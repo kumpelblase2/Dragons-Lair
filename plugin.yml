@@ -1,0 +1,14 @@
+main: de.kumpelblase2.dragonslair.DragonsLairMain
+author: kumpelblase2
+version: 1.0
+name: Dragons Lair
+softdepend: [Citizens, Vault]
+commands:
+    dragonslair:
+        description: All commands of Dragons Lair
+        aliases: [dl]
+
+permissions:
+    dragonslair.config:
+        description: Gives the ability to use the configuration
+        default: op
