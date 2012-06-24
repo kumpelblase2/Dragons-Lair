@@ -25,7 +25,8 @@ public enum EventActionOptions
 	BROADCAST_MESSAGE(new String[] { "message" }, new String[] { "permission", "dungeon_id", "cooldown", "delay" }),
 	SAY(new String[] { "message" }, new String[] { "cooldown", "delay" }),
 	ADD_POTION_EFFECT(new String[] { "potiontype", "amplifier", "duration" }, new String[] { "scope", "cooldown", "delay" }),
-	REMOVE_POTION_EFFECT(new String[] { "potiontype" }, new String[] { "duration", "scope", "cooldown", "delay" });
+	REMOVE_POTION_EFFECT(new String[] { "potiontype" }, new String[] { "duration", "scope", "cooldown", "delay" }),
+	KILL_PLAYER(new String[0], new String[] { "scope", "cooldown", "delay" });
 	
 	private String[] requiredOptions;
 	private String[] optionalOptions;
