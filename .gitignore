@@ -1,6 +1,16 @@
 *.class
-*.classpath
-*.project
+.DS_Store
+*.swp
+*.iml
+*.ipr
+*.iws
+.classpath
+.gitignore
+.project
+.settings/
+.springBeans/
+target/
+.classpath
 
 # Package Files #
 *.jar

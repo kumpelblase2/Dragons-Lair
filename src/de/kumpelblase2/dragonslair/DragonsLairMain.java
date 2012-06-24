@@ -31,7 +31,7 @@ public class DragonsLairMain extends JavaPlugin
 	private DLEventHandler eventHandler;
 	private ConversationHandler conversationHandler;
 	private LoggingManager logManager;
-	private final int DATABASE_REV = 6;
+	private final int DATABASE_REV = 7;
 	private boolean citizensEnabled = false;
 	private boolean economyEnabled = false;
 	private Economy econ;
