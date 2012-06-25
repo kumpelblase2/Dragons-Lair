@@ -29,7 +29,7 @@ public class BlockChangeEventExecutor implements EventExecutor
 			final int maxy = (y < y2) ? y2 : y;
 			final int minz = (z > z2) ? z2 : z;
 			final int maxz = (z < z2) ? z2 : z;
-			final ActiveDungeon ad = DragonsLairMain.getInstance().getDungeonManager().getDungeonOfPlayer(p.getName());
+			final ActiveDungeon ad = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
 			Bukkit.getScheduler().scheduleSyncDelayedTask(DragonsLairMain.getInstance(), new Runnable()
 			{
 				@Override

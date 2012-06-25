@@ -23,10 +23,10 @@ public class BroadcastEventExecutor implements EventExecutor
 			{
 				int id = Integer.parseInt(dungeon);
 				ActiveDungeon ad;
-				ad = DragonsLairMain.getInstance().getDungeonManager().getDungeonOfPlayer(p.getName());
+				ad = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
 				if(ad == null || ad.getInfo().getID() != id)
 				{
-					for(ActiveDungeon a : DragonsLairMain.getInstance().getDungeonManager().getActiveDungeons())
+					for(ActiveDungeon a : DragonsLairMain.getDungeonManager().getActiveDungeons())
 					{
 						if(ad.getInfo().getID() == id)
 						{

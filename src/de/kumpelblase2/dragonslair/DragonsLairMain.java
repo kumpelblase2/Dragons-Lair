@@ -201,6 +201,11 @@ public class DragonsLairMain extends JavaPlugin
 		return instance;
 	}
 	
+	public static DungeonManager getDungeonManager()
+	{
+		return getInstance().getDungeonManagerInstance();
+	}
+	
 	public Connection getMysqlConnection()
 	{
 		return this.conn;
@@ -304,7 +309,7 @@ public class DragonsLairMain extends JavaPlugin
 		return null;
 	}
 	
-	public DungeonManager getDungeonManager()
+	public DungeonManager getDungeonManagerInstance()
 	{
 		return this.manager;
 	}
@@ -319,7 +324,7 @@ public class DragonsLairMain extends JavaPlugin
 	
 	public static Settings getSettings()
 	{
-		return DragonsLairMain.getInstance().getDungeonManager().getSettings();
+		return DragonsLairMain.getDungeonManager().getSettings();
 	}
 	
 	public ConversationHandler getConversationHandler()
@@ -378,7 +383,7 @@ public class DragonsLairMain extends JavaPlugin
 				@Override
 				public int getValue()
 				{
-					return DragonsLairMain.getInstance().getDungeonManager().getSpawnedNPCIDs().size();
+					return DragonsLairMain.getDungeonManager().getSpawnedNPCIDs().size();
 				}
 				
 				@Override

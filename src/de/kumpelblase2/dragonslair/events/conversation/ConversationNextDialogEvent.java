@@ -13,7 +13,7 @@ public class ConversationNextDialogEvent extends ConversationEvent
 	{
 		super(inName, inConv);
 		this.npc = DragonsLairMain.getSettings().getNPCByName(inName);
-		this.hnpc = DragonsLairMain.getInstance().getDungeonManager().getNPCByName(inName);
+		this.hnpc = DragonsLairMain.getDungeonManager().getNPCByName(inName);
 		this.conv = inConv;
 		this.nextDialog = next;
 	}

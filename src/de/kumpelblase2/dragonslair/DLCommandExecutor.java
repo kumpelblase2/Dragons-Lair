@@ -32,7 +32,7 @@ public class DLCommandExecutor implements CommandExecutor
 			
 			if(sender instanceof Player || sender instanceof ConsoleCommandSender)
 			{
-				ConversationFactory f = DragonsLairMain.getInstance().getDungeonManager().getConversationFactory();
+				ConversationFactory f = DragonsLairMain.getDungeonManager().getConversationFactory();
 				Conversation c = f.withEscapeSequence("/exit").withFirstPrompt(new GeneralConfigDialog()).buildConversation((Conversable)sender);
 				c.begin();
 				return true;
@@ -53,7 +53,7 @@ public class DLCommandExecutor implements CommandExecutor
 			
 			DragonsLairMain.Log.info("Reloading data...");
 			DragonsLairMain.Log.info("Stopping all running dungeons...");
-			DragonsLairMain.getInstance().getDungeonManager().stopDungeons();
+			DragonsLairMain.getDungeonManager().stopDungeons();
 			DragonsLairMain.Log.info("Reloading from database...");
 			DragonsLairMain.getSettings().loadAll();
 			DragonsLairMain.getInstance().getEventHandler().reloadTriggers();
@@ -65,7 +65,7 @@ public class DLCommandExecutor implements CommandExecutor
 		{
 			if(sender instanceof Player || sender instanceof ConsoleCommandSender)
 			{
-				ConversationFactory f = DragonsLairMain.getInstance().getDungeonManager().getConversationFactory();
+				ConversationFactory f = DragonsLairMain.getDungeonManager().getConversationFactory();
 				Conversation c = f.withEscapeSequence("/exit").withFirstPrompt(new HelpDialog()).buildConversation((Conversable)sender);
 				((Conversable)sender).beginConversation(c);
 				return true;

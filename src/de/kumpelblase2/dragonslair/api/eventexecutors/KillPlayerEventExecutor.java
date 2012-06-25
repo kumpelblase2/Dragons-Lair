@@ -20,7 +20,7 @@ public class KillPlayerEventExecutor implements EventExecutor
 			String scope = e.getOption("scope");
 			if(scope.equalsIgnoreCase("all") || scope.equalsIgnoreCase("party"))
 			{
-				ActiveDungeon ad = DragonsLairMain.getInstance().getDungeonManager().getDungeonOfPlayer(p.getName());
+				ActiveDungeon ad = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
 				if(ad != null)
 				{
 					for(String member : ad.getCurrentParty().getMembers())

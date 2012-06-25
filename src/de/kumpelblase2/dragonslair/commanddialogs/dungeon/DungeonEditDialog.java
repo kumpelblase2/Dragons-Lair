@@ -191,7 +191,7 @@ public class DungeonEditDialog extends ValidatingPrompt
 				return false;
 			}
 			
-			for(ActiveDungeon ad : DragonsLairMain.getInstance().getDungeonManager().getActiveDungeons())
+			for(ActiveDungeon ad : DragonsLairMain.getDungeonManager().getActiveDungeons())
 			{
 				if(ad.getInfo().getID() == d.getID())
 				{

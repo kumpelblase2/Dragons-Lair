@@ -28,14 +28,14 @@ public class SafeWordPrompt extends FixedSetPrompt
 		else if(arg1.equals("stop"))
 		{
 			arg0.getForWhom().sendRawMessage("<Voice>Pff. Aren't tough enough? I knew it. Derp.");
-			ActiveDungeon playerDungeon = DragonsLairMain.getInstance().getDungeonManager().getDungeonOfPlayer(((Player)arg0.getForWhom()).getName());
+			ActiveDungeon playerDungeon = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(((Player)arg0.getForWhom()).getName());
 			if(playerDungeon != null)
-				DragonsLairMain.getInstance().getDungeonManager().stopDungeon(playerDungeon.getInfo().getID(), false);
+				DragonsLairMain.getDungeonManager().stopDungeon(playerDungeon.getInfo().getID(), false);
 		}
 		else
 		{
 			arg0.getForWhom().sendRawMessage("<Voice>If you don't come back, something unexpected and really bad thing will happen. I have warned you.");
-			DragonsLairMain.getInstance().getDungeonManager().stopDungeon(DragonsLairMain.getInstance().getDungeonManager().getDungeonOfPlayer(((Player)arg0.getForWhom()).getName()).getInfo().getName(), true);
+			DragonsLairMain.getDungeonManager().stopDungeon(DragonsLairMain.getDungeonManager().getDungeonOfPlayer(((Player)arg0.getForWhom()).getName()).getInfo().getName(), true);
 		}
 		DragonsLairMain.getInstance().getConversationHandler().removeSafeWordConversation((Player)arg0.getForWhom());
 		

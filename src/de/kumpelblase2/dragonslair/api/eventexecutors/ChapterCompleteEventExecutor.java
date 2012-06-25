@@ -14,7 +14,7 @@ public class ChapterCompleteEventExecutor implements EventExecutor
 	{
 		try
 		{
-			ActiveDungeon d = DragonsLairMain.getInstance().getDungeonManager().getDungeonOfPlayer(p.getName());
+			ActiveDungeon d = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
 			if(d == null)
 				return false;
 			

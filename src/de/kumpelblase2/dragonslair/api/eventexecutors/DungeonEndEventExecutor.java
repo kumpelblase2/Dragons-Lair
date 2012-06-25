@@ -16,14 +16,14 @@ public class DungeonEndEventExecutor implements EventExecutor
 		{
 			String dungeon_id = e.getOption("dungeon_id");
 			Location bak = p.getLocation();
-			ActiveDungeon ad = DragonsLairMain.getInstance().getDungeonManager().getDungeonOfPlayer(p.getName());
+			ActiveDungeon ad = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
 			if(ad != null)
 			{
 				if(e.getOption("give_items") != null && !Boolean.parseBoolean(e.getOption("give_items")))
 					ad.getSavedPlayers().clear();
 			}
 			
-			DragonsLairMain.getInstance().getDungeonManager().stopDungeon(Integer.parseInt(dungeon_id), false);
+			DragonsLairMain.getDungeonManager().stopDungeon(Integer.parseInt(dungeon_id), false);
 			if(e.getOption("warp_on_end") != null && !Boolean.parseBoolean(e.getOption("warp_on_end")))
 				p.teleport(bak);
 		}

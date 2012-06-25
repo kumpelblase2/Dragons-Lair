@@ -19,7 +19,7 @@ public class NPCDespawnExecutor implements EventExecutor
 			if(n == null)
 				return false;
 				
-			DragonsLairMain.getInstance().getDungeonManager().despawnNPC(n.getName());
+			DragonsLairMain.getDungeonManager().despawnNPC(n.getName());
 			
 			return true;
 		}

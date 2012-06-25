@@ -31,7 +31,7 @@ public class ItemAddEventExecutor implements EventExecutor
 					}
 					else
 					{
-						ActiveDungeon d = DragonsLairMain.getInstance().getDungeonManager().getDungeonOfPlayer(p.getName());
+						ActiveDungeon d = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
 						if(d != null)
 						{
 							for(String member : d.getCurrentParty().getMembers())
@@ -59,7 +59,7 @@ public class ItemAddEventExecutor implements EventExecutor
 				}
 				else
 				{
-					ActiveDungeon d = DragonsLairMain.getInstance().getDungeonManager().getDungeonOfPlayer(p.getName());
+					ActiveDungeon d = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
 					if(d != null)
 					{
 						for(String member : d.getCurrentParty().getMembers())

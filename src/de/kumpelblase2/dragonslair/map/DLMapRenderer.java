@@ -27,10 +27,10 @@ public class DLMapRenderer extends MapRenderer
 		if(!mapstack.getEnchantments().containsKey(Enchantment.ARROW_INFINITE))
 			return;
 		
-		if(DragonsLairMain.getInstance().getDungeonManager().getDungeonOfPlayer(player.getName()) == null)
+		if(DragonsLairMain.getDungeonManager().getDungeonOfPlayer(player.getName()) == null)
 			return;
 		
-		DLMap map = DragonsLairMain.getInstance().getDungeonManager().getMapOfPlayer(player);
+		DLMap map = DragonsLairMain.getDungeonManager().getMapOfPlayer(player);
 		map.checkUpdate();
 		if(map.isRendered())
 			return;

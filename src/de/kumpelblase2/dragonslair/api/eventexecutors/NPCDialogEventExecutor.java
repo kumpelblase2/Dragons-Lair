@@ -47,7 +47,7 @@ public class NPCDialogEventExecutor implements EventExecutor
 		String sendTo = e.getOption("send_to");
 		if(sendTo != null && (sendTo.equalsIgnoreCase("all") || sendTo.equalsIgnoreCase("party")))
 		{
-			ActiveDungeon d = DragonsLairMain.getInstance().getDungeonManager().getDungeonOfPlayer(p.getName());
+			ActiveDungeon d = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
 			for(String playername : d.getCurrentParty().getMembers())
 			{
 				Player player = Bukkit.getPlayer(playername);

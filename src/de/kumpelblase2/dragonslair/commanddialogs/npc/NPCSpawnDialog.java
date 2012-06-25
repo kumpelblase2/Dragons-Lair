@@ -19,7 +19,7 @@ public class NPCSpawnDialog extends ValidatingPrompt
 		if(arg1.equals("back") || arg1.equals("cancel"))
 			return new NPCManageDialog();
 		
-		DragonsLairMain.getInstance().getDungeonManager().spawnNPC(arg1);
+		DragonsLairMain.getDungeonManager().spawnNPC(arg1);
 		arg0.getForWhom().sendRawMessage(ChatColor.GREEN + "NPC spawned!");
 		return new NPCManageDialog();
 	}

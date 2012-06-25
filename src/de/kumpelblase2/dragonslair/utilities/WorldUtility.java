@@ -20,7 +20,7 @@ public class WorldUtility
 			if(!(e instanceof LivingEntity) || excluded.contains(e.getType()))
 				continue;
 			
-			if(e instanceof Player && DragonsLairMain.getInstance().getDungeonManager().getNPCManager().isNPC(e))
+			if(e instanceof Player && DragonsLairMain.getDungeonManager().getNPCManager().isNPC(e))
 				continue;
 			
 			double squared = e.getLocation().distanceSquared(loc);
