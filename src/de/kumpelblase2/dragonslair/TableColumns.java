@@ -19,7 +19,7 @@ public class TableColumns
 		CONSIDER_AGREEMENT_ID,
 		DISAGREEMENT_ID,
 		CONSIDE_DISAGREEMENT_ID,
-		CONSIDERING_ID
+		CONSIDER_ID
 	}
 	
 	public static enum Dungeons

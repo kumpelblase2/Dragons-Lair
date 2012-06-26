@@ -2,6 +2,7 @@ package de.kumpelblase2.dragonslair.api;
 
 import java.sql.*;
 import java.util.*;
+import java.util.Map.Entry;
 import de.kumpelblase2.dragonslair.*;
 import de.kumpelblase2.dragonslair.conversation.AnswerType;
 
@@ -30,23 +31,23 @@ public class Dialog
 			this.id = result.getInt(TableColumns.Dialogs.ID.ordinal());
 			this.text = result.getString(TableColumns.Dialogs.TEXT.ordinal());
 			this.nextIDs.put(AnswerType.AGREEMENT, result.getInt(TableColumns.Dialogs.AGREEMENT_ID.ordinal()));
-			if(result.wasNull())
+			if(result.wasNull() || this.nextIDs.get(AnswerType.AGREEMENT) == 0)
 				this.nextIDs.remove(AnswerType.AGREEMENT);
 			
 			this.nextIDs.put(AnswerType.CONSIDERING_AGREEMENT, result.getInt(TableColumns.Dialogs.CONSIDER_AGREEMENT_ID.ordinal()));
-			if(result.wasNull())
+			if(result.wasNull() || this.nextIDs.get(AnswerType.CONSIDERING_AGREEMENT) == 0)
 				this.nextIDs.remove(AnswerType.CONSIDERING_AGREEMENT);
 			
 			this.nextIDs.put(AnswerType.DISAGREEMENT, result.getInt(TableColumns.Dialogs.DISAGREEMENT_ID.ordinal()));
-			if(result.wasNull())
+			if(result.wasNull() || this.nextIDs.get(AnswerType.DISAGREEMENT) == 0)
 				this.nextIDs.remove(AnswerType.DISAGREEMENT);
 			
 			this.nextIDs.put(AnswerType.CONSIDERING_DISAGREEMENT, result.getInt(TableColumns.Dialogs.CONSIDE_DISAGREEMENT_ID.ordinal()));
-			if(result.wasNull())
+			if(result.wasNull() || this.nextIDs.get(AnswerType.CONSIDERING_DISAGREEMENT) == 0)
 				this.nextIDs.remove(AnswerType.CONSIDERING_DISAGREEMENT);
 			
-			this.nextIDs.put(AnswerType.CONSIDERING, result.getInt(TableColumns.Dialogs.CONSIDERING_ID.ordinal()));
-			if(result.wasNull())
+			this.nextIDs.put(AnswerType.CONSIDERING, result.getInt(TableColumns.Dialogs.CONSIDER_ID.ordinal()));
+			if(result.wasNull() || this.nextIDs.get(AnswerType.CONSIDERING) == 0)
 				this.nextIDs.remove(AnswerType.CONSIDERING);
 			
 			if(this.nextIDs.size() > 0)
@@ -75,11 +76,23 @@ public class Dialog
 	
 	public void setNextID(AnswerType inType, int inId)
 	{
-		this.nextIDs.put(inType, id);
+		if(id == 0)
+			this.nextIDs.remove(inType);
+		else
+			this.nextIDs.put(inType, id);
 	}
 	
 	public void setNextIDs(Map<AnswerType, Integer> inNext)
 	{
+		Iterator<Entry<AnswerType, Integer>> it = inNext.entrySet().iterator();
+		
+		while(it.hasNext())
+		{
+			Entry<AnswerType, Integer> entry = it.next();
+			if(entry.getValue() == 0)
+				it.remove();
+		}
+		
 		this.nextIDs = inNext;
 	}
 	
@@ -114,15 +127,34 @@ public class Dialog
 						"next_consider_agreement_id," +
 						"next_disagreement_id," +
 						"next_consider_disagreement_id," +
-						"next_considering_id" +
+						"next_consider_id" +
 						") VALUES(?,?,?,?,?,?,?)");
 				st.setInt(1, this.id);
 				st.setString(2, this.text);
-				st.setInt(3, this.nextIDs.get(AnswerType.AGREEMENT));
-				st.setInt(4, this.nextIDs.get(AnswerType.CONSIDERING_AGREEMENT));
-				st.setInt(5, this.nextIDs.get(AnswerType.DISAGREEMENT));
-				st.setInt(6, this.nextIDs.get(AnswerType.CONSIDERING_DISAGREEMENT));
-				st.setInt(7, this.nextIDs.get(AnswerType.CONSIDERING));
+				if(this.nextIDs.get(AnswerType.AGREEMENT) == null)
+					st.setNull(3, Types.INTEGER);
+				else
+					st.setInt(3, this.nextIDs.get(AnswerType.AGREEMENT));
+				
+				if(this.nextIDs.get(AnswerType.CONSIDERING_AGREEMENT) == null)
+					st.setNull(4, Types.INTEGER);
+				else
+					st.setInt(4, this.nextIDs.get(AnswerType.CONSIDERING_AGREEMENT));
+				
+				if(this.nextIDs.get(AnswerType.DISAGREEMENT) == null)
+					st.setNull(5, Types.INTEGER);
+				else
+					st.setInt(5, this.nextIDs.get(AnswerType.DISAGREEMENT));
+				
+				if(this.nextIDs.get(AnswerType.CONSIDERING_DISAGREEMENT) == null)
+					st.setNull(6, Types.INTEGER);
+				else
+					st.setInt(6, this.nextIDs.get(AnswerType.CONSIDERING_DISAGREEMENT));
+				
+				if(this.nextIDs.get(AnswerType.CONSIDERING) == null)
+					st.setNull(7, Types.INTEGER);
+				else
+					st.setInt(7, this.nextIDs.get(AnswerType.CONSIDERING));
 				st.execute();
 			}
 			else
@@ -133,14 +165,33 @@ public class Dialog
 						"next_consider_agreement_id," +
 						"next_disagreement_id," +
 						"next_consider_disagreement_id," +
-						"next_considering_id" +
+						"next_consider_id" +
 						") VALUES(?,?,?,?,?,?)");
 				st.setString(1, this.text);
-				st.setInt(2, this.nextIDs.get(AnswerType.AGREEMENT));
-				st.setInt(3, this.nextIDs.get(AnswerType.CONSIDERING_AGREEMENT));
-				st.setInt(4, this.nextIDs.get(AnswerType.DISAGREEMENT));
-				st.setInt(5, this.nextIDs.get(AnswerType.CONSIDERING_DISAGREEMENT));
-				st.setInt(6, this.nextIDs.get(AnswerType.CONSIDERING));
+				if(this.nextIDs.get(AnswerType.AGREEMENT) == null)
+					st.setNull(2, Types.INTEGER);
+				else
+					st.setInt(2, this.nextIDs.get(AnswerType.AGREEMENT));
+				
+				if(this.nextIDs.get(AnswerType.CONSIDERING_AGREEMENT) == null)
+					st.setNull(3, Types.INTEGER);
+				else
+					st.setInt(3, this.nextIDs.get(AnswerType.CONSIDERING_AGREEMENT));
+				
+				if(this.nextIDs.get(AnswerType.DISAGREEMENT) == null)
+					st.setNull(4, Types.INTEGER);
+				else
+					st.setInt(4, this.nextIDs.get(AnswerType.DISAGREEMENT));
+				
+				if(this.nextIDs.get(AnswerType.CONSIDERING_DISAGREEMENT) == null)
+					st.setNull(5, Types.INTEGER);
+				else
+					st.setInt(5, this.nextIDs.get(AnswerType.CONSIDERING_DISAGREEMENT));
+				
+				if(this.nextIDs.get(AnswerType.CONSIDERING) == null)
+					st.setNull(6, Types.INTEGER);
+				else
+					st.setInt(6, this.nextIDs.get(AnswerType.CONSIDERING));
 				st.execute();
 				ResultSet keys = st.getGeneratedKeys();
 				if(keys.next())
@@ -150,6 +201,21 @@ public class Dialog
 		catch(Exception e)
 		{
 			DragonsLairMain.Log.warning("Unable to save dialog " + this.id);
+			DragonsLairMain.Log.warning(e.getMessage());
+		}
+	}
+
+	public void remove()
+	{
+		try
+		{
+			PreparedStatement st = DragonsLairMain.createStatement("REMOVE FROM " + Tables.DIALOGS + " WHERE `dialog_id` = ?");
+			st.setInt(1, this.id);
+			st.execute();
+		}
+		catch(Exception e)
+		{
+			DragonsLairMain.Log.warning("Unable to remove dialog " + this.id);
 			DragonsLairMain.Log.warning(e.getMessage());
 		}
 	}
