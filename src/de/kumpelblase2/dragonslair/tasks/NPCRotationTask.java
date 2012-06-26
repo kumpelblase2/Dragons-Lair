@@ -22,7 +22,7 @@ public class NPCRotationTask implements Runnable
 		DragonsLairMain main = DragonsLairMain.getInstance();
 		if(main != null)
 		{
-			HumanNPC npc = DragonsLairMain.getInstance().getDungeonManager().getNPCByName(this.npcName);
+			HumanNPC npc = DragonsLairMain.getDungeonManager().getNPCByName(this.npcName);
 			if(npc != null)
 			{
 				List<Entity> entities = npc.getBukkitEntity().getNearbyEntities(10, 5, 10);				

@@ -31,7 +31,7 @@ public class DragonsLairMain extends JavaPlugin
 	private DLEventHandler eventHandler;
 	private ConversationHandler conversationHandler;
 	private LoggingManager logManager;
-	private final int DATABASE_REV = 6;
+	private final int DATABASE_REV = 7;
 	private boolean citizensEnabled = false;
 	private boolean economyEnabled = false;
 	private Economy econ;
@@ -53,60 +53,69 @@ public class DragonsLairMain extends JavaPlugin
 		this.economyEnabled = this.setupEconomy();
 		this.commandExecutor = new DLCommandExecutor();
 		this.eventHandler = new DLEventHandler();
-		
-		DragonsLairInitializeEvent initializeEvent = new DragonsLairInitializeEvent(this);
-		Bukkit.getPluginManager().callEvent(initializeEvent);
-		if(initializeEvent.isCancelled())
-		{
-			Bukkit.getPluginManager().disablePlugin(this);
-			return;
-		}
-		
-		this.manager.getSettings().loadAll();
-		this.logManager.loadEntries();
-		this.manager.spawnNPCs();
-		this.eventHandler.reloadTriggers();
 		getCommand("dragonslair").setExecutor(this.commandExecutor);
 		Bukkit.getPluginManager().registerEvents(this.eventHandler, this);
-		this.manager.setEventExecutor(EventActionType.NPC_DIALOG, new NPCDialogEventExecutor());
-		this.manager.setEventExecutor(EventActionType.ITEM_REMOVE, new ItemRemoveEventExecutor());
-		this.manager.setEventExecutor(EventActionType.NPC_SPAWN, new NPCSpawnEventExecutor());
-		this.manager.setEventExecutor(EventActionType.NPC_DESPAWN, new NPCDespawnExecutor());
-		this.manager.setEventExecutor(EventActionType.BLOCK_CHANGE, new BlockChangeEventExecutor());
-		this.manager.setEventExecutor(EventActionType.CHAPTER_COMPLETE, new ChapterCompleteEventExecutor());
-		this.manager.setEventExecutor(EventActionType.DUNGEON_END, new DungeonEndEventExecutor());
-		this.manager.setEventExecutor(EventActionType.DUNGEON_REGISTER, new DungeonRegisterEventExecutor());
-		this.manager.setEventExecutor(EventActionType.DUNGEON_START, new DungeonStartEventExecutor());
-		this.manager.setEventExecutor(EventActionType.ITEM_ADD, new ItemAddEventExecutor());
-		this.manager.setEventExecutor(EventActionType.MOB_SPAWN, new MobSpawnEventExecutor());
-		this.manager.setEventExecutor(EventActionType.OBJECTIVE_COMPLETE, new ObjectiveCompleteEventExecutor());
-		this.manager.setEventExecutor(EventActionType.PLAYER_WARP, new PlayerTeleportEventExecutor());
-		this.manager.setEventExecutor(EventActionType.NPC_ATTACK, new NPCAttackEventExecutor());
-		this.manager.setEventExecutor(EventActionType.NPC_STOP_ATTACK, new NPCStopAttackEventExecutor());
-		this.manager.setEventExecutor(EventActionType.NPC_WALK, new NPCWalkToEventExecutor());
-		this.manager.setEventExecutor(EventActionType.ITEM_SPAWN, new ItemSpawnEventExecutor());
-		this.manager.setEventExecutor(EventActionType.BROADCAST_MESSAGE, new BroadcastEventExecutor());
-		this.manager.setEventExecutor(EventActionType.SAY, new SayEventExecutor());
-		this.manager.setEventExecutor(EventActionType.ADD_POTION_EFFECT, new AddPotionEffectEventExecutor());
-		this.manager.setEventExecutor(EventActionType.REMOVE_POTION_EFFECT, new RemovePotionEffectEventExecutor());
 		
-		this.createMetricsData();
-		if(this.checkCitizen())
-			Bukkit.getPluginManager().registerEvents(new DLCitizenHandler(), this);
-		
-		if(this.getConfig().getBoolean("verbose-start"))
+		Bukkit.getScheduler().scheduleSyncDelayedTask(this, new Runnable()
 		{
-			Log.info("Loaded " + this.manager.getSettings().getNPCs().size() + " NPCs");
-			Log.info("Loaded " + this.manager.getSettings().getDialogs().size() + " dungeons");
-			Log.info("Loaded " + this.manager.getSettings().getTriggers().size() + " triggers");
-			Log.info("Loaded " + this.manager.getSettings().getEvents().size() + " events");
-			Log.info("Loaded " + this.manager.getSettings().getDialogs().size() + " dialogs");
-			Log.info("Loaded " + this.manager.getSettings().getObjectives().size() + " objectivess");
-			Log.info("Loaded " + this.manager.getSettings().getChapters().size() + " chapters");
-		}
-		Log.info("Done.");
-		Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new CooldownCleanup(), 200L, 200L);
-		this.startUpdateCheck();
+			@Override
+			public void run()
+			{
+				DragonsLairInitializeEvent initializeEvent = new DragonsLairInitializeEvent(DragonsLairMain.getInstance());
+				Bukkit.getPluginManager().callEvent(initializeEvent);
+				if(initializeEvent.isCancelled())
+				{
+					Bukkit.getPluginManager().disablePlugin(DragonsLairMain.getInstance());
+					return;
+				}
+				
+				manager.getSettings().loadAll();
+				logManager.loadEntries();
+				manager.spawnNPCs();
+				eventHandler.reloadTriggers();
+				manager.setEventExecutor(EventActionType.NPC_DIALOG, new NPCDialogEventExecutor());
+				manager.setEventExecutor(EventActionType.ITEM_REMOVE, new ItemRemoveEventExecutor());
+				manager.setEventExecutor(EventActionType.NPC_SPAWN, new NPCSpawnEventExecutor());
+				manager.setEventExecutor(EventActionType.NPC_DESPAWN, new NPCDespawnExecutor());
+				manager.setEventExecutor(EventActionType.BLOCK_CHANGE, new BlockChangeEventExecutor());
+				manager.setEventExecutor(EventActionType.CHAPTER_COMPLETE, new ChapterCompleteEventExecutor());
+				manager.setEventExecutor(EventActionType.DUNGEON_END, new DungeonEndEventExecutor());
+				manager.setEventExecutor(EventActionType.DUNGEON_REGISTER, new DungeonRegisterEventExecutor());
+				manager.setEventExecutor(EventActionType.DUNGEON_START, new DungeonStartEventExecutor());
+				manager.setEventExecutor(EventActionType.ITEM_ADD, new ItemAddEventExecutor());
+				manager.setEventExecutor(EventActionType.MOB_SPAWN, new MobSpawnEventExecutor());
+				manager.setEventExecutor(EventActionType.OBJECTIVE_COMPLETE, new ObjectiveCompleteEventExecutor());
+				manager.setEventExecutor(EventActionType.PLAYER_WARP, new PlayerTeleportEventExecutor());
+				manager.setEventExecutor(EventActionType.NPC_ATTACK, new NPCAttackEventExecutor());
+				manager.setEventExecutor(EventActionType.NPC_STOP_ATTACK, new NPCStopAttackEventExecutor());
+				manager.setEventExecutor(EventActionType.NPC_WALK, new NPCWalkToEventExecutor());
+				manager.setEventExecutor(EventActionType.ITEM_SPAWN, new ItemSpawnEventExecutor());
+				manager.setEventExecutor(EventActionType.BROADCAST_MESSAGE, new BroadcastEventExecutor());
+				manager.setEventExecutor(EventActionType.SAY, new SayEventExecutor());
+				manager.setEventExecutor(EventActionType.ADD_POTION_EFFECT, new AddPotionEffectEventExecutor());
+				manager.setEventExecutor(EventActionType.REMOVE_POTION_EFFECT, new RemovePotionEffectEventExecutor());
+				manager.setEventExecutor(EventActionType.KILL_PLAYER, new KillPlayerEventExecutor());
+				
+				createMetricsData();
+				if(checkCitizen())
+					Bukkit.getPluginManager().registerEvents(new DLCitizenHandler(), DragonsLairMain.getInstance());
+				
+				if(getConfig().getBoolean("verbose-start"))
+				{
+					Log.info("Loaded " + manager.getSettings().getNPCs().size() + " NPCs");
+					Log.info("Loaded " + manager.getSettings().getDungeons().size() + " dungeons");
+					Log.info("Loaded " + manager.getSettings().getTriggers().size() + " triggers");
+					Log.info("Loaded " + manager.getSettings().getEvents().size() + " events");
+					Log.info("Loaded " + manager.getSettings().getDialogs().size() + " dialogs");
+					Log.info("Loaded " + manager.getSettings().getObjectives().size() + " objectivess");
+					Log.info("Loaded " + manager.getSettings().getChapters().size() + " chapters");
+				}
+				Log.info("Done.");
+				Bukkit.getScheduler().scheduleSyncRepeatingTask(DragonsLairMain.getInstance(), new CooldownCleanup(), 200L, 200L);
+				startUpdateCheck();
+			}
+		});
+		
 	}
 
 	private boolean setupEconomy()
@@ -190,6 +199,11 @@ public class DragonsLairMain extends JavaPlugin
 	public static DragonsLairMain getInstance()
 	{
 		return instance;
+	}
+	
+	public static DungeonManager getDungeonManager()
+	{
+		return getInstance().getDungeonManagerInstance();
 	}
 	
 	public Connection getMysqlConnection()
@@ -295,7 +309,7 @@ public class DragonsLairMain extends JavaPlugin
 		return null;
 	}
 	
-	public DungeonManager getDungeonManager()
+	public DungeonManager getDungeonManagerInstance()
 	{
 		return this.manager;
 	}
@@ -310,7 +324,7 @@ public class DragonsLairMain extends JavaPlugin
 	
 	public static Settings getSettings()
 	{
-		return DragonsLairMain.getInstance().getDungeonManager().getSettings();
+		return DragonsLairMain.getDungeonManager().getSettings();
 	}
 	
 	public ConversationHandler getConversationHandler()
@@ -369,7 +383,7 @@ public class DragonsLairMain extends JavaPlugin
 				@Override
 				public int getValue()
 				{
-					return DragonsLairMain.getInstance().getDungeonManager().getSpawnedNPCIDs().size();
+					return DragonsLairMain.getDungeonManager().getSpawnedNPCIDs().size();
 				}
 				
 				@Override

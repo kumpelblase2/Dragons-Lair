@@ -1,6 +1,6 @@
 main: de.kumpelblase2.dragonslair.DragonsLairMain
 author: kumpelblase2
-version: 1.0
+version: 1.1
 name: Dragons Lair
 softdepend: [Citizens, Vault]
 commands:

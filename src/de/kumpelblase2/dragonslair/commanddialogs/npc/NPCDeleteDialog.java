@@ -49,7 +49,7 @@ public class NPCDeleteDialog extends ValidatingPrompt
 			if(input.equals("delete"))
 			{
 				String name = (String)context.getSessionData("npc_name");
-				DragonsLairMain.getInstance().getDungeonManager().despawnNPC(name);
+				DragonsLairMain.getDungeonManager().despawnNPC(name);
 				NPC npc = DragonsLairMain.getSettings().getNPCByName(name);
 				npc.remove();
 				DragonsLairMain.getSettings().getNPCs().remove(DragonsLairMain.getSettings().getNPCByName(name).getID());

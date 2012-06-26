@@ -26,7 +26,7 @@ public class AddPotionEffectEventExecutor implements EventExecutor
 			}
 			else
 			{
-				ActiveDungeon ad = DragonsLairMain.getInstance().getDungeonManager().getDungeonOfPlayer(p.getName());
+				ActiveDungeon ad = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
 				if(ad != null)
 				{
 					for(String member : ad.getCurrentParty().getMembers())

@@ -28,7 +28,7 @@ public class NPCWalkToEventExecutor implements EventExecutor
 			if(x == null || y == null || z == null)
 				return false;
 			
-			HumanNPC npc = DragonsLairMain.getInstance().getDungeonManager().getNPCByName(n.getName());
+			HumanNPC npc = DragonsLairMain.getDungeonManager().getNPCByName(n.getName());
 			if(npc != null)
 				npc.walkTo(new Location(npc.getBukkitEntity().getLocation().getWorld(), Integer.parseInt(x), Integer.parseInt(y), Integer.parseInt(z)));
 			

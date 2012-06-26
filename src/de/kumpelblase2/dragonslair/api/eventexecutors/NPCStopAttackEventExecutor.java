@@ -20,7 +20,7 @@ public class NPCStopAttackEventExecutor implements EventExecutor
 			if(n == null)
 				return false;
 			
-			HumanNPC npc = DragonsLairMain.getInstance().getDungeonManager().getNPCByName(n.getName());
+			HumanNPC npc = DragonsLairMain.getDungeonManager().getNPCByName(n.getName());
 			if(npc != null)
 				npc.stopAttacking();
 			

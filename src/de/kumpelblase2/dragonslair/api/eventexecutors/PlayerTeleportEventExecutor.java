@@ -27,7 +27,7 @@ public class PlayerTeleportEventExecutor implements EventExecutor
 			}
 			else
 			{
-				ActiveDungeon d = DragonsLairMain.getInstance().getDungeonManager().getDungeonOfPlayer(p.getName());
+				ActiveDungeon d = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
 				for(String member : d.getCurrentParty().getMembers())
 				{
 					Player pl = Bukkit.getPlayer(member);

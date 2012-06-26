@@ -23,7 +23,7 @@ public class ItemRemoveEventExecutor implements EventExecutor
 			String onSuccess = e.getOption("on_success");
 			double amount = Double.parseDouble(e.getOption("amount"));
 			boolean success = true;
-			ActiveDungeon ad = DragonsLairMain.getInstance().getDungeonManager().getDungeonOfPlayer(p.getName());
+			ActiveDungeon ad = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
 			if(e.getOption("item_id").equalsIgnoreCase("money"))
 			{
 				if(DragonsLairMain.getInstance().isEconomyEnabled())
@@ -103,18 +103,18 @@ public class ItemRemoveEventExecutor implements EventExecutor
 						return true;
 					
 					int failid = Integer.parseInt(onFail);
-					DragonsLairMain.getInstance().getDungeonManager().executeEvent(DragonsLairMain.getSettings().getEvents().get(failid), p);
+					DragonsLairMain.getDungeonManager().executeEvent(DragonsLairMain.getSettings().getEvents().get(failid), p);
 				}
 				
 				if(onSuccess != null)
 				{
 					int successid = Integer.parseInt(onSuccess);
-					DragonsLairMain.getInstance().getDungeonManager().executeEvent(DragonsLairMain.getSettings().getEvents().get(successid), p);
+					DragonsLairMain.getDungeonManager().executeEvent(DragonsLairMain.getSettings().getEvents().get(successid), p);
 				}
 			}
 			else
 			{
-				ActiveDungeon d = DragonsLairMain.getInstance().getDungeonManager().getDungeonOfPlayer(p.getName());
+				ActiveDungeon d = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
 				if(d != null)
 				{
 					for(String player : d.getCurrentParty().getMembers())
@@ -126,13 +126,13 @@ public class ItemRemoveEventExecutor implements EventExecutor
 								continue;
 							
 							int failid = Integer.parseInt(onFail);
-							DragonsLairMain.getInstance().getDungeonManager().executeEvent(DragonsLairMain.getSettings().getEvents().get(failid), pl);
+							DragonsLairMain.getDungeonManager().executeEvent(DragonsLairMain.getSettings().getEvents().get(failid), pl);
 						}
 						
 						if(onSuccess != null)
 						{
 							int successid = Integer.parseInt(onSuccess);
-							DragonsLairMain.getInstance().getDungeonManager().executeEvent(DragonsLairMain.getSettings().getEvents().get(successid), pl);
+							DragonsLairMain.getDungeonManager().executeEvent(DragonsLairMain.getSettings().getEvents().get(successid), pl);
 						}
 					}
 				}

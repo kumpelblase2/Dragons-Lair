@@ -19,7 +19,7 @@ public class NPCDespawnDialog extends ValidatingPrompt
 		if(input.equals("back") || input.equals("cancel"))
 			return new NPCDespawnDialog();
 		
-		DragonsLairMain.getInstance().getDungeonManager().despawnNPC(input);
+		DragonsLairMain.getDungeonManager().despawnNPC(input);
 		context.getForWhom().sendRawMessage(ChatColor.GREEN + "NPC despawned!");
 		return new NPCManageDialog();
 	}
@@ -32,7 +32,7 @@ public class NPCDespawnDialog extends ValidatingPrompt
 		
 		if(DragonsLairMain.getSettings().getNPCByName(input) != null)
 		{
-			if(DragonsLairMain.getInstance().getDungeonManager().getNPCByName(input) != null)
+			if(DragonsLairMain.getDungeonManager().getNPCByName(input) != null)
 				return true;
 			else
 			{

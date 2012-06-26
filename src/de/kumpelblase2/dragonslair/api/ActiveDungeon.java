@@ -179,7 +179,7 @@ public class ActiveDungeon
             Player p = Bukkit.getPlayer(member);
 			p.sendMap(mapview);
 			p.getInventory().addItem(map);
-			DragonsLairMain.getInstance().getDungeonManager().addMapHolder(p);
+			DragonsLairMain.getDungeonManager().addMapHolder(p);
 		}
 	}
 	

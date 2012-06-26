@@ -15,7 +15,7 @@ public class ObjectiveCompleteEventExecutor implements EventExecutor
 		try
 		{
 			int nextID = Integer.parseInt(e.getOption("objective_id"));
-			ActiveDungeon d = DragonsLairMain.getInstance().getDungeonManager().getDungeonOfPlayer(p.getName());
+			ActiveDungeon d = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
 			if(d == null)
 				return false;
 			

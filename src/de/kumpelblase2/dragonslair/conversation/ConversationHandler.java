@@ -32,7 +32,7 @@ public class ConversationHandler implements ConversationAbandonedListener
     	if(this.isInConversation(p))
     		p.abandonConversation(this.conversations.get(p.getName()).getConversation());
     	
-    	ConversationFactory f = DragonsLairMain.getInstance().getDungeonManager().getConversationFactory();
+    	ConversationFactory f = DragonsLairMain.getDungeonManager().getConversationFactory();
     	Conversation c = f.withFirstPrompt(ConversationHandler.getPromptByID(dialogID, n.getName())).buildConversation(p);
     	ConversationStartEvent event = new ConversationStartEvent(n.getName(), c, dialogID);
     	Bukkit.getPluginManager().callEvent(event);
@@ -69,7 +69,7 @@ public class ConversationHandler implements ConversationAbandonedListener
 	
 	public void startSafeWordConversation(Player p)
 	{
-		ConversationFactory f = DragonsLairMain.getInstance().getDungeonManager().getConversationFactory();
+		ConversationFactory f = DragonsLairMain.getDungeonManager().getConversationFactory();
     	Conversation c = f.withFirstPrompt(new SafeWordPrompt()).buildConversation(p);
     	p.beginConversation(c);
     	this.safeWordConversations.add(p.getName());

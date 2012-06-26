@@ -167,7 +167,7 @@ public class NPCManager
 		npcs.put(id, npc);
 		NPCRotationTask task = new NPCRotationTask(id);
 		this.npcRotationTasks.put(id, Bukkit.getScheduler().scheduleSyncRepeatingTask(DragonsLairMain.getInstance(), task, 2 * 20L, 2 * 20L));
-		DragonsLairMain.getInstance().getDungeonManager().getSpawnedNPCIDs().put(name, id);
+		DragonsLairMain.getDungeonManager().getSpawnedNPCIDs().put(name, id);
 		return npc;
 	}
 

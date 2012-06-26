@@ -25,7 +25,7 @@ public class PlayerQueue
 			}
 		}
 		
-		return DragonsLairMain.getInstance().getDungeonManager().startDungeon(dungeon.getID(), startingPlayers.toArray(new String[0]));
+		return DragonsLairMain.getDungeonManager().startDungeon(dungeon.getID(), startingPlayers.toArray(new String[0]));
 	}
 	
 	public void queuePlayer(String dungeon, Player p)

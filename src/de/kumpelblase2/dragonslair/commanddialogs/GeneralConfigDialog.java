@@ -3,6 +3,7 @@ package de.kumpelblase2.dragonslair.commanddialogs;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.*;
 import de.kumpelblase2.dragonslair.commanddialogs.chapters.ChapterManageDialog;
+import de.kumpelblase2.dragonslair.commanddialogs.dialogs.DialogManageDialog;
 import de.kumpelblase2.dragonslair.commanddialogs.dungeon.DungeonManageDialog;
 import de.kumpelblase2.dragonslair.commanddialogs.event.EventManageDialog;
 import de.kumpelblase2.dragonslair.commanddialogs.npc.NPCManageDialog;
@@ -13,7 +14,7 @@ public class GeneralConfigDialog extends FixedSetPrompt
 {
 	public GeneralConfigDialog()
 	{
-		super("dungeons", "npcs", "events", "triggers", "chapters", "objectives", "help", "exit");
+		super("dungeons", "npcs", "events", "triggers", "chapters", "objectives", "dialogs", "help", "exit");
 	}
 	
 	@Override
@@ -22,7 +23,7 @@ public class GeneralConfigDialog extends FixedSetPrompt
 		arg0.getForWhom().sendRawMessage(ChatColor.GREEN + "Welcome to the configuration of Dragons Lair! You can quit this at any point by saying '/exit' in the chat.");
 		arg0.getForWhom().sendRawMessage(ChatColor.YELLOW + "Note: While you're in this configuration, you can't chat!");
 		arg0.getForWhom().sendRawMessage(ChatColor.GREEN + "What do you want to manage?");
-		return ChatColor.AQUA + "dungeons, npcs, events, triggers, chapters, objectives, help, exit";
+		return ChatColor.AQUA + "dungeons, npcs, events, triggers, chapters, objectives, dialogs, help, exit";
 	}
 
 	@Override
@@ -55,6 +56,10 @@ public class GeneralConfigDialog extends FixedSetPrompt
 		else if(arg1.equals("objectives"))
 		{
 			return new ObjectiveManageDialog();
+		}
+		else if(arg1.equals("dialogs"))
+		{
+			return new DialogManageDialog();
 		}
 		else
 		{

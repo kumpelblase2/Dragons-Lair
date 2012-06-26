@@ -15,7 +15,7 @@ public class ConversationEvent extends BaseEvent
 	public ConversationEvent(String inName, Conversation inConv)
 	{
 		this.npc = DragonsLairMain.getSettings().getNPCByName(inName);
-		this.hnpc = DragonsLairMain.getInstance().getDungeonManager().getNPCByName(inName);
+		this.hnpc = DragonsLairMain.getDungeonManager().getNPCByName(inName);
 		this.conv = inConv;
 	}
 	

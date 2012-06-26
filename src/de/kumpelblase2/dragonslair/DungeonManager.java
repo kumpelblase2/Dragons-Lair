@@ -165,13 +165,13 @@ public class DungeonManager
 								@Override
 								public void run()
 								{
-									DragonsLairMain.getInstance().getDungeonManager().executeEvent(e, p);
+									DragonsLairMain.getDungeonManager().executeEvent(e, p);
 								}
 							}, Integer.parseInt(e.getOption("delay")) * 20L);
 						}
 						else
 						{
-							DragonsLairMain.getInstance().getDungeonManager().executeEvent(e, p);
+							DragonsLairMain.getDungeonManager().executeEvent(e, p);
 						}
 					}
 					t.use(name);
@@ -197,13 +197,13 @@ public class DungeonManager
 						@Override
 						public void run()
 						{
-							DragonsLairMain.getInstance().getDungeonManager().executeEvent(e, p);
+							DragonsLairMain.getDungeonManager().executeEvent(e, p);
 						}
 					}, Integer.parseInt(e.getOption("delay")) * 20L);
 				}
 				else
 				{
-					DragonsLairMain.getInstance().getDungeonManager().executeEvent(e, p);
+					DragonsLairMain.getDungeonManager().executeEvent(e, p);
 				}
 			}
 			t.use(name);
@@ -247,7 +247,7 @@ public class DungeonManager
 				for(NPC n : DragonsLairMain.getSettings().getNPCs().values())
 				{
 					if(n.shouldSpawnAtBeginning())
-						DragonsLairMain.getInstance().getDungeonManager().spawnNPC(n.getName());
+						DragonsLairMain.getDungeonManager().spawnNPC(n.getName());
 				}
 			}
 		});

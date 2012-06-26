@@ -13,7 +13,7 @@ public class DungeonRegisterEventExecutor implements EventExecutor
 		try
 		{
 			String dungeon_id = e.getOption("dungeon_id");
-			DragonsLairMain.getInstance().getDungeonManager().queuePlayer(p.getName(), Integer.parseInt(dungeon_id));
+			DragonsLairMain.getDungeonManager().queuePlayer(p.getName(), Integer.parseInt(dungeon_id));
 		}
 		catch(Exception ex)
 		{

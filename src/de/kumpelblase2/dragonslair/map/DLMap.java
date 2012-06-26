@@ -23,7 +23,7 @@ public class DLMap
 	public DLMap(Player p)
 	{
 		this.player = p.getName();
-		ActiveDungeon ad = DragonsLairMain.getInstance().getDungeonManager().getDungeonOfPlayer(this.player);
+		ActiveDungeon ad = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(this.player);
 		if(ad != null)
 		{
 			this.objectiveid = ad.getCurrentObjective().getID();
@@ -68,7 +68,7 @@ public class DLMap
 	
 	public void checkUpdate()
 	{
-		ActiveDungeon ad = DragonsLairMain.getInstance().getDungeonManager().getDungeonOfPlayer(this.player);
+		ActiveDungeon ad = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(this.player);
 		if(ad == null)
 			return;
 		

@@ -104,7 +104,7 @@ public class DLEventHandler implements Listener
 				if(!this.triggers.containsKey(TriggerType.NPC_INTERACT))
 					return;
 				
-				HumanNPC entitynpc = DragonsLairMain.getInstance().getDungeonManager().getNPCByEntity(event.getEntity());
+				HumanNPC entitynpc = DragonsLairMain.getDungeonManager().getNPCByEntity(event.getEntity());
 				NPC npc = DragonsLairMain.getSettings().getNPCByName(entitynpc.getName());
 				
 				for(Trigger t : this.triggers.get(TriggerType.NPC_INTERACT))
@@ -115,7 +115,7 @@ public class DLEventHandler implements Listener
 					
 					if(npcid.equals(npc.getID() + ""))
 					{
-						DragonsLairMain.getInstance().getDungeonManager().callTrigger(t, (Player)event.getTarget());
+						DragonsLairMain.getDungeonManager().callTrigger(t, (Player)event.getTarget());
 					}
 				}
 			}
@@ -124,7 +124,7 @@ public class DLEventHandler implements Listener
 				if(!this.triggers.containsKey(TriggerType.NPC_TOUCH))
 					return;
 				
-				HumanNPC entitynpc = DragonsLairMain.getInstance().getDungeonManager().getNPCByEntity(event.getEntity());
+				HumanNPC entitynpc = DragonsLairMain.getDungeonManager().getNPCByEntity(event.getEntity());
 				NPC npc = DragonsLairMain.getSettings().getNPCByName(entitynpc.getName());
 				
 				for(Trigger t : this.triggers.get(TriggerType.NPC_TOUCH))
@@ -135,7 +135,7 @@ public class DLEventHandler implements Listener
 					
 					if(npcid.equals(npc.getID() + ""))
 					{
-						DragonsLairMain.getInstance().getDungeonManager().callTrigger(t, (Player)event.getTarget());
+						DragonsLairMain.getDungeonManager().callTrigger(t, (Player)event.getTarget());
 					}
 				}
 			}
@@ -154,7 +154,7 @@ public class DLEventHandler implements Listener
 		if(!DragonsLairMain.isWorldEnabled(event.getDamager().getWorld().getName()))
 			return;
 		
-		HumanNPC entitynpc = DragonsLairMain.getInstance().getDungeonManager().getNPCByEntity(event.getDamager());
+		HumanNPC entitynpc = DragonsLairMain.getDungeonManager().getNPCByEntity(event.getDamager());
 		NPC npc = DragonsLairMain.getSettings().getNPCByName(entitynpc.getName());
 		
 		for(Trigger t : this.triggers.get(TriggerType.NPC_DAMAGE))
@@ -165,7 +165,7 @@ public class DLEventHandler implements Listener
 			
 			if(npcid.equals(npc.getID() + ""))
 			{
-				DragonsLairMain.getInstance().getDungeonManager().callTrigger(t, (Player)event.getDamager());
+				DragonsLairMain.getDungeonManager().callTrigger(t, (Player)event.getDamager());
 			}
 		}
 		
@@ -211,7 +211,7 @@ public class DLEventHandler implements Listener
 		{
 			Location newLoc = new Location(p.getWorld(), to.getBlockX(), to.getY(), to.getBlockZ());
 			if(this.locations.containsKey(newLoc))
-				DragonsLairMain.getInstance().getDungeonManager().callTrigger(this.locations.get(newLoc), p);
+				DragonsLairMain.getDungeonManager().callTrigger(this.locations.get(newLoc), p);
 		}
 	}
 	
@@ -233,7 +233,7 @@ public class DLEventHandler implements Listener
 					String id = t.getOption("dialog_id");
 					if(id.equals(event.getNextDialogID() + ""))
 					{
-						DragonsLairMain.getInstance().getDungeonManager().callTrigger(t, (Player)event.getConversation().getForWhom());
+						DragonsLairMain.getDungeonManager().callTrigger(t, (Player)event.getConversation().getForWhom());
 					}
 				}
 			}
@@ -247,7 +247,7 @@ public class DLEventHandler implements Listener
 		if(!DragonsLairMain.isWorldEnabled(p.getWorld().getName()))
 			return;
 		
-		ActiveDungeon d = DragonsLairMain.getInstance().getDungeonManager().getDungeonOfPlayer(p.getName());
+		ActiveDungeon d = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
 		if(d == null)
 			return;
 		
@@ -263,7 +263,7 @@ public class DLEventHandler implements Listener
 		if(!DragonsLairMain.isWorldEnabled(placed.getWorld().getName()))
 			return;
 		
-		ActiveDungeon ad = DragonsLairMain.getInstance().getDungeonManager().getDungeonOfPlayer(p.getName());
+		ActiveDungeon ad = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
 		if(ad != null)
 		{
 			DragonsLairMain.getInstance().getLoggingManager().logBlockPlace(ad, event.getBlock().getState());
@@ -314,7 +314,7 @@ public class DLEventHandler implements Listener
 			
 			if(x.equals(placed.getBlockX() + "") && y.equals(placed.getBlockY() + "") && z.equals(placed.getBlockZ() + ""))
 			{
-				DragonsLairMain.getInstance().getDungeonManager().callTrigger(t, p);
+				DragonsLairMain.getDungeonManager().callTrigger(t, p);
 			}
 		}
 	}
@@ -327,7 +327,7 @@ public class DLEventHandler implements Listener
 		if(!DragonsLairMain.isWorldEnabled(placed.getWorld().getName()))
 			return;
 		
-		ActiveDungeon ad = DragonsLairMain.getInstance().getDungeonManager().getDungeonOfPlayer(p.getName());
+		ActiveDungeon ad = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
 		if(ad != null)
 		{
 			DragonsLairMain.getInstance().getLoggingManager().logBlockBreak(ad, event.getBlock().getState());
@@ -376,7 +376,7 @@ public class DLEventHandler implements Listener
 				continue;
 			
 			if(x == (placed.getBlockX() < 0 ? placed.getBlockX() + 1 : placed.getBlockX()) && y == placed.getBlockY() && z == placed.getBlockZ())
-				DragonsLairMain.getInstance().getDungeonManager().callTrigger(t, p);
+				DragonsLairMain.getDungeonManager().callTrigger(t, p);
 		}
 	}
 	
@@ -386,7 +386,7 @@ public class DLEventHandler implements Listener
 		TNTEntry e = this.tntList.getEntry(event.getLocation());
 		if(e != null)
 		{
-			ActiveDungeon ad = DragonsLairMain.getInstance().getDungeonManager().getActiveDungeonByName(e.getDungeon());
+			ActiveDungeon ad = DragonsLairMain.getDungeonManager().getActiveDungeonByName(e.getDungeon());
 			if(ad == null)
 				return;
 			
@@ -453,7 +453,7 @@ public class DLEventHandler implements Listener
 			
 			if(x.equals(interacted.getBlockX() + "") && y.equals(interacted.getBlockY() + "") && z.equals(interacted.getBlockZ() + ""))
 			{
-				DragonsLairMain.getInstance().getDungeonManager().callTrigger(t, p);
+				DragonsLairMain.getDungeonManager().callTrigger(t, p);
 			}
 		}
 	}
@@ -482,7 +482,7 @@ public class DLEventHandler implements Listener
 			if(!chapter.equals(chapterid + ""))
 				continue;
 			
-			DragonsLairMain.getInstance().getDungeonManager().callTrigger(t, null);
+			DragonsLairMain.getDungeonManager().callTrigger(t, null);
 		}
 	}
 	
@@ -510,7 +510,7 @@ public class DLEventHandler implements Listener
 			if(!objective.equals(objectiveid + ""))
 				continue;
 			
-			DragonsLairMain.getInstance().getDungeonManager().callTrigger(t, null);
+			DragonsLairMain.getDungeonManager().callTrigger(t, null);
 		}
 	}
 	
@@ -522,10 +522,10 @@ public class DLEventHandler implements Listener
 		if(current == null || current.getType() != Material.MAP)
 			return;
 
-		if(DragonsLairMain.getInstance().getDungeonManager().getDungeonOfPlayer(p.getName()) == null)
+		if(DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName()) == null)
 			return;
 		
-		DLMap map = DragonsLairMain.getInstance().getDungeonManager().getMapOfPlayer(p);
+		DLMap map = DragonsLairMain.getDungeonManager().getMapOfPlayer(p);
 		if(map == null)
 			return;
 		
@@ -543,7 +543,7 @@ public class DLEventHandler implements Listener
 	{
 		Player p = event.getPlayer();
 		ItemStack dropped = event.getItemDrop().getItemStack();
-		if(DragonsLairMain.getInstance().getDungeonManager().getDungeonOfPlayer(p.getName()) == null)
+		if(DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName()) == null)
 			return;
 		
 		if(dropped.getType() != Material.MAP)
@@ -560,7 +560,7 @@ public class DLEventHandler implements Listener
 		if(!DragonsLairMain.isWorldEnabled(p.getWorld().getName()))
 			return;
 		
-		ActiveDungeon ad = DragonsLairMain.getInstance().getDungeonManager().getDungeonOfPlayer(p.getName());
+		ActiveDungeon ad = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
 		if(ad == null)
 			return;
 		
@@ -597,11 +597,11 @@ public class DLEventHandler implements Listener
 	public void onPlayerExit(PlayerQuitEvent event)
 	{
 		Player p = event.getPlayer();
-		ActiveDungeon ad = DragonsLairMain.getInstance().getDungeonManager().getDungeonOfPlayer(p.getName());
+		ActiveDungeon ad = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
 		if(ad == null)
 			return;
 		
-		DragonsLairMain.getInstance().getDungeonManager().stopDungeon(ad.getInfo().getName());
+		DragonsLairMain.getDungeonManager().stopDungeon(ad.getInfo().getName());
 	}
 	
 	/*@EventHandler
@@ -653,7 +653,7 @@ public class DLEventHandler implements Listener
 			Location loc = b.getLocation();
 			if(x.equals(loc.getBlockX() + "") && y.equals(loc.getBlockY() + "") && z.equals(loc.getBlockZ() + ""))
 			{
-				DragonsLairMain.getInstance().getDungeonManager().callTrigger(t, p);
+				DragonsLairMain.getDungeonManager().callTrigger(t, p);
 			}
 		}
 	}*/
@@ -713,7 +713,7 @@ public class DLEventHandler implements Listener
 			
 			if(dungeonid != -1)
 			{
-				ActiveDungeon ad = DragonsLairMain.getInstance().getDungeonManager().getDungeonOfPlayer(p.getName());
+				ActiveDungeon ad = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
 				if(ad == null)
 					continue;
 				
@@ -724,7 +724,7 @@ public class DLEventHandler implements Listener
 			if(pickedUp.getType() == m)
 			{
 				if(pickedUp.getAmount() >= amount)
-					DragonsLairMain.getInstance().getDungeonManager().callTrigger(t, p);
+					DragonsLairMain.getDungeonManager().callTrigger(t, p);
 				else
 				{
 					amount -= pickedUp.getAmount();
@@ -735,7 +735,7 @@ public class DLEventHandler implements Listener
 						for(ItemStack item : items.values())
 						{
 							if(item.getAmount() >= amount)
-								DragonsLairMain.getInstance().getDungeonManager().callTrigger(t, p);
+								DragonsLairMain.getDungeonManager().callTrigger(t, p);
 							else
 								amount -= item.getAmount();
 						}
@@ -758,7 +758,7 @@ public class DLEventHandler implements Listener
 		if(!DragonsLairMain.isWorldEnabled(killer.getWorld().getName()))
 			return;
 		
-		ActiveDungeon ad = DragonsLairMain.getInstance().getDungeonManager().getDungeonOfPlayer(killer.getName());
+		ActiveDungeon ad = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(killer.getName());
 		if(ad == null)
 			return;
 		
@@ -776,7 +776,7 @@ public class DLEventHandler implements Listener
 			if(!this.triggers.containsKey(TriggerType.NPC_DEATH))
 				return;
 			
-			NPC n = DragonsLairMain.getSettings().getNPCByName(DragonsLairMain.getInstance().getDungeonManager().getNPCByEntity(e).getName());
+			NPC n = DragonsLairMain.getSettings().getNPCByName(DragonsLairMain.getDungeonManager().getNPCByEntity(e).getName());
 			if(n != null)
 			{
 				for(Trigger t : this.triggers.get(TriggerType.NPC_DEATH))
@@ -788,7 +788,7 @@ public class DLEventHandler implements Listener
 					if(!(n.getID() + "").equals(t.getOption("npc_id")))
 						continue;
 					
-					DragonsLairMain.getInstance().getDungeonManager().callTrigger(t, killer);
+					DragonsLairMain.getDungeonManager().callTrigger(t, killer);
 				}
 			}
 		}
@@ -797,8 +797,8 @@ public class DLEventHandler implements Listener
 			if(!this.triggers.containsKey(TriggerType.MOBS_KILLED))
 				return;
 			
-			Event spawnEvent = DragonsLairMain.getInstance().getDungeonManager().getEventFromMob(e);
-			int amount = DragonsLairMain.getInstance().getDungeonManager().addMobKill(ad, e, spawnEvent);
+			Event spawnEvent = DragonsLairMain.getDungeonManager().getEventFromMob(e);
+			int amount = DragonsLairMain.getDungeonManager().addMobKill(ad, e, spawnEvent);
 			for(Trigger t : this.triggers.get(TriggerType.MOBS_KILLED))
 			{
 				if(Integer.parseInt(t.getOption("amount")) > amount)
@@ -827,7 +827,7 @@ public class DLEventHandler implements Listener
 					}
 				}
 				
-				DragonsLairMain.getInstance().getDungeonManager().callTrigger(t, killer);
+				DragonsLairMain.getDungeonManager().callTrigger(t, killer);
 			}
 		}
 	}

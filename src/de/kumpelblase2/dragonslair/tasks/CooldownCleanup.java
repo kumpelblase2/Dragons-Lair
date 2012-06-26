@@ -9,7 +9,7 @@ public class CooldownCleanup implements Runnable
 {
 	public void run()
 	{
-		DungeonManager manager = DragonsLairMain.getInstance().getDungeonManager();
+		DungeonManager manager = DragonsLairMain.getDungeonManager();
 		if(manager == null)
 			return;
 		

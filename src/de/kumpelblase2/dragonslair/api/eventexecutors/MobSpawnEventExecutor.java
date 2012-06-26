@@ -29,8 +29,8 @@ public class MobSpawnEventExecutor implements EventExecutor
 			int z = Integer.parseInt(e.getOption("z"));
 			World w = Bukkit.getWorld(world);
 			Location l = new Location(w, x, y, z);
-			ActiveDungeon ad = DragonsLairMain.getInstance().getDungeonManager().getDungeonOfPlayer(p.getName());
-			DungeonManager dm = DragonsLairMain.getInstance().getDungeonManager();
+			ActiveDungeon ad = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
+			DungeonManager dm = DragonsLairMain.getDungeonManager();
 			for(int i = 0; i < amount; i++)
 			{
 				if(ad != null)
