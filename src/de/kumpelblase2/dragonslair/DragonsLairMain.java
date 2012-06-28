@@ -31,7 +31,7 @@ public class DragonsLairMain extends JavaPlugin
 	private DLEventHandler eventHandler;
 	private ConversationHandler conversationHandler;
 	private LoggingManager logManager;
-	private final int DATABASE_REV = 7;
+	private final int DATABASE_REV = 8;
 	private boolean citizensEnabled = false;
 	private boolean economyEnabled = false;
 	private Economy econ;
@@ -95,6 +95,7 @@ public class DragonsLairMain extends JavaPlugin
 				manager.setEventExecutor(EventActionType.ADD_POTION_EFFECT, new AddPotionEffectEventExecutor());
 				manager.setEventExecutor(EventActionType.REMOVE_POTION_EFFECT, new RemovePotionEffectEventExecutor());
 				manager.setEventExecutor(EventActionType.KILL_PLAYER, new KillPlayerEventExecutor());
+				manager.setEventExecutor(EventActionType.SET_LEVEL, new SetLevelEventExecutor());
 				
 				createMetricsData();
 				if(checkCitizen())
