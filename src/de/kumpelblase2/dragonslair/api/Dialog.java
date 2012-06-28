@@ -76,24 +76,21 @@ public class Dialog
 	
 	public void setNextID(AnswerType inType, int inId)
 	{
-		if(id == 0)
+		System.out.println(inId);
+		if(inId == 0)
 			this.nextIDs.remove(inType);
 		else
-			this.nextIDs.put(inType, id);
+			this.nextIDs.put(inType, inId);
+		
+		System.out.println(this.nextIDs.get(inType));
 	}
 	
 	public void setNextIDs(Map<AnswerType, Integer> inNext)
 	{
-		Iterator<Entry<AnswerType, Integer>> it = inNext.entrySet().iterator();
-		
-		while(it.hasNext())
+		for(Entry<AnswerType, Integer> entry : inNext.entrySet())
 		{
-			Entry<AnswerType, Integer> entry = it.next();
-			if(entry.getValue() == 0)
-				it.remove();
+			this.setNextID(entry.getKey(), entry.getValue());
 		}
-		
-		this.nextIDs = inNext;
 	}
 	
 	public Map<AnswerType, Integer> getNextIDs()
@@ -129,6 +126,13 @@ public class Dialog
 						"next_consider_disagreement_id," +
 						"next_consider_id" +
 						") VALUES(?,?,?,?,?,?,?)");
+				
+				for(Entry<AnswerType, Integer> entry : this.nextIDs.entrySet())
+				{
+					System.out.println(entry.getKey() + ":" + entry.getValue());
+				}
+				
+				
 				st.setInt(1, this.id);
 				st.setString(2, this.text);
 				if(this.nextIDs.get(AnswerType.AGREEMENT) == null)
