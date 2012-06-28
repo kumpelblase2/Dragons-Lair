@@ -465,8 +465,7 @@ public class DragonsLairMain extends JavaPlugin
 		}
 		catch (Exception e)
 		{
-			Log.info("There was an issue while trying to check for updates therefore it has been cancelled.");
-			e.printStackTrace();
+			Log.info("There was an issue while trying to check for updates therefore it has been cancelled. " + e.getMessage());
 		}
 	}
 	
