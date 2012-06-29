@@ -27,7 +27,7 @@ public enum EventActionOptions
 	ADD_POTION_EFFECT(new String[] { "potiontype", "amplifier", "duration" }, new String[] { "scope", "cooldown", "delay" }),
 	REMOVE_POTION_EFFECT(new String[] { "potiontype" }, new String[] { "duration", "scope", "cooldown", "delay" }),
 	KILL_PLAYER(new String[0], new String[] { "scope", "cooldown", "delay" }),
-	SET_LEVEL(new String[] { "level" }, new String[] { "scope", "cooldown", "delay" });
+	CHANGE_LEVEL(new String[] { "amount", "change_type" }, new String[] { "scope", "cooldown", "delay" });
 	
 	private String[] requiredOptions;
 	private String[] optionalOptions;

@@ -95,7 +95,7 @@ public class DragonsLairMain extends JavaPlugin
 				manager.setEventExecutor(EventActionType.ADD_POTION_EFFECT, new AddPotionEffectEventExecutor());
 				manager.setEventExecutor(EventActionType.REMOVE_POTION_EFFECT, new RemovePotionEffectEventExecutor());
 				manager.setEventExecutor(EventActionType.KILL_PLAYER, new KillPlayerEventExecutor());
-				manager.setEventExecutor(EventActionType.SET_LEVEL, new SetLevelEventExecutor());
+				manager.setEventExecutor(EventActionType.CHANGE_LEVEL, new ChangeLevelEventExecutor());
 				
 				createMetricsData();
 				if(checkCitizen())

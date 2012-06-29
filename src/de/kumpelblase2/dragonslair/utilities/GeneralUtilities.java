@@ -77,7 +77,7 @@ public class GeneralUtilities
 			}
 			return true;
 		}
-		else if(option.equalsIgnoreCase("x") || option.equalsIgnoreCase("y") || option.equalsIgnoreCase("z") || option.equalsIgnoreCase("x2") || option.equalsIgnoreCase("y2") || option.equalsIgnoreCase("z2") || option.equalsIgnoreCase("amount") || option.equalsIgnoreCase("damage") || option.equalsIgnoreCase("cooldown") || option.equalsIgnoreCase("duration") || option.equalsIgnoreCase("amplifier") || option.equalsIgnoreCase("level"))
+		else if(option.equalsIgnoreCase("x") || option.equalsIgnoreCase("y") || option.equalsIgnoreCase("z") || option.equalsIgnoreCase("x2") || option.equalsIgnoreCase("y2") || option.equalsIgnoreCase("z2") || option.equalsIgnoreCase("amount") || option.equalsIgnoreCase("damage") || option.equalsIgnoreCase("cooldown") || option.equalsIgnoreCase("duration") || option.equalsIgnoreCase("amplifier"))
 		{
 			try
 			{
@@ -322,6 +322,10 @@ public class GeneralUtilities
 					return true;
 			}
 			return false;
+		}
+		else if(option.equalsIgnoreCase("change_type"))
+		{
+			return arg1.equals("add") || arg1.equals("remove") || arg1.equals("set");
 		}
 		else
 		{
