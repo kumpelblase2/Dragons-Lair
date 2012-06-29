@@ -16,7 +16,8 @@ public enum TriggerTypeOptions
 	NPC_DAMAGE(new String[] { "npc_id" }, new String[] { "delay", "cooldown" }),
 	GATHER_ITEM(new String[] { "item_id", "amount" }, new String[] { "dungeon_id", "delay", "cooldown" }),
 	MOBS_KILLED(new String[] { "amount", "dungeon_id" }, new String[] { "mob_id", "spawned_by", "cooldown" }),
-	NPC_DEATH(new String[] { "npc_id" }, new String[] { "cooldown" });
+	NPC_DEATH(new String[] { "npc_id" }, new String[] { "cooldown" }),
+	LEVEL_ACHIEVE(new String[] { "amount" }, new String[] { "dungeon_id", "delay", "cooldown" });
 	
 	private String[] requiredOptions;
 	private String[] optionalOptions;

@@ -831,4 +831,43 @@ public class DLEventHandler implements Listener
 			}
 		}
 	}
+	
+	@EventHandler
+	public void onLevelChange(PlayerLevelChangeEvent event)
+	{
+		if(!this.triggers.containsKey(TriggerType.LEVEL_ACHIEVE))
+			return;
+		
+		Player p = event.getPlayer();
+		ActiveDungeon ad = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
+		for(Trigger t : this.triggers.get(TriggerType.LEVEL_ACHIEVE))
+		{
+			int level = Integer.parseInt(t.getOption("amount"));
+			if(level == event.getNewLevel())
+			{
+				String dungeonid = t.getOption("dungeon_id");
+				if(dungeonid == null)
+				{
+					DragonsLairMain.getDungeonManager().callTrigger(t, p);
+				}
+				else
+				{
+					if(ad == null)
+						continue;
+					
+					try
+					{
+						int id = Integer.parseInt(dungeonid);
+						if(ad.getInfo().getID() == id)
+							DragonsLairMain.getDungeonManager().callTrigger(t, p);
+					}
+					catch(Exception e)
+					{
+						if(ad.getInfo().getName().equals(dungeonid))
+							DragonsLairMain.getDungeonManager().callTrigger(t, p);
+					}
+				}
+			}
+		}
+	}
 }
