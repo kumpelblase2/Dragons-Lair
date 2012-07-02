@@ -253,7 +253,7 @@ public class GeneralUtilities
 			else
 				return true;
 		}
-		else if(option.equalsIgnoreCase("safe word") || option.equalsIgnoreCase("message") || option.equalsIgnoreCase("permission"))
+		else if(option.equalsIgnoreCase("safe word") || option.equalsIgnoreCase("message") || option.equalsIgnoreCase("permission") || option.equalsIgnoreCase("command"))
 		{
 			return true;
 		}
@@ -326,6 +326,10 @@ public class GeneralUtilities
 		else if(option.equalsIgnoreCase("change_type"))
 		{
 			return arg1.equals("add") || arg1.equals("remove") || arg1.equals("set");
+		}
+		else if(option.equalsIgnoreCase("execute_as"))
+		{
+			return arg1.equals("player") || arg1.equals("console");
 		}
 		else
 		{
