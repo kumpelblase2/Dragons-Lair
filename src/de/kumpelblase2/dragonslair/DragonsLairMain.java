@@ -281,7 +281,7 @@ public class DragonsLairMain extends JavaPlugin
 	{
 		try
 		{
-			BufferedReader r = new BufferedReader(new InputStreamReader(DragonsLairMain.class.getResourceAsStream(File.separator + "resources" + File.separator + "rev" + nextRev + ".txt")));
+			BufferedReader r = new BufferedReader(new InputStreamReader(DragonsLairMain.class.getResourceAsStream("/resources/rev" + nextRev + ".txt")));
 			String s = "";
 			while((s = r.readLine()) != null)
 			{
