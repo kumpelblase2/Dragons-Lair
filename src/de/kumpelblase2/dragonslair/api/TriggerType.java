@@ -14,5 +14,6 @@ public enum TriggerType
 	NPC_DAMAGE,
 	GATHER_ITEM,
 	MOBS_KILLED,
-	NPC_DEATH
+	NPC_DEATH,
+	LEVEL_ACHIEVE
 }

@@ -22,11 +22,15 @@ public class NPCDialogEventExecutor implements EventExecutor
 		int dialog = -1;
 		try
 		{
-			Integer id = Integer.parseInt(npcid);
-			if(!DragonsLairMain.getSettings().getNPCs().containsKey(id))
-				return false;
-			
-			npc = DragonsLairMain.getSettings().getNPCs().get(id);
+			npc = DragonsLairMain.getSettings().getNPCByName(npcid);
+			if(npc == null)
+			{			
+				Integer id = Integer.parseInt(npcid);
+				if(!DragonsLairMain.getSettings().getNPCs().containsKey(id))
+					return false;
+				
+				npc = DragonsLairMain.getSettings().getNPCs().get(id);
+			}
 			if(dialogid == null)
 				return false;
 			else

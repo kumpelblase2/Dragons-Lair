@@ -15,11 +15,14 @@ public class NPCStopAttackEventExecutor implements EventExecutor
 		String npcid = e.getOption("npc_id");
 		try
 		{
-			int id = Integer.parseInt(npcid);
-			NPC n = DragonsLairMain.getSettings().getNPCs().get(id);
+			NPC n = DragonsLairMain.getSettings().getNPCByName(npcid);
 			if(n == null)
-				return false;
-			
+			{
+				int id = Integer.parseInt(npcid);
+				n = DragonsLairMain.getSettings().getNPCs().get(id);
+				if(n == null)
+					return false;
+			}
 			HumanNPC npc = DragonsLairMain.getDungeonManager().getNPCByName(n.getName());
 			if(npc != null)
 				npc.stopAttacking();

@@ -31,7 +31,7 @@ public class DragonsLairMain extends JavaPlugin
 	private DLEventHandler eventHandler;
 	private ConversationHandler conversationHandler;
 	private LoggingManager logManager;
-	private final int DATABASE_REV = 7;
+	private final int DATABASE_REV = 8;
 	private boolean citizensEnabled = false;
 	private boolean economyEnabled = false;
 	private Economy econ;
@@ -94,7 +94,10 @@ public class DragonsLairMain extends JavaPlugin
 				manager.setEventExecutor(EventActionType.SAY, new SayEventExecutor());
 				manager.setEventExecutor(EventActionType.ADD_POTION_EFFECT, new AddPotionEffectEventExecutor());
 				manager.setEventExecutor(EventActionType.REMOVE_POTION_EFFECT, new RemovePotionEffectEventExecutor());
-				manager.setEventExecutor(EventActionType.KILL_PLAYER, new KillPlayerEventExecutor());
+				manager.setEventExecutor(EventActionType.CHANGE_LEVEL, new ChangeLevelEventExecutor());
+				manager.setEventExecutor(EventActionType.CHANGE_HEALTH, new ChangeHealthEventExecutor());
+				manager.setEventExecutor(EventActionType.CHANGE_HUNGER, new ChangeHungerEventExecutor());
+				manager.setEventExecutor(EventActionType.EXECUTE_COMMAND, new ExecuteCommandEventExecutor());
 				
 				createMetricsData();
 				if(checkCitizen())
@@ -223,13 +226,13 @@ public class DragonsLairMain extends JavaPlugin
 		}
 		catch (ClassNotFoundException e)
 		{
-			Log.warning("Couldn't start MySQL Driver. Stopping...\n" + e.getMessage());
+			Log.warning("Couldn't start SQL Driver. Stopping...\n" + e.getMessage());
 			getServer().getPluginManager().disablePlugin(this);
 			return false;
 		}
 		catch (SQLException e)
 		{
-			Log.warning("Couldn't connect to MySQL database. Stopping...\n" + e.getMessage());
+			Log.warning("Couldn't connect to SQL database. Stopping...\n" + e.getMessage());
 			getServer().getPluginManager().disablePlugin(this);
 			return false;
 		}
@@ -278,7 +281,7 @@ public class DragonsLairMain extends JavaPlugin
 	{
 		try
 		{
-			BufferedReader r = new BufferedReader(new InputStreamReader(DragonsLairMain.class.getResourceAsStream(File.separator + "resources" + File.separator + "rev" + nextRev)));
+			BufferedReader r = new BufferedReader(new InputStreamReader(DragonsLairMain.class.getResourceAsStream(File.separator + "resources" + File.separator + "rev" + nextRev + ".txt")));
 			String s = "";
 			while((s = r.readLine()) != null)
 			{
@@ -296,7 +299,7 @@ public class DragonsLairMain extends JavaPlugin
 		Connection conn = getInstance().getMysqlConnection();
 		try
 		{
-			if(conn == null || conn.isClosed())
+			if(conn == null || !isDatabaseAlive())
 				DragonsLairMain.getInstance().setupDatabase();
 
 			return conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -465,8 +468,7 @@ public class DragonsLairMain extends JavaPlugin
 		}
 		catch (Exception e)
 		{
-			Log.info("There was an issue while trying to check for updates therefore it has been cancelled.");
-			e.printStackTrace();
+			Log.info("There was an issue while trying to check for updates therefore it has been cancelled. " + e.getMessage());
 		}
 	}
 	
@@ -492,5 +494,18 @@ public class DragonsLairMain extends JavaPlugin
 	public static boolean isWorldEnabled(String inName)
 	{
 		return getInstance().getConfig().getStringList("enabled-worlds").contains(inName);
+	}
+	
+	private static boolean isDatabaseAlive()
+	{
+		try
+		{
+			getInstance().getMysqlConnection().prepareStatement("DO 1").execute();
+			return true;
+		}
+		catch(Exception e)
+		{
+			return false;
+		}
 	}
 }

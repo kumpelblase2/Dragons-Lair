@@ -31,7 +31,7 @@ import de.kumpelblase2.dragonslair.utilities.InventoryUtilities;
 public class DLEventHandler implements Listener
 {
 	private Map<TriggerType, Set<Trigger>> triggers = new HashMap<TriggerType, Set<Trigger>>();
-	private Map<Location, Trigger> locations = new HashMap<Location, Trigger>();
+	private Set<TriggerLocationEntry> locations = new HashSet<TriggerLocationEntry>();
 	private TNTList tntList = new TNTList();
 	
 	public void reloadTriggers()
@@ -41,7 +41,7 @@ public class DLEventHandler implements Listener
 		
 		for(Trigger t : DragonsLairMain.getSettings().getTriggers().values())
 		{
-			if(t.getType() != TriggerType.MOVEMENT)
+			if(t.getOption("x") == null || t.getOption("y") == null || t.getOption("z") == null)
 			{
 				if(!this.triggers.containsKey(t.getType()))
 					this.triggers.put(t.getType(), new HashSet<Trigger>());
@@ -82,11 +82,25 @@ public class DLEventHandler implements Listener
 					{
 						for(int posz = minz; posz <= maxz; posz++)
 						{
-							locations.put(new Location(Bukkit.getWorld(world), posx, posy, posz), t);
+							Location loc = new Location(Bukkit.getWorld(world), posx, posy, posz);
+							boolean added = false;
+							for(TriggerLocationEntry entry : this.locations)
+							{
+								if(entry.equals(loc))
+								{
+									entry.addTrigger(t);
+									added = true;
+								}
+							}
+							if(!added)
+							{
+								TriggerLocationEntry entry = new TriggerLocationEntry(loc);
+								entry.addTrigger(t);
+								this.locations.add(entry);
+							}
 						}
 					}
 				}
-				
 			}
 		}
 	}
@@ -210,8 +224,16 @@ public class DLEventHandler implements Listener
 		if(this.locations.size() > 0)
 		{
 			Location newLoc = new Location(p.getWorld(), to.getBlockX(), to.getY(), to.getBlockZ());
-			if(this.locations.containsKey(newLoc))
-				DragonsLairMain.getDungeonManager().callTrigger(this.locations.get(newLoc), p);
+			for(TriggerLocationEntry entry : this.locations)
+			{
+				if(entry.equals(newLoc))
+				{
+					for(Trigger t : entry.getTriggersForType(TriggerType.MOVEMENT))
+					{
+						DragonsLairMain.getDungeonManager().callTrigger(t, p);
+					}
+				}
+			}
 		}
 	}
 	
@@ -275,46 +297,38 @@ public class DLEventHandler implements Listener
 		if(!this.triggers.containsKey(TriggerType.BLOCK_PLACE))
 			return;
 		
-		for(Trigger t : this.triggers.get(TriggerType.BLOCK_PLACE))
+		
+		for(TriggerLocationEntry entry : this.locations)
 		{
-			String x, y, z, block_id;
-			x = t.getOption("x");
-			y = t.getOption("y");
-			z = t.getOption("z");
-			block_id = t.getOption("block_id");
-			String world = t.getOption("world");
-			if(x == null || y == null || z == null)
-				continue;
-			
-			if(!world.equals(placed.getWorld().getName()))
-				continue;
-			
-			if(block_id != null)
+			if(entry.equals(event.getBlock().getLocation()))
 			{
-				try
+				for(Trigger t : entry.getTriggersForType(TriggerType.BLOCK_PLACE))
 				{
-					int id = Integer.parseInt(block_id);
-					Material m = Material.getMaterial(id);
-					if(m != null)
+					String block_id = t.getOption("block_id");
+					if(block_id != null)
 					{
-						if(placed.getBlock().getType() != m)
-							continue;
+						try
+						{
+							int id = Integer.parseInt(block_id);
+							Material m = Material.getMaterial(id);
+							if(m != null)
+							{
+								if(placed.getBlock().getType() != m)
+									continue;
+							}
+						}
+						catch(Exception e)
+						{
+							Material m = Material.getMaterial(block_id.replace(" ", "_").toUpperCase());
+							if(m != null)
+							{
+								if(placed.getBlock().getType() != m)
+									continue;
+							}
+						}
 					}
+					DragonsLairMain.getDungeonManager().callTrigger(t, p);
 				}
-				catch(Exception e)
-				{
-					Material m = Material.getMaterial(block_id.replace(" ", "_").toUpperCase());
-					if(m != null)
-					{
-						if(placed.getBlock().getType() != m)
-							continue;
-					}
-				}
-			}
-			
-			if(x.equals(placed.getBlockX() + "") && y.equals(placed.getBlockY() + "") && z.equals(placed.getBlockZ() + ""))
-			{
-				DragonsLairMain.getDungeonManager().callTrigger(t, p);
 			}
 		}
 	}
@@ -336,47 +350,38 @@ public class DLEventHandler implements Listener
 		if(!this.triggers.containsKey(TriggerType.BLOCK_BREAK))
 			return;
 		
-		for(Trigger t : this.triggers.get(TriggerType.BLOCK_BREAK))
+		for(TriggerLocationEntry entry : this.locations)
 		{
-			String block_id;
-			block_id = t.getOption("block_id");
-			String world = t.getOption("world");
-			if(t.getOption("x") == null || t.getOption("y") == null || t.getOption("z") == null)
-				continue;
-			
-			int x, y, z;
-			x = Integer.parseInt(t.getOption("x"));
-			y = Integer.parseInt(t.getOption("y"));
-			z = Integer.parseInt(t.getOption("z"));
-			
-			if(block_id != null)
+			if(entry.equals(event.getBlock().getLocation()))
 			{
-				try
+				for(Trigger t : entry.getTriggersForType(TriggerType.BLOCK_BREAK))
 				{
-					int id = Integer.parseInt(block_id);
-					Material m = Material.getMaterial(id);
-					if(m != null)
+					String block_id = t.getOption("block_id");
+					if(block_id != null)
 					{
-						if(placed.getBlock().getType() != m)
-							continue;
+						try
+						{
+							int id = Integer.parseInt(block_id);
+							Material m = Material.getMaterial(id);
+							if(m != null)
+							{
+								if(placed.getBlock().getType() != m)
+									continue;
+							}
+						}
+						catch(Exception e)
+						{
+							Material m = Material.getMaterial(block_id.replace(" ", "_").toUpperCase());
+							if(m != null)
+							{
+								if(placed.getBlock().getType() != m)
+									continue;
+							}
+						}
 					}
-				}
-				catch(Exception e)
-				{
-					Material m = Material.getMaterial(block_id.replace(" ", "_").toUpperCase());
-					if(m != null)
-					{
-						if(placed.getBlock().getType() != m)
-							continue;
-					}
+					DragonsLairMain.getDungeonManager().callTrigger(t, p);
 				}
 			}
-			
-			if(!world.equals(placed.getWorld().getName()))
-				continue;
-			
-			if(x == (placed.getBlockX() < 0 ? placed.getBlockX() + 1 : placed.getBlockX()) && y == placed.getBlockY() && z == placed.getBlockZ())
-				DragonsLairMain.getDungeonManager().callTrigger(t, p);
 		}
 	}
 	
@@ -414,46 +419,37 @@ public class DLEventHandler implements Listener
 		if(!this.triggers.containsKey(TriggerType.BLOCK_INTERACT))
 			return;
 		
-		for(Trigger t : this.triggers.get(TriggerType.BLOCK_INTERACT))
+		for(TriggerLocationEntry entry : this.locations)
 		{
-			String x, y, z, block_id;
-			x = t.getOption("x");
-			y = t.getOption("y");
-			z = t.getOption("z");
-			block_id = t.getOption("block_id");
-			String world = t.getOption("world");
-			if(x == null || y == null || z == null)
-				continue;
-			
-			if(block_id != null)
+			if(entry.equals(interactedBlock.getLocation()))
 			{
-				try
+				for(Trigger t : entry.getTriggersForType(TriggerType.BLOCK_INTERACT))
 				{
-					int id = Integer.parseInt(block_id);
-					Material m = Material.getMaterial(id);
-					if(m != null)
+					String block_id = t.getOption("block_id");
+					if(block_id != null)
 					{
-						if(interactedBlock.getType() != m)
-							continue;
+						try
+						{
+							int id = Integer.parseInt(block_id);
+							Material m = Material.getMaterial(id);
+							if(m != null)
+							{
+								if(interactedBlock.getType() != m)
+									continue;
+							}
+						}
+						catch(Exception e)
+						{
+							Material m = Material.getMaterial(block_id.replace(" ", "_").toUpperCase());
+							if(m != null)
+							{
+								if(interactedBlock.getType() != m)
+									continue;
+							}
+						}
 					}
+					DragonsLairMain.getDungeonManager().callTrigger(t, p);
 				}
-				catch(Exception e)
-				{
-					Material m = Material.getMaterial(block_id.replace(" ", "_").toUpperCase());
-					if(m != null)
-					{
-						if(interactedBlock.getType() != m)
-							continue;
-					}
-				}
-			}
-			
-			if(!world.equals(interacted.getWorld().getName()))
-				continue;
-			
-			if(x.equals(interacted.getBlockX() + "") && y.equals(interacted.getBlockY() + "") && z.equals(interacted.getBlockZ() + ""))
-			{
-				DragonsLairMain.getDungeonManager().callTrigger(t, p);
 			}
 		}
 	}
@@ -828,6 +824,45 @@ public class DLEventHandler implements Listener
 				}
 				
 				DragonsLairMain.getDungeonManager().callTrigger(t, killer);
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onLevelChange(PlayerLevelChangeEvent event)
+	{
+		if(!this.triggers.containsKey(TriggerType.LEVEL_ACHIEVE))
+			return;
+		
+		Player p = event.getPlayer();
+		ActiveDungeon ad = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
+		for(Trigger t : this.triggers.get(TriggerType.LEVEL_ACHIEVE))
+		{
+			int level = Integer.parseInt(t.getOption("amount"));
+			if(level == event.getNewLevel())
+			{
+				String dungeonid = t.getOption("dungeon_id");
+				if(dungeonid == null)
+				{
+					DragonsLairMain.getDungeonManager().callTrigger(t, p);
+				}
+				else
+				{
+					if(ad == null)
+						continue;
+					
+					try
+					{
+						int id = Integer.parseInt(dungeonid);
+						if(ad.getInfo().getID() == id)
+							DragonsLairMain.getDungeonManager().callTrigger(t, p);
+					}
+					catch(Exception e)
+					{
+						if(ad.getInfo().getName().equals(dungeonid))
+							DragonsLairMain.getDungeonManager().callTrigger(t, p);
+					}
+				}
 			}
 		}
 	}

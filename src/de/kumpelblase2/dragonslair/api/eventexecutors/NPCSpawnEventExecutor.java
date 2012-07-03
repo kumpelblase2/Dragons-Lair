@@ -3,6 +3,7 @@ package de.kumpelblase2.dragonslair.api.eventexecutors;
 import org.bukkit.entity.Player;
 import de.kumpelblase2.dragonslair.DragonsLairMain;
 import de.kumpelblase2.dragonslair.api.Event;
+import de.kumpelblase2.dragonslair.api.NPC;
 
 public class NPCSpawnEventExecutor implements EventExecutor
 {
@@ -16,11 +17,19 @@ public class NPCSpawnEventExecutor implements EventExecutor
 		
 		try
 		{
-			int id = Integer.parseInt(npc);
-			if(!DragonsLairMain.getSettings().getNPCs().containsKey(id))
-				return false;
-			
-			DragonsLairMain.getDungeonManager().spawnNPC(DragonsLairMain.getSettings().getNPCs().get(id).getName());
+			NPC n = DragonsLairMain.getSettings().getNPCByName(npc);
+			if(n == null)
+			{
+				int id = Integer.parseInt(npc);
+				if(!DragonsLairMain.getSettings().getNPCs().containsKey(id))
+					return false;
+				
+				DragonsLairMain.getDungeonManager().spawnNPC(DragonsLairMain.getSettings().getNPCs().get(id).getName());
+			}
+			else
+			{
+				DragonsLairMain.getDungeonManager().spawnNPC(n.getName());
+			}
 		}
 		catch(Exception ex)
 		{
