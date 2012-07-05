@@ -43,6 +43,7 @@ public class ActiveDungeon
 		this.playerSaves.clear();
 	}
 	
+	@SuppressWarnings("deprecation")
 	public void loadParty(Party p)
 	{
 		for(String player : p.getMembers())
@@ -50,6 +51,7 @@ public class ActiveDungeon
 			Player pl = Bukkit.getPlayer(player);
 			this.playerSaves.put(player, new SavedPlayer(pl));
 			pl.getInventory().clear();
+			pl.updateInventory();
 			PlayerSave save = new PlayerSave(pl, p);
 			if(!save.restore())
 			{
