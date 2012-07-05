@@ -13,6 +13,8 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.Bed;
+import org.bukkit.material.Door;
 import com.topcat.npclib.entity.HumanNPC;
 import com.topcat.npclib.nms.*;
 import com.topcat.npclib.nms.NpcEntityTargetEvent.NpcTargetReason;
@@ -311,19 +313,37 @@ public class DLEventHandler implements Listener
 	public void onBlockBreak(BlockBreakEvent event)
 	{
 		Player p = event.getPlayer();
-		Location placed = event.getBlock().getLocation();
+		Block placed = event.getBlock();
 		if(!DragonsLairMain.isWorldEnabled(placed.getWorld().getName()))
 			return;
 		
 		ActiveDungeon ad = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
 		if(ad != null)
 		{
-			DragonsLairMain.getInstance().getLoggingManager().logBlockBreak(ad, event.getBlock().getState());
+			DragonsLairMain.getInstance().getLoggingManager().logBlockBreak(ad, placed.getState());
+			switch(placed.getType())
+			{
+				case BED_BLOCK:
+					Bed b = (Bed)placed.getState().getData();
+					if(b.isHeadOfBed())
+						DragonsLairMain.getInstance().getLoggingManager().logBlockBreak(ad, placed.getRelative(b.getFacing().getOppositeFace()).getState());
+					else
+						DragonsLairMain.getInstance().getLoggingManager().logBlockBreak(ad, placed.getRelative(b.getFacing()).getState());
+					break;
+				case WOODEN_DOOR:
+				case IRON_DOOR_BLOCK:
+					Door d = (Door)placed.getState().getData();
+					if(d.isTopHalf())
+						DragonsLairMain.getInstance().getLoggingManager().logBlockBreak(ad, placed.getRelative(BlockFace.DOWN).getState());
+					else
+						DragonsLairMain.getInstance().getLoggingManager().logBlockBreak(ad, placed.getRelative(BlockFace.UP).getState());
+					break;
+			}
 		}
 		
 		for(TriggerLocationEntry entry : this.locations)
 		{
-			if(entry.equals(event.getBlock().getLocation()))
+			if(entry.equals(placed.getLocation()))
 			{
 				for(Trigger t : entry.getTriggersForType(TriggerType.BLOCK_BREAK))
 				{
@@ -336,7 +356,7 @@ public class DLEventHandler implements Listener
 							Material m = Material.getMaterial(id);
 							if(m != null)
 							{
-								if(placed.getBlock().getType() != m)
+								if(placed.getType() != m)
 									continue;
 							}
 						}
@@ -345,7 +365,7 @@ public class DLEventHandler implements Listener
 							Material m = Material.getMaterial(block_id.replace(" ", "_").toUpperCase());
 							if(m != null)
 							{
-								if(placed.getBlock().getType() != m)
+								if(placed.getType() != m)
 									continue;
 							}
 						}
@@ -788,6 +808,9 @@ public class DLEventHandler implements Listener
 		Action a = event.getAction();
 		
 		if(a == Action.LEFT_CLICK_AIR || a == Action.RIGHT_CLICK_AIR)
+			return;
+		
+		if(a == Action.LEFT_CLICK_BLOCK && p.getGameMode() == GameMode.CREATIVE)
 			return;
 		
 		Block clicked = event.getClickedBlock();
