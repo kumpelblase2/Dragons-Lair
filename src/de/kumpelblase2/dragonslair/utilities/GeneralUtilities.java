@@ -253,7 +253,7 @@ public class GeneralUtilities
 			else
 				return true;
 		}
-		else if(option.equalsIgnoreCase("safe word") || option.equalsIgnoreCase("message") || option.equalsIgnoreCase("permission") || option.equalsIgnoreCase("command"))
+		else if(option.equalsIgnoreCase("safe word") || option.equalsIgnoreCase("message") || option.equalsIgnoreCase("permission") || option.equalsIgnoreCase("command") || option.equals("ending message") || option.equals("starting message") || option.equals("ready message"))
 		{
 			return true;
 		}
