@@ -52,7 +52,7 @@ public class LoggingManager
 				{
 					case BLOCK_CHANGE:
 					{
-						entry = new BlockChangeEntry(dungeon, party, loc, before, after);
+						entry = new BlockContentChangeEntry(dungeon, party, loc, before, after);
 					}
 					case BLOCK_REMOVE:
 					{
@@ -93,11 +93,17 @@ public class LoggingManager
 		this.logEntry(ad, inPlaced, entry);
 	}
 	
-	public void logBlockChange(ActiveDungeon ad, BlockState inCurrent, Map<String, String> inNew, Map<String, String> inOldItem)
+	public void logBlockContentChange(ActiveDungeon ad, BlockState inCurrent, Map<String, String> inNew, Map<String, String> inOldItem)
 	{
-		BlockChangeEntry entry = new BlockChangeEntry(inCurrent, ad);
+		BlockContentChangeEntry entry = new BlockContentChangeEntry(inCurrent, ad);
 		entry.m_before.putAll(inOldItem);
 		entry.m_new.putAll(inNew);
+		this.logEntry(ad, inCurrent, entry);
+	}
+	
+	public void logBlockDataChange(ActiveDungeon ad, BlockState inCurrent)
+	{
+		BlockDataChangeEntry entry = new BlockDataChangeEntry(inCurrent, ad);
 		this.logEntry(ad, inCurrent, entry);
 	}
 	
