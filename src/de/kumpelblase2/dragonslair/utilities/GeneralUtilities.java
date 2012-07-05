@@ -373,7 +373,7 @@ public class GeneralUtilities
 			case BLOCK_INTERACT:
 			case BLOCK_PLACE:
 			case GATHER_ITEM:
-				return 60;
+				return 30;
 			case MOBS_KILLED:
 				return 10;
 			case MOVEMENT:
