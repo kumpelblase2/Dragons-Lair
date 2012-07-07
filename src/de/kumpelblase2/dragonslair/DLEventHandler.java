@@ -7,14 +7,14 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
 import org.bukkit.event.block.*;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.entity.EntityTargetEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.Bed;
+import org.bukkit.material.Door;
 import com.topcat.npclib.entity.HumanNPC;
 import com.topcat.npclib.nms.*;
 import com.topcat.npclib.nms.NpcEntityTargetEvent.NpcTargetReason;
@@ -105,7 +105,7 @@ public class DLEventHandler implements Listener
 		}
 	}
 	
-	@EventHandler
+	@EventHandler(ignoreCancelled = true)
 	public void onInteractNPC(EntityTargetEvent event)
 	{
 		if(!DragonsLairMain.isWorldEnabled(event.getEntity().getWorld().getName()))
@@ -156,7 +156,7 @@ public class DLEventHandler implements Listener
 		}
 	}
 	
-	@EventHandler
+	@EventHandler(ignoreCancelled = true)
 	public void onNPCDamage(NpcDamageEvent event)
 	{
 		if(!(event.getDamager() instanceof Player))
@@ -187,28 +187,7 @@ public class DLEventHandler implements Listener
 			event.setDamage(0);
 	}
 	
-	/*@EventHandler
-	public void onPlayerMove(PlayerMoveEvent event)
-	{
-		Player p = event.getPlayer();
-		Location to = event.getTo();
-		Location from = event.getFrom();
-		if(to.getBlockX() - from.getBlockX() == 0 && to.getBlockY() - from.getBlockY() == 0 && to.getBlockZ() - from.getBlockZ() == 0)
-			return;
-		
-		if(DragonsLairMain.getInstance().getConversationHandler().isInConversation(p))
-		{
-			NPCConversation conv = DragonsLairMain.getInstance().getConversationHandler().getConversations().get(p.getName());
-			if(to.distanceSquared(conv.getNPCEntity().getBukkitEntity().getLocation()) > 100)
-			{
-				conv.getConversation().getForWhom().sendRawMessage("<" + conv.getNPC().getName() + ">" + "GET BACK HERE!");
-				conv.adandon();
-				DragonsLairMain.getInstance().getConversationHandler().getConversations().remove(p.getName());
-			}
-		}
-	}*/
-	
-	@EventHandler
+	@EventHandler(ignoreCancelled = true)
 	public void onMove(PlayerMoveEvent event)
 	{		
 		Location from = event.getFrom();
@@ -237,7 +216,7 @@ public class DLEventHandler implements Listener
 		}
 	}
 	
-	@EventHandler
+	@EventHandler(ignoreCancelled = true)
 	public void onNextDialog(ConversationNextDialogEvent event)
 	{
 		if(!DragonsLairMain.isWorldEnabled(((Player)event.getConversation().getForWhom()).getWorld().getName()))
@@ -262,7 +241,7 @@ public class DLEventHandler implements Listener
 		}
 	}
 	
-	@EventHandler
+	@EventHandler(ignoreCancelled = true)
 	public void onPlayerChat(PlayerChatEvent event)
 	{
 		Player p = event.getPlayer();
@@ -277,7 +256,7 @@ public class DLEventHandler implements Listener
 			DragonsLairMain.getInstance().getConversationHandler().startSafeWordConversation(p);	
 	}
 	
-	@EventHandler(priority = EventPriority.HIGH)
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
 	public void onBlockPlace(BlockPlaceEvent event)
 	{
 		Player p = event.getPlayer();
@@ -293,9 +272,6 @@ public class DLEventHandler implements Listener
 		
 		if(event.getBlock().getType() == Material.TNT)
 			this.tntList.addEntry(ad.getInfo().getName(), placed);
-		
-		if(!this.triggers.containsKey(TriggerType.BLOCK_PLACE))
-			return;
 		
 		
 		for(TriggerLocationEntry entry : this.locations)
@@ -333,26 +309,41 @@ public class DLEventHandler implements Listener
 		}
 	}
 	
-	@EventHandler(priority = EventPriority.HIGH)
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
 	public void onBlockBreak(BlockBreakEvent event)
 	{
 		Player p = event.getPlayer();
-		Location placed = event.getBlock().getLocation();
+		Block placed = event.getBlock();
 		if(!DragonsLairMain.isWorldEnabled(placed.getWorld().getName()))
 			return;
 		
 		ActiveDungeon ad = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
 		if(ad != null)
 		{
-			DragonsLairMain.getInstance().getLoggingManager().logBlockBreak(ad, event.getBlock().getState());
+			DragonsLairMain.getInstance().getLoggingManager().logBlockBreak(ad, placed.getState());
+			switch(placed.getType())
+			{
+				case BED_BLOCK:
+					Bed b = (Bed)placed.getState().getData();
+					if(b.isHeadOfBed())
+						DragonsLairMain.getInstance().getLoggingManager().logBlockBreak(ad, placed.getRelative(b.getFacing().getOppositeFace()).getState());
+					else
+						DragonsLairMain.getInstance().getLoggingManager().logBlockBreak(ad, placed.getRelative(b.getFacing()).getState());
+					break;
+				case WOODEN_DOOR:
+				case IRON_DOOR_BLOCK:
+					Door d = (Door)placed.getState().getData();
+					if(d.isTopHalf())
+						DragonsLairMain.getInstance().getLoggingManager().logBlockBreak(ad, placed.getRelative(BlockFace.DOWN).getState());
+					else
+						DragonsLairMain.getInstance().getLoggingManager().logBlockBreak(ad, placed.getRelative(BlockFace.UP).getState());
+					break;
+			}
 		}
-		
-		if(!this.triggers.containsKey(TriggerType.BLOCK_BREAK))
-			return;
 		
 		for(TriggerLocationEntry entry : this.locations)
 		{
-			if(entry.equals(event.getBlock().getLocation()))
+			if(entry.equals(placed.getLocation()))
 			{
 				for(Trigger t : entry.getTriggersForType(TriggerType.BLOCK_BREAK))
 				{
@@ -365,7 +356,7 @@ public class DLEventHandler implements Listener
 							Material m = Material.getMaterial(id);
 							if(m != null)
 							{
-								if(placed.getBlock().getType() != m)
+								if(placed.getType() != m)
 									continue;
 							}
 						}
@@ -374,7 +365,7 @@ public class DLEventHandler implements Listener
 							Material m = Material.getMaterial(block_id.replace(" ", "_").toUpperCase());
 							if(m != null)
 							{
-								if(placed.getBlock().getType() != m)
+								if(placed.getType() != m)
 									continue;
 							}
 						}
@@ -416,9 +407,6 @@ public class DLEventHandler implements Listener
 		if(!DragonsLairMain.isWorldEnabled(interacted.getWorld().getName()))
 			return;
 		
-		if(!this.triggers.containsKey(TriggerType.BLOCK_INTERACT))
-			return;
-		
 		for(TriggerLocationEntry entry : this.locations)
 		{
 			if(entry.equals(interactedBlock.getLocation()))
@@ -454,7 +442,7 @@ public class DLEventHandler implements Listener
 		}
 	}
 	
-	@EventHandler
+	@EventHandler(ignoreCancelled = true)
 	public void onChapterChange(ChapterChangeEvent event)
 	{		
 		if(!this.triggers.containsKey(TriggerType.CHAPTER_CHANGE))
@@ -482,7 +470,7 @@ public class DLEventHandler implements Listener
 		}
 	}
 	
-	@EventHandler
+	@EventHandler(ignoreCancelled = true)
 	public void onObjectiveChange(ObjectiveChangeEvent event)
 	{
 		if(!this.triggers.containsKey(TriggerType.OBJECTIVE_CHANGE))
@@ -510,7 +498,7 @@ public class DLEventHandler implements Listener
 		}
 	}
 	
-	@EventHandler
+	@EventHandler(ignoreCancelled = true)
 	public void onMapScroll(PlayerInteractEvent event)
 	{
 		Player p = event.getPlayer();
@@ -534,7 +522,7 @@ public class DLEventHandler implements Listener
 		event.setCancelled(true);
 	}
 	
-	@EventHandler
+	@EventHandler(ignoreCancelled = true)
 	public void onItemDrop(PlayerDropItemEvent event)
 	{
 		Player p = event.getPlayer();
@@ -549,7 +537,7 @@ public class DLEventHandler implements Listener
 			event.setCancelled(true);
 	}
 	
-	@EventHandler
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
 	public void onInventoryClick(InventoryClickEvent event)
 	{
 		Player p = (Player)event.getWhoClicked();
@@ -579,13 +567,13 @@ public class DLEventHandler implements Listener
 				else
 					oldItem.put("slot" + event.getSlot(), InventoryUtilities.itemToString(event.getCursor()));
 				
-				DragonsLairMain.getInstance().getLoggingManager().logBlockChange(ad, holder, newItem, oldItem);
+				DragonsLairMain.getInstance().getLoggingManager().logBlockContentChange(ad, holder, newItem, oldItem);
 			}
 		}
 		else
 		{
 			if(event.isShiftClick())
-				DragonsLairMain.getInstance().getLoggingManager().logBlockChange(ad, holder, InventoryUtilities.getChangedStates(event.getView().getTopInventory(), (event.getCursor().getType() == Material.AIR ? event.getCurrentItem() : event.getCursor())), new HashMap<String, String>());
+				DragonsLairMain.getInstance().getLoggingManager().logBlockContentChange(ad, holder, InventoryUtilities.getChangedStates(event.getView().getTopInventory(), (event.getCursor().getType() == Material.AIR ? event.getCurrentItem() : event.getCursor())), new HashMap<String, String>());
 		}
 	}
 	
@@ -600,61 +588,7 @@ public class DLEventHandler implements Listener
 		DragonsLairMain.getDungeonManager().stopDungeon(ad.getInfo().getName());
 	}
 	
-	/*@EventHandler
-	public void onBlockDamage(BlockDamageEvent event)
-	{
-		Player p = event.getPlayer();
-		Block b = event.getBlock();
-		
-		if(!this.triggers.containsKey(TriggerType.BLOCK_DAMAGE))
-			return;
-		
-		for(Trigger t : this.triggers.get(TriggerType.BLOCK_DAMAGE))
-		{
-			String x, y, z, block_id;
-			x = t.getOption("x");
-			y = t.getOption("y");
-			z = t.getOption("z");
-			block_id = t.getOption("block_id");
-			String world = t.getOption("world");
-			if(x == null || y == null || z == null)
-				continue;
-			
-			if(!world.equals(b.getWorld().getName()))
-				continue;
-			
-			if(block_id != null)
-			{
-				try
-				{
-					int id = Integer.parseInt(block_id);
-					Material m = Material.getMaterial(id);
-					if(m != null)
-					{
-						if(b.getType() != m)
-							continue;
-					}
-				}
-				catch(Exception e)
-				{
-					Material m = Material.getMaterial(block_id);
-					if(m != null)
-					{
-						if(b.getType() != m)
-							continue;
-					}
-				}
-			}
-			
-			Location loc = b.getLocation();
-			if(x.equals(loc.getBlockX() + "") && y.equals(loc.getBlockY() + "") && z.equals(loc.getBlockZ() + ""))
-			{
-				DragonsLairMain.getDungeonManager().callTrigger(t, p);
-			}
-		}
-	}*/
-	
-	@EventHandler
+	@EventHandler(ignoreCancelled = true)
 	public void onPickup(PlayerPickupItemEvent event)
 	{
 		Player p = event.getPlayer();
@@ -828,7 +762,7 @@ public class DLEventHandler implements Listener
 		}
 	}
 	
-	@EventHandler
+	@EventHandler(ignoreCancelled = true)
 	public void onLevelChange(PlayerLevelChangeEvent event)
 	{
 		if(!this.triggers.containsKey(TriggerType.LEVEL_ACHIEVE))
@@ -865,5 +799,29 @@ public class DLEventHandler implements Listener
 				}
 			}
 		}
+	}
+	
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+	public void onInteractLog(PlayerInteractEvent event)
+	{
+		Player p = event.getPlayer();
+		Action a = event.getAction();
+		
+		if(a == Action.LEFT_CLICK_AIR || a == Action.RIGHT_CLICK_AIR)
+			return;
+		
+		if(a == Action.LEFT_CLICK_BLOCK && p.getGameMode() == GameMode.CREATIVE)
+			return;
+		
+		Block clicked = event.getClickedBlock();
+		
+		if(!DragonsLairMain.isWorldEnabled(clicked.getWorld().getName()))
+			return;
+		
+		ActiveDungeon ad = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
+		if(ad == null)
+			return;
+		
+		DragonsLairMain.getInstance().getLoggingManager().logBlockDataChange(ad, clicked.getState());
 	}
 }

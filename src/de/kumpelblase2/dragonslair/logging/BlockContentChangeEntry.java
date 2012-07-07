@@ -10,15 +10,15 @@ import org.bukkit.inventory.ItemStack;
 import de.kumpelblase2.dragonslair.api.ActiveDungeon;
 import de.kumpelblase2.dragonslair.utilities.InventoryUtilities;
 
-public class BlockChangeEntry extends BlockEntry
+public class BlockContentChangeEntry extends BlockEntry
 {
-	public BlockChangeEntry(BlockState inState, ActiveDungeon ad)
+	public BlockContentChangeEntry(BlockState inState, ActiveDungeon ad)
 	{
 		super(inState, ad);
 		this.m_before = this.getOptions(inState);
 	}
 	
-	public BlockChangeEntry(String inDungeon, int inParty, Location inLoc, Map<String, String> inBefore, Map<String, String> inNew)
+	public BlockContentChangeEntry(String inDungeon, int inParty, Location inLoc, Map<String, String> inBefore, Map<String, String> inNew)
 	{
 		super(inDungeon, inParty, inLoc, inBefore, inNew);
 	}

@@ -253,7 +253,7 @@ public class GeneralUtilities
 			else
 				return true;
 		}
-		else if(option.equalsIgnoreCase("safe word") || option.equalsIgnoreCase("message") || option.equalsIgnoreCase("permission") || option.equalsIgnoreCase("command"))
+		else if(option.equalsIgnoreCase("safe word") || option.equalsIgnoreCase("message") || option.equalsIgnoreCase("permission") || option.equalsIgnoreCase("command") || option.equals("ending message") || option.equals("starting message") || option.equals("ready message"))
 		{
 			return true;
 		}
@@ -373,7 +373,7 @@ public class GeneralUtilities
 			case BLOCK_INTERACT:
 			case BLOCK_PLACE:
 			case GATHER_ITEM:
-				return 60;
+				return 30;
 			case MOBS_KILLED:
 				return 10;
 			case MOVEMENT:

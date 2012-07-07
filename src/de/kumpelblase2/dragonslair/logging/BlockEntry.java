@@ -219,7 +219,6 @@ public class BlockEntry implements Recoverable
 			case WALL_SIGN:
 			case SIGN_POST:
 				Sign s = (Sign)inState;
-				System.out.println("sign");
 				s.setLine(0, options.get("line0"));
 				s.setLine(1, options.get("line1"));
 				s.setLine(2, options.get("line2"));

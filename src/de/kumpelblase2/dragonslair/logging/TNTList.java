@@ -38,7 +38,7 @@ public class TNTList
 			else
 			{
 				Location l;
-				if(o instanceof TNTEntry) //TODO
+				if(o instanceof TNTEntry)
 					l = ((TNTEntry)o).getLocation();
 				else if(o instanceof Location)
 					l = (Location)o;
