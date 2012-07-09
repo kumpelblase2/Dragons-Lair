@@ -29,14 +29,14 @@ public class NPC
 	{
 		try
 		{
-			this.id = result.getInt(TableColumns.NPCs.ID.ordinal());
-			this.name = result.getString(TableColumns.NPCs.NAME.ordinal());
-			this.skin = result.getString(TableColumns.NPCs.SKIN.ordinal());
-			this.loc = WorldUtility.stringToLocation(result.getString(TableColumns.NPCs.LOCATION.ordinal()));
-			this.heldItem = Material.getMaterial(result.getInt(TableColumns.NPCs.HELD_ITEM_ID.ordinal()));
-			this.shoudSpawnAtBeginning = result.getBoolean(TableColumns.NPCs.SHOULD_SPAWN_AT_BEGINNING.ordinal());
-			this.armor = InventoryUtilities.stringToItems(result.getString(TableColumns.NPCs.ARMOR.ordinal()));
-			this.isInvincible = result.getBoolean(TableColumns.NPCs.INVINCIBLE.ordinal());
+			this.id = result.getInt(TableColumns.NPCs.ID);
+			this.name = result.getString(TableColumns.NPCs.NAME);
+			this.skin = result.getString(TableColumns.NPCs.SKIN);
+			this.loc = WorldUtility.stringToLocation(result.getString(TableColumns.NPCs.LOCATION));
+			this.heldItem = Material.getMaterial(result.getInt(TableColumns.NPCs.HELD_ITEM_ID));
+			this.shoudSpawnAtBeginning = result.getBoolean(TableColumns.NPCs.SHOULD_SPAWN_AT_BEGINNING);
+			this.armor = InventoryUtilities.stringToItems(result.getString(TableColumns.NPCs.ARMOR));
+			this.isInvincible = result.getBoolean(TableColumns.NPCs.INVINCIBLE);
 		}
 		catch (SQLException e)
 		{

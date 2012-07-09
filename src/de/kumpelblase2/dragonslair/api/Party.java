@@ -21,12 +21,12 @@ public class Party
 	{
 		try
 		{
-			this.id = result.getInt(TableColumns.Parties.ID.ordinal());
-			String memberList = result.getString(TableColumns.Parties.MEMBERS.ordinal());
+			this.id = result.getInt(TableColumns.Parties.ID);
+			String memberList = result.getString(TableColumns.Parties.MEMBERS);
 			this.members = memberList.split(":");
-			this.objectiveID = result.getInt(TableColumns.Parties.OBJECTIVE_ID.ordinal());
-			this.chapterID = result.getInt(TableColumns.Parties.CHAPTER_ID.ordinal());
-			this.dungeonID = result.getInt(TableColumns.Parties.DUNGEON_ID.ordinal());
+			this.objectiveID = result.getInt(TableColumns.Parties.OBJECTIVE_ID);
+			this.chapterID = result.getInt(TableColumns.Parties.CHAPTER_ID);
+			this.dungeonID = result.getInt(TableColumns.Parties.DUNGEON_ID);
 		}
 		catch (SQLException e)
 		{

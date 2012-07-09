@@ -27,26 +27,26 @@ public class LoggingManager
 			ResultSet result = st.executeQuery();
 			while(result.next())
 			{
-				LogType type = LogType.valueOf(result.getString(TableColumns.Log.LOG_TYPE.ordinal()).toUpperCase());
+				LogType type = LogType.valueOf(result.getString(TableColumns.Log.LOG_TYPE).toUpperCase());
 				Recoverable entry = null;
 				Map<String, String> before = new HashMap<String, String>();
 				Map<String, String> after = new HashMap<String, String>();
-				String[] split = result.getString(TableColumns.Log.BEFORE_DATA.ordinal()).split(";");
+				String[] split = result.getString(TableColumns.Log.BEFORE_DATA).split(";");
 				for(String s : split)
 				{
 					String[] value = s.split("" + ((byte)0x1D));
 					before.put(value[0], value[1]);
 				}
 				
-				split = result.getString(TableColumns.Log.AFTER_DATA.ordinal()).split(";");
+				split = result.getString(TableColumns.Log.AFTER_DATA).split(";");
 				for(String s : split)
 				{
 					String[] value = s.split("" + ((byte)0x1D));
 					after.put(value[0], value[1]);
 				}
-				String dungeon = result.getString(TableColumns.Log.DUNGEON_NAME.ordinal());
-				int party = result.getInt(TableColumns.Log.PARTY_ID.ordinal());
-				Location loc = WorldUtility.stringToLocation(result.getString(TableColumns.Log.LOCATION.ordinal()));
+				String dungeon = result.getString(TableColumns.Log.DUNGEON_NAME);
+				int party = result.getInt(TableColumns.Log.PARTY_ID);
+				Location loc = WorldUtility.stringToLocation(result.getString(TableColumns.Log.LOCATION));
 				
 				switch(type)
 				{

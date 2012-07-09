@@ -214,15 +214,33 @@ public class DragonsLairMain extends JavaPlugin
 		return this.conn;
 	}
 	
-	private boolean connectToDB(String host, int port, String db, String user, String pass)
+	private boolean connectToDB(String type, String host, int port, String db, String user, String pass)
 	{
 		try
 		{
-			Class.forName("com.mysql.jdbc.Driver");
-			conn = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + db, user, pass);
-			if(this.getConfig().getBoolean("verbose-start"))
-				Log.info("Connected to database.");
-			return true;
+			if(type.equals("mysql"))
+			{
+				Class.forName("com.mysql.jdbc.Driver");
+				conn = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + db, user, pass);
+				if(this.getConfig().getBoolean("verbose-start"))
+					Log.info("Connected to database.");
+				return true;
+			}
+			else if(type.equals("sqlite"))
+			{
+				Class.forName("org.sqlite.JDBC");
+				conn = DriverManager.getConnection("jdbc:sqlite:"+ this.getDataFolder().getAbsolutePath() + "/" + host);
+				if(this.getConfig().getBoolean("verbose-start"))
+					Log.info("Connected to database.");
+				return true;
+			}
+			else
+			{
+				Log.warning("A database of that type isn't supported");
+				getServer().getPluginManager().disablePlugin(this);
+				return false;
+			}
+			
 		}
 		catch (ClassNotFoundException e)
 		{
@@ -248,7 +266,11 @@ public class DragonsLairMain extends JavaPlugin
 			{
 				try
 				{
-					PreparedStatement st = createStatement(t.getCreatingQuery());
+					PreparedStatement st;
+					if(this.getConfig().getString("db.type").equals("mysql"))
+						st = createStatement(t.getCreatingQuery());
+					else
+						st = createStatement(t.getSQLiteCreatingQuery());
 					st.execute();
 				}
 				catch(Exception e)
@@ -281,7 +303,7 @@ public class DragonsLairMain extends JavaPlugin
 	{
 		try
 		{
-			BufferedReader r = new BufferedReader(new InputStreamReader(DragonsLairMain.class.getResourceAsStream("/resources/rev" + nextRev + ".txt")));
+			BufferedReader r = new BufferedReader(new InputStreamReader(this.getConfig().getString("db.type").equals("mysql") ? DragonsLairMain.class.getResourceAsStream("/resources/rev" + nextRev + ".txt") : DragonsLairMain.class.getResourceAsStream("/resources/rev" + nextRev + "_sqlite.txt")));
 			String s = "";
 			while((s = r.readLine()) != null)
 			{
@@ -322,7 +344,7 @@ public class DragonsLairMain extends JavaPlugin
 		this.setupConfig();
 		if(this.getConfig().getBoolean("verbose-start"))
 			Log.info("Connecting to database...");
-		return this.connectToDB(getConfig().getString("db.host"), getConfig().getInt("db.port"), getConfig().getString("db.database"), getConfig().getString("db.user"), getConfig().getString("db.pass"));
+		return this.connectToDB(getConfig().getString("db.type"), getConfig().getString("db.host"), getConfig().getInt("db.port"), getConfig().getString("db.database"), getConfig().getString("db.user"), getConfig().getString("db.pass"));
 	}
 	
 	public static Settings getSettings()
@@ -412,6 +434,7 @@ public class DragonsLairMain extends JavaPlugin
 	public void setupConfig()
 	{
 		this.reloadConfig();
+		this.getConfig().set("db.type", this.getConfig().getString("db.type", "mysql"));
 		this.getConfig().set("db.host", this.getConfig().getString("db.host", "localhost"));
 		this.getConfig().set("db.port", this.getConfig().getInt("db.port", 3306));
 		this.getConfig().set("db.database", this.getConfig().getString("db.database", "dragonslair"));
@@ -500,7 +523,8 @@ public class DragonsLairMain extends JavaPlugin
 	{
 		try
 		{
-			getInstance().getMysqlConnection().prepareStatement("DO 1").execute();
+			if(getInstance().getConfig().getString("db.type").equals("mysql"))
+				getInstance().getMysqlConnection().prepareStatement("DO 1").execute();
 			return true;
 		}
 		catch(Exception e)

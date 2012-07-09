@@ -1,0 +1,14 @@
+ALTER TABLE `events` ADD COLUMN `event_cooldowns` text;
+ALTER TABLE `triggers` ADD COLUMN `trigger_cooldowns` text;
+CREATE TABLE `chapters_backup` (`chapter_id` int(11), `chapter_name` varchar(50) NOT NULL, PRIMARY KEY (`chapter_id`));
+INSERT INTO `chapters_backup` SELECT chapter_id, chapter_name FROM `chapters`;
+DROP TABLE `chapters`;
+CREATE TABLE `chapters` (`chapter_id` int(11), `chapter_name` varchar(50) NOT NULL, PRIMARY KEY (`chapter_id`));
+INSERT INTO `chapters` SELECT chapter_id, chapter_name FROM `chapters_backup`;
+DROP TABLE `chapters_backup`;
+CREATE TABLE `objectives_backup` (`objective_id` int(10), `objective_description` text DEFAULT NULL, PRIMARY KEY (`objective_id`));
+INSERT INTO `objectives_backup` SELECT objective_id, objective_description FROM `objectives`;
+DROP TABLE `objectives`;
+CREATE TABLE `objectives` (`objective_id` int(10), `objective_description` text DEFAULT NULL, PRIMARY KEY (`objective_id`));
+INSERT INTO `objectives` SELECT objective_id, objective_description FROM `objectives_backup`;
+DROP TABLE `objectives_backup`;

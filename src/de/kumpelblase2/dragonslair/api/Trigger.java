@@ -23,9 +23,9 @@ public class Trigger
 	{
 		try
 		{
-			this.id = result.getInt(TableColumns.Triggers.ID.ordinal());
-			this.type = TriggerType.valueOf(result.getString(TableColumns.Triggers.TYPE.ordinal()).toUpperCase());
-			String options = result.getString(TableColumns.Triggers.TYPE_OPTIONS.ordinal());
+			this.id = result.getInt(TableColumns.Triggers.ID);
+			this.type = TriggerType.valueOf(result.getString(TableColumns.Triggers.TYPE).toUpperCase());
+			String options = result.getString(TableColumns.Triggers.TYPE_OPTIONS);
 			if(options.contains(":"))
 			{
 				String[] optionSplitt = options.split(";");
@@ -47,7 +47,7 @@ public class Trigger
 			{
 				this.type_options = new Option[0];
 			}
-			String eventsString = result.getString(TableColumns.Triggers.ACTION_EVENT_ID.ordinal());
+			String eventsString = result.getString(TableColumns.Triggers.ACTION_EVENT_ID);
 			if(eventsString.contains(";"))
 			{
 				String[] eventsSplitt = eventsString.split(";");
@@ -82,7 +82,7 @@ public class Trigger
 				}
 			}
 			
-			String cooldownString = result.getString(TableColumns.Triggers.COOLDOWNS.ordinal());
+			String cooldownString = result.getString(TableColumns.Triggers.COOLDOWNS);
 			if(cooldownString != null && cooldownString.length() > 0)
 			{
 				String[] splitted = cooldownString.split(";");

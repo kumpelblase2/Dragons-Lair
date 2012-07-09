@@ -18,8 +18,8 @@ public class Objective
 	{
 		try
 		{
-			this.id = result.getInt(TableColumns.Objectives.ID.ordinal());
-			this.description = result.getString(TableColumns.Objectives.DESCRIPTION.ordinal());
+			this.id = result.getInt(TableColumns.Objectives.ID);
+			this.description = result.getString(TableColumns.Objectives.DESCRIPTION);
 		}
 		catch (SQLException e)
 		{

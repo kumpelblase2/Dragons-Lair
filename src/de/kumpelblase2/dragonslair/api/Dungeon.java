@@ -29,23 +29,23 @@ public class Dungeon
 	{
 		try
 		{
-			this.id = result.getInt(TableColumns.Dungeons.ID.ordinal());
-			this.name = result.getString(TableColumns.Dungeons.NAME.ordinal());
-			this.startingObjective = DragonsLairMain.getSettings().getObjectives().get(result.getInt(TableColumns.Dungeons.STARTING_OBJECTIVE.ordinal()));
-			this.startingChapter = DragonsLairMain.getSettings().getChapters().get(result.getInt(TableColumns.Dungeons.STARTING_CHAPTER.ordinal()));
-			this.startinPosition = WorldUtility.stringToLocation(result.getString(TableColumns.Dungeons.STARTING_POSITION.ordinal()));
-			this.safeWord = result.getString(TableColumns.Dungeons.SAFE_WORD.ordinal());
-			this.maxPlayers = result.getInt(TableColumns.Dungeons.MAX_PLAYERS.ordinal());
-			this.minPlayers = result.getInt(TableColumns.Dungeons.MIN_PLAYERS.ordinal());
-			this.startMessage = result.getString(TableColumns.Dungeons.START_MESSAGE.ordinal());
+			this.id = result.getInt(TableColumns.Dungeons.ID);
+			this.name = result.getString(TableColumns.Dungeons.NAME);
+			this.startingObjective = DragonsLairMain.getSettings().getObjectives().get(result.getInt(TableColumns.Dungeons.STARTING_OBJECTIVE));
+			this.startingChapter = DragonsLairMain.getSettings().getChapters().get(result.getInt(TableColumns.Dungeons.STARTING_CHAPTER));
+			this.startinPosition = WorldUtility.stringToLocation(result.getString(TableColumns.Dungeons.STARTING_POSITION));
+			this.safeWord = result.getString(TableColumns.Dungeons.SAFE_WORD);
+			this.maxPlayers = result.getInt(TableColumns.Dungeons.MAX_PLAYERS);
+			this.minPlayers = result.getInt(TableColumns.Dungeons.MIN_PLAYERS);
+			this.startMessage = result.getString(TableColumns.Dungeons.START_MESSAGE);
 			if(result.wasNull())
 				this.startMessage = "";
 			
-			this.endMessage = result.getString(TableColumns.Dungeons.END_MESSAGE.ordinal());
+			this.endMessage = result.getString(TableColumns.Dungeons.END_MESSAGE);
 			if(result.wasNull())
 				this.endMessage = "";
 			
-			this.readyMessage = result.getString(TableColumns.Dungeons.PARTY_READY_MESSAGE.ordinal());
+			this.readyMessage = result.getString(TableColumns.Dungeons.PARTY_READY_MESSAGE);
 			if(result.wasNull())
 				this.readyMessage = "";
 		}

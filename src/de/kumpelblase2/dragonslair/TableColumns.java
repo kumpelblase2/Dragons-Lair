@@ -1,120 +1,101 @@
 package de.kumpelblase2.dragonslair;
 
-public class TableColumns
+public abstract class TableColumns
 {
-	public static enum Chapters
+	public abstract class Chapters
 	{
-		NONE,
-		ID,
-		NAME,
-		ORDER
+		public static final String ID = "chapter_id";
+		public static final String NAME = "chapter_name";
 	}
 	
-	public static enum Dialogs
+	public abstract class Dialogs
 	{
-		NONE,
-		ID,
-		TEXT,
-		AGREEMENT_ID,
-		CONSIDER_AGREEMENT_ID,
-		DISAGREEMENT_ID,
-		CONSIDE_DISAGREEMENT_ID,
-		CONSIDER_ID
+		public static final String ID = "dialog_id";
+		public static final String TEXT = "dialog_text";
+		public static final String AGREEMENT_ID = "next_agreement_id";
+		public static final String DISAGREEMENT_ID = "next_disagreement_id";
+		public static final String CONSIDER_AGREEMENT_ID = "next_consider_agreement_id";
+		public static final String CONSIDER_DISAGREEMENT_ID = "next_consider_disagreement_id";
+		public static final String CONSIDER_ID = "next_consider_id";
 	}
 	
-	public static enum Dungeons
+	public abstract class Dungeons
 	{
-		NONE,
-		ID,
-		NAME,
-		STARTING_OBJECTIVE,
-		STARTING_CHAPTER,
-		STARTING_POSITION,
-		SAFE_WORD,
-		MIN_PLAYERS,
-		MAX_PLAYERS,
-		START_MESSAGE,
-		END_MESSAGE,
-		PARTY_READY_MESSAGE
+		public static final String ID = "dungeon_id";
+		public static final String NAME = "dungeon_name";
+		public static final String STARTING_OBJECTIVE = "dungeon_starting_objective";
+		public static final String STARTING_CHAPTER = "dungeon_starting_chapter";
+		public static final String STARTING_POSITION = "dungeon_starting_pos";
+		public static final String SAFE_WORD = "dungeon_safe_word";
+		public static final String MIN_PLAYERS = "dungeon_min_players";
+		public static final String MAX_PLAYERS = "dungeon_max_players";
+		public static final String START_MESSAGE = "dungeon_start_message";
+		public static final String END_MESSAGE = "dungeon_end_message";
+		public static final String PARTY_READY_MESSAGE = "dungeon_party_ready_message";
 	}
 	
-	public static enum Events
+	public abstract class Events
 	{
-		NONE,
-		ID,
-		ACTION_TYPE,
-		ACTION_OPTIONS,
-		COOLDOWNS
+		public static final String ID = "event_id";
+		public static final String ACTION_TYPE = "event_action_type";
+		public static final String ACTION_OPTIONS = "event_action_options";
+		public static final String COOLDOWNS = "event_cooldowns";
 	}
 	
-	public static enum NPCs
+	public abstract class NPCs
 	{
-		NONE,
-		ID,
-		NAME,
-		SKIN,
-		LOCATION,
-		HELD_ITEM_ID,
-		ARMOR,
-		SHOULD_SPAWN_AT_BEGINNING,
-		INVINCIBLE
+		public static final String ID = "npc_id";
+		public static final String NAME = "npc_name";
+		public static final String SKIN = "npc_skin";
+		public static final String LOCATION = "npc_location";
+		public static final String HELD_ITEM_ID = "npc_held_item";
+		public static final String ARMOR = "npc_item";
+		public static final String SHOULD_SPAWN_AT_BEGINNING = "npc_spawned_from_beginning";
+		public static final String INVINCIBLE = "npc_invincible";
 	}
 	
-	public static enum Objectives
+	public abstract class Objectives
 	{
-		NONE,
-		ID,
-		DESCRIPTION
+		public static final String ID = "objective_id";
+		public static final String DESCRIPTION = "objective_description";
 	}
 	
-	public static enum Triggers
+	public abstract class Triggers
 	{
-		NONE,
-		ID,
-		TYPE,
-		TYPE_OPTIONS,
-		ACTION_EVENT_ID,
-		COOLDOWNS
+		public static final String ID = "trigger_id";
+		public static final String TYPE = "trigger_type";
+		public static final String TYPE_OPTIONS = "trigger_type_options";
+		public static final String ACTION_EVENT_ID = "trigger_action_event";
+		public static final String COOLDOWNS = "trigger_cooldowns";
 	}
 	
-	public static enum Parties
+	public abstract class Parties
 	{
-		NONE,
-		ID,
-		MEMBERS,
-		OBJECTIVE_ID,
-		CHAPTER_ID,
-		DUNGEON_ID
+		public static final String ID = "party_id";
+		public static final String MEMBERS = "party_members";
+		public static final String OBJECTIVE_ID = "party_objecitve_id";
+		public static final String CHAPTER_ID = "party_chapter_id";
+		public static final String DUNGEON_ID = "party_dungeon_id";
 	}
 	
-	public static enum Player_Saves
+	public abstract class Player_Saves
 	{
-		NONE,
-		NAME,
-		ARMOR,
-		ITEMS,
-		HEALTH,
-		HUNGER,
-		LOCATION,
-		PARTY_ID
+		public static final String NAME = "player_name";
+		public static final String ARMOR = "player_armor";
+		public static final String ITEMS = "player_items";
+		public static final String HEALTH = "player_health";
+		public static final String HUNGER = "player_hunger";
+		public static final String LOCATION = "player_location";
+		public static final String PARTY_ID = "player_party_id";
 	}
 	
-	public static enum Messages
+	public abstract class Log
 	{
-		NONE,
-		ID,
-		TYPE,
-		MESSAGE
-	}
-	
-	public static enum Log
-	{
-		NONE,
-		DUNGEON_NAME,
-		PARTY_ID,
-		LOG_TYPE,
-		LOCATION,
-		BEFORE_DATA,
-		AFTER_DATA
+		public static final String DUNGEON_NAME = "dungeon_name";
+		public static final String PARTY_ID = "party_id";
+		public static final String LOG_TYPE = "log_type";
+		public static final String LOCATION = "location";
+		public static final String BEFORE_DATA = "before_data";
+		public static final String AFTER_DATA = "after_data";
 	}
 }
