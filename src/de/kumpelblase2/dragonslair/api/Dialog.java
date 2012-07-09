@@ -28,25 +28,25 @@ public class Dialog
 	{
 		try
 		{
-			this.id = result.getInt(TableColumns.Dialogs.ID.ordinal());
-			this.text = result.getString(TableColumns.Dialogs.TEXT.ordinal());
-			this.nextIDs.put(AnswerType.AGREEMENT, result.getInt(TableColumns.Dialogs.AGREEMENT_ID.ordinal()));
+			this.id = result.getInt(TableColumns.Dialogs.ID);
+			this.text = result.getString(TableColumns.Dialogs.TEXT);
+			this.nextIDs.put(AnswerType.AGREEMENT, result.getInt(TableColumns.Dialogs.AGREEMENT_ID));
 			if(result.wasNull() || this.nextIDs.get(AnswerType.AGREEMENT) == 0)
 				this.nextIDs.remove(AnswerType.AGREEMENT);
 			
-			this.nextIDs.put(AnswerType.CONSIDERING_AGREEMENT, result.getInt(TableColumns.Dialogs.CONSIDER_AGREEMENT_ID.ordinal()));
+			this.nextIDs.put(AnswerType.CONSIDERING_AGREEMENT, result.getInt(TableColumns.Dialogs.CONSIDER_AGREEMENT_ID));
 			if(result.wasNull() || this.nextIDs.get(AnswerType.CONSIDERING_AGREEMENT) == 0)
 				this.nextIDs.remove(AnswerType.CONSIDERING_AGREEMENT);
 			
-			this.nextIDs.put(AnswerType.DISAGREEMENT, result.getInt(TableColumns.Dialogs.DISAGREEMENT_ID.ordinal()));
+			this.nextIDs.put(AnswerType.DISAGREEMENT, result.getInt(TableColumns.Dialogs.DISAGREEMENT_ID));
 			if(result.wasNull() || this.nextIDs.get(AnswerType.DISAGREEMENT) == 0)
 				this.nextIDs.remove(AnswerType.DISAGREEMENT);
 			
-			this.nextIDs.put(AnswerType.CONSIDERING_DISAGREEMENT, result.getInt(TableColumns.Dialogs.CONSIDE_DISAGREEMENT_ID.ordinal()));
+			this.nextIDs.put(AnswerType.CONSIDERING_DISAGREEMENT, result.getInt(TableColumns.Dialogs.CONSIDER_DISAGREEMENT_ID));
 			if(result.wasNull() || this.nextIDs.get(AnswerType.CONSIDERING_DISAGREEMENT) == 0)
 				this.nextIDs.remove(AnswerType.CONSIDERING_DISAGREEMENT);
 			
-			this.nextIDs.put(AnswerType.CONSIDERING, result.getInt(TableColumns.Dialogs.CONSIDER_ID.ordinal()));
+			this.nextIDs.put(AnswerType.CONSIDERING, result.getInt(TableColumns.Dialogs.CONSIDER_ID));
 			if(result.wasNull() || this.nextIDs.get(AnswerType.CONSIDERING) == 0)
 				this.nextIDs.remove(AnswerType.CONSIDERING);
 			

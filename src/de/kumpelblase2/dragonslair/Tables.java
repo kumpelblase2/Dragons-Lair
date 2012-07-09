@@ -106,4 +106,10 @@ public enum Tables
 	{
 		return this.create;
 	}
+	
+	public String getSQLiteCreatingQuery()
+	{
+		String query = this.getCreatingQuery().replace("AUTO_INCREMENT", "").replace(" unsigned", "").replaceAll("enum\\(.*?\\)", "text");
+		return query.substring(0, query.lastIndexOf(")") + 1);
+	}
 }

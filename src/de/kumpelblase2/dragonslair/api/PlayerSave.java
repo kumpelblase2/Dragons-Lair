@@ -67,11 +67,11 @@ public class PlayerSave
 			if(result == null || !result.next())
 				return false;			
 			
-			this.player.setHealth(result.getInt(TableColumns.Player_Saves.HEALTH.ordinal()));
-			this.player.setFoodLevel(result.getInt(TableColumns.Player_Saves.HUNGER.ordinal()));
-			this.player.getInventory().setArmorContents(InventoryUtilities.stringToItems(result.getString(TableColumns.Player_Saves.ARMOR.ordinal())));
-			this.player.getInventory().setContents(InventoryUtilities.stringToItems(result.getString(TableColumns.Player_Saves.ITEMS.ordinal())));
-			this.player.teleport(WorldUtility.stringToLocation(result.getString(TableColumns.Player_Saves.LOCATION.ordinal())));
+			this.player.setHealth(result.getInt(TableColumns.Player_Saves.HEALTH));
+			this.player.setFoodLevel(result.getInt(TableColumns.Player_Saves.HUNGER));
+			this.player.getInventory().setArmorContents(InventoryUtilities.stringToItems(result.getString(TableColumns.Player_Saves.ARMOR)));
+			this.player.getInventory().setContents(InventoryUtilities.stringToItems(result.getString(TableColumns.Player_Saves.ITEMS)));
+			this.player.teleport(WorldUtility.stringToLocation(result.getString(TableColumns.Player_Saves.LOCATION)));
 			return true;
 		}
 		catch(Exception e)

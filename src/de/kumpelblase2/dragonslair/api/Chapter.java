@@ -17,8 +17,8 @@ public class Chapter
 	{
 		try
 		{
-			this.id = result.getInt(TableColumns.Chapters.ID.ordinal());
-			this.name = result.getString(TableColumns.Chapters.NAME.ordinal());
+			this.id = result.getInt(TableColumns.Chapters.ID);
+			this.name = result.getString(TableColumns.Chapters.NAME);
 		}
 		catch (SQLException e)
 		{
@@ -48,8 +48,8 @@ public class Chapter
 			if(this.id != -1)
 			{
 				PreparedStatement st = DragonsLairMain.createStatement("REPLACE INTO " + Tables.CHAPTERS + "(" +
-						"chapter_id," +
-						"chapter_name" +
+						TableColumns.Chapters.ID + "," +
+						TableColumns.Chapters.NAME +
 						") VALUES(?,?)");
 				st.setInt(1, this.id);
 				st.setString(2, this.name);
@@ -58,7 +58,7 @@ public class Chapter
 			else
 			{
 				PreparedStatement st = DragonsLairMain.createStatement("INSERT INTO " + Tables.CHAPTERS + "(" +
-						"chapter_name" +
+						TableColumns.Chapters.NAME +
 						") VALUES(?)");
 				st.setString(1, this.name);
 				st.execute();
@@ -78,7 +78,7 @@ public class Chapter
 	{
 		try
 		{
-			PreparedStatement st = DragonsLairMain.createStatement("REMOVE FROM " + Tables.CHAPTERS + " WHERE `chapter_id` = ?");
+			PreparedStatement st = DragonsLairMain.createStatement("REMOVE FROM " + Tables.CHAPTERS + " WHERE `" + TableColumns.Chapters.ID + "` = ?");
 			st.setInt(1, this.id);
 			st.execute();
 		}

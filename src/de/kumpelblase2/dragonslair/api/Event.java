@@ -22,9 +22,9 @@ public class Event
 	{
 		try
 		{
-			this.id = result.getInt(TableColumns.Events.ID.ordinal());
-			this.actionType = EventActionType.valueOf(result.getString(TableColumns.Events.ACTION_TYPE.ordinal()).toUpperCase());
-			String options = result.getString(TableColumns.Events.ACTION_OPTIONS.ordinal());
+			this.id = result.getInt(TableColumns.Events.ID);
+			this.actionType = EventActionType.valueOf(result.getString(TableColumns.Events.ACTION_TYPE).toUpperCase());
+			String options = result.getString(TableColumns.Events.ACTION_OPTIONS);
 			if(options != null && options.length() > 0 && options.contains(":"))
 			{
 				String[] optionSplitt = options.split(";");
@@ -47,7 +47,7 @@ public class Event
 				this.actionOptions = new Option[0];
 			}
 			
-			String cooldownString = result.getString(TableColumns.Events.COOLDOWNS.ordinal());
+			String cooldownString = result.getString(TableColumns.Events.COOLDOWNS);
 			if(cooldownString != null && cooldownString.length() > 0)
 			{
 				String[] splitted = cooldownString.split(";");
