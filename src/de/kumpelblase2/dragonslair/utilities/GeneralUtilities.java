@@ -383,11 +383,6 @@ public class GeneralUtilities
 		}
 	}
 	
-	public static int getDefaultCooldown(EventActionType type)
-	{
-		return 0;
-	}
-	
 	public static String replaceColors(String inString)
 	{
 		if(inString == null)

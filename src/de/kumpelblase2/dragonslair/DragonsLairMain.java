@@ -222,6 +222,7 @@ public class DragonsLairMain extends JavaPlugin
 			{
 				Class.forName("com.mysql.jdbc.Driver");
 				conn = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + db, user, pass);
+				conn.setAutoCommit(true);
 				if(this.getConfig().getBoolean("verbose-start"))
 					Log.info("Connected to database.");
 				return true;
