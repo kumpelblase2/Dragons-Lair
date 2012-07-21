@@ -97,6 +97,8 @@ public class TriggerEditDialog extends ValidatingPrompt
 	{
 		if(arg1.equals("cancel"))
 		{
+			this.t = null;
+			arg0.setSessionData("trigger_id", null);
 			arg0.setSessionData("trigger_type", null);
 			arg0.setSessionData("option", null);
 			arg0.setSessionData("trigger_option_type", null);

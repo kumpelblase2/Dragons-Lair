@@ -1,5 +1,6 @@
 package de.kumpelblase2.dragonslair;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.*;
 import org.bukkit.conversations.*;
 import org.bukkit.entity.Player;
@@ -67,13 +68,13 @@ public class DLCommandExecutor implements CommandExecutor
 			{
 				ConversationFactory f = DragonsLairMain.getDungeonManager().getConversationFactory();
 				Conversation c = f.withEscapeSequence("/exit").withFirstPrompt(new HelpDialog()).buildConversation((Conversable)sender);
-				((Conversable)sender).beginConversation(c);
+				c.begin();
 				return true;
 			}
 		}
 		else
 		{
-			sender.sendMessage("No command like that.");
+			sender.sendMessage(ChatColor.RED + "No command like that.");
 		}
 		
 		return false;
