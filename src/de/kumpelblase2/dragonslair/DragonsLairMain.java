@@ -304,7 +304,14 @@ public class DragonsLairMain extends JavaPlugin
 	{
 		try
 		{
-			BufferedReader r = new BufferedReader(new InputStreamReader(this.getConfig().getString("db.type").equals("mysql") ? DragonsLairMain.class.getResourceAsStream("/resources/rev" + nextRev + ".txt") : DragonsLairMain.class.getResourceAsStream("/resources/rev" + nextRev + "_sqlite.txt")));
+			InputStream stream = this.getConfig().getString("db.type").equals("mysql") ? this.getResource("/resources/rev" + nextRev + ".txt") : this.getResource("/resources/rev" + nextRev + "_sqlite.txt");
+			if(stream == null && !this.getConfig().getString("db.type").equals("mysql"))
+			{
+				if(this.getResource("/resources/rev" + nextRev + ".txt") != null)
+					return;
+			}
+			
+			BufferedReader r = new BufferedReader(new InputStreamReader(stream));
 			String s = "";
 			while((s = r.readLine()) != null)
 			{
