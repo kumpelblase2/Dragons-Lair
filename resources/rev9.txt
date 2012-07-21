@@ -1,0 +1,1 @@
+ALTER TABLE `triggers` CHANGE COLUMN `trigger_type` `trigger_type` enum('block_place','npc_interact','movement','block_break','npc_touch','dialog_occur','block_interact','chapter_change','objective_change','npc_damage','gather_item','mobs_killed','npc_death','level_achieve','item_craft');
