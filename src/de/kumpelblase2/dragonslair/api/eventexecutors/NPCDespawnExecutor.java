@@ -23,7 +23,7 @@ public class NPCDespawnExecutor implements EventExecutor
 					return false;
 			}
 				
-			DragonsLairMain.getDungeonManager().despawnNPC(n.getName());
+			DragonsLairMain.getDungeonManager().despawnNPC(n.getID());
 			
 			return true;
 		}

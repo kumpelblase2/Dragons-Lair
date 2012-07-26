@@ -21,18 +21,17 @@ import de.kumpelblase2.dragonslair.utilities.EnumChange;
 
 public class DungeonManager
 {
-	private Map<String, Dungeon> dungeons = new HashMap<String, Dungeon>();
-	private ConversationFactory cfactory;
-	private NPCManager npcManager;
-	private Settings settings = new Settings();
-	private Map<String, String> npcIDs = new HashMap<String, String>();
-	private Map<EventActionType, EventExecutor> executors = new HashMap<EventActionType, EventExecutor>();
-	private Set<ActiveDungeon> activeDungeons = new HashSet<ActiveDungeon>();
-	private PlayerQueue queue = new PlayerQueue();
-	private MapList maps = new MapList();
-	private Map<String, Integer> m_playerDungeons = new HashMap<String, Integer>();
-	private Set<EventMonster> spawnedEntities = Collections.synchronizedSet(new HashSet<EventMonster>());
-	private Map<String, Map<Integer, Map<EntityType, Integer>>> killedMobs = new HashMap<String, Map<Integer, Map<EntityType, Integer>>>();
+	private final Map<String, Dungeon> dungeons = new HashMap<String, Dungeon>();
+	private final ConversationFactory cfactory;
+	private final NPCManager npcManager;
+	private final Settings settings = new Settings();
+	private final Map<EventActionType, EventExecutor> executors = new HashMap<EventActionType, EventExecutor>();
+	private final Set<ActiveDungeon> activeDungeons = new HashSet<ActiveDungeon>();
+	private final PlayerQueue queue = new PlayerQueue();
+	private final MapList maps = new MapList();
+	private final Map<String, Integer> m_playerDungeons = new HashMap<String, Integer>();
+	private final Set<EventMonster> spawnedEntities = Collections.synchronizedSet(new HashSet<EventMonster>());
+	private final Map<String, Map<Integer, Map<EntityType, Integer>>> killedMobs = new HashMap<String, Map<Integer, Map<EntityType, Integer>>>();
 	
 	public DungeonManager()
 	{
@@ -60,19 +59,23 @@ public class DungeonManager
 		return this.settings;
 	}
 	
-	public Map<String, String> getSpawnedNPCIDs()
+	public Map<Integer, com.topcat.npclib.entity.NPC> getSpawnedNPCIDs()
 	{
-		return this.npcIDs;
+		return this.npcManager.getNPCs();
 	}
 	
 	public HumanNPC getNPCByName(String inName)
 	{
-		return (HumanNPC)this.npcManager.getNPC(this.npcIDs.get(inName));
+		NPC n = DragonsLairMain.getSettings().getNPCByName(inName);
+		if(n == null)
+			return null;
+		
+		return this.npcManager.getNPC(n.getID());
 	}
 	
 	public HumanNPC getNPCByEntity(Entity e)
 	{
-		return (HumanNPC)this.npcManager.getNPC(this.npcIDs.get(this.npcManager.getNPCIdFromEntity(e)));
+		return (HumanNPC)this.npcManager.getNPC(this.npcManager.getNPCIdFromEntity(e));
 	}
 	
 	public boolean executeEvent(Event e, Player p)
@@ -218,7 +221,23 @@ public class DungeonManager
 	public void spawnNPC(String name)
 	{
 		NPC npc = DragonsLairMain.getSettings().getNPCByName(name);
-		HumanNPC hnpc = (HumanNPC)this.getNPCManager().spawnHumanNPC(name, npc.getLocation());
+		this.spawnNPC(npc);
+	}
+	
+	public void spawnNPC(Integer id)
+	{
+		NPC npc = DragonsLairMain.getSettings().getNPCs().get(id);
+		if(npc == null)
+		{
+			DragonsLairMain.Log.warning("Unable to spawn NPC with id " + id + ".");
+			return;
+		}
+		this.spawnNPC(npc);
+	}
+	
+	public void spawnNPC(NPC npc)
+	{
+		HumanNPC hnpc = (HumanNPC)this.getNPCManager().spawnHumanNPC(npc);
 		if(hnpc != null)
 		{
 			if(npc.getSkin() != null && !npc.getSkin().equals(""))
@@ -226,17 +245,21 @@ public class DungeonManager
 			
 			hnpc.setItemInHand(npc.getHeldItem());
 			hnpc.getInventory().setArmorContents(npc.getArmorParts());
-			this.npcIDs.put(name, this.getNPCManager().getNPCIdFromEntity((Entity)hnpc.getBukkitEntity()));
 		}
 	}
 	
 	public boolean despawnNPC(String name)
 	{
-		if(!this.npcIDs.containsKey(name))
+		NPC n = DragonsLairMain.getSettings().getNPCByName(name);
+		if(n == null)
 			return false;
 		
-		this.npcManager.despawnById(this.npcIDs.get(name));
-		return true;
+		return this.despawnNPC(n.getID());
+	}
+	
+	public boolean despawnNPC(Integer id)
+	{
+		return this.npcManager.despawnById(id);
 	}
 	
 	public void spawnNPCs()
@@ -247,7 +270,7 @@ public class DungeonManager
 				for(NPC n : DragonsLairMain.getSettings().getNPCs().values())
 				{
 					if(n.shouldSpawnAtBeginning())
-						DragonsLairMain.getDungeonManager().spawnNPC(n.getName());
+						DragonsLairMain.getDungeonManager().spawnNPC(n);
 				}
 			}
 		});
@@ -625,5 +648,15 @@ public class DungeonManager
 				return ad;
 		}
 		return null;
+	}
+
+	public HumanNPC getNPCByID(Integer npcID)
+	{
+		return this.npcManager.getNPC(npcID);
+	}
+
+	public boolean despawnNPC(NPC n)
+	{
+		return this.despawnNPC(n.getID());
 	}
 }

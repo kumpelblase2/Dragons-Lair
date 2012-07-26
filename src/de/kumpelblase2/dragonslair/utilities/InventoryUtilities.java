@@ -10,7 +10,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import de.kumpelblase2.dragonslair.DragonsLairMain;
 
-public class InventoryUtilities
+public final class InventoryUtilities
 {
 	public static boolean isInventoryEmpty(Player p, boolean checkArmor)
 	{

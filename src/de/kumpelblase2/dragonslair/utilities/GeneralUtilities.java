@@ -8,7 +8,7 @@ import org.bukkit.potion.PotionEffectType;
 import de.kumpelblase2.dragonslair.DragonsLairMain;
 import de.kumpelblase2.dragonslair.api.*;
 
-public class GeneralUtilities
+public final class GeneralUtilities
 {
 	public static <T> List<T> getOrderedValues(Map<Integer, T> map)
 	{

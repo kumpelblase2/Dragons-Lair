@@ -11,7 +11,7 @@ import sun.reflect.ConstructorAccessor;
 import sun.reflect.FieldAccessor;
 import sun.reflect.ReflectionFactory;
 
-public class EnumChange
+public final class EnumChange
 {
 	private static ReflectionFactory reflectionFactory = ReflectionFactory.getReflectionFactory();
 

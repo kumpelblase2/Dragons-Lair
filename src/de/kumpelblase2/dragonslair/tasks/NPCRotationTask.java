@@ -8,12 +8,12 @@ import de.kumpelblase2.dragonslair.utilities.WorldUtility;
 
 public class NPCRotationTask implements Runnable
 {
-	private String npcName;
+	private Integer npcID;
 	private boolean looked = false;
 	
-	public NPCRotationTask(String name)
+	public NPCRotationTask(Integer id)
 	{
-		this.npcName = name;
+		this.npcID = id;
 	}
 	
 	@Override
@@ -22,7 +22,7 @@ public class NPCRotationTask implements Runnable
 		DragonsLairMain main = DragonsLairMain.getInstance();
 		if(main != null)
 		{
-			HumanNPC npc = DragonsLairMain.getDungeonManager().getNPCByName(this.npcName);
+			HumanNPC npc = DragonsLairMain.getDungeonManager().getNPCByID(this.npcID);
 			if(npc != null)
 			{
 				List<Entity> entities = npc.getBukkitEntity().getNearbyEntities(10, 5, 10);				

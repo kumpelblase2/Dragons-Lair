@@ -19,7 +19,7 @@ public class NPCConversation
 		this.player = p;
 		this.npc = n;
 		this.conv = c;
-		this.hnpc = (HumanNPC)DragonsLairMain.getDungeonManager().getNPCManager().getNPC(DragonsLairMain.getDungeonManager().getSpawnedNPCIDs().get(this.npc.getName()));
+		this.hnpc = DragonsLairMain.getDungeonManager().getNPCByID(this.npc.getID());
 	}
 	
 	public void adandon()

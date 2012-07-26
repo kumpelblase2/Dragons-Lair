@@ -28,7 +28,7 @@ public class NPCSpawnEventExecutor implements EventExecutor
 			}
 			else
 			{
-				DragonsLairMain.getDungeonManager().spawnNPC(n.getName());
+				DragonsLairMain.getDungeonManager().spawnNPC(n.getID());
 			}
 		}
 		catch(Exception ex)
