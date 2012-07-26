@@ -838,6 +838,9 @@ public class DLEventHandler implements Listener
 	{
 		Material outcome = event.getRecipe().getResult().getType();
 		
+		if(!this.triggers.containsKey(TriggerType.ITEM_CRAFT))
+			return;
+		
 		for(Trigger t : this.triggers.get(TriggerType.ITEM_CRAFT))
 		{
 			Material m;
