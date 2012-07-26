@@ -1,1 +1,0 @@
-ALTER TABLE `npcs` ADD COLUMN `npc_invincible` tinyint(1) DEFAULT '0';
