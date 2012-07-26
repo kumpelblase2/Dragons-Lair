@@ -31,7 +31,7 @@ public class DragonsLairMain extends JavaPlugin
 	private DLEventHandler eventHandler;
 	private ConversationHandler conversationHandler;
 	private LoggingManager logManager;
-	private final int DATABASE_REV = 8;
+	private final int DATABASE_REV = 9;
 	private boolean citizensEnabled = false;
 	private boolean economyEnabled = false;
 	private Economy econ;
@@ -304,10 +304,10 @@ public class DragonsLairMain extends JavaPlugin
 	{
 		try
 		{
-			InputStream stream = this.getConfig().getString("db.type").equals("mysql") ? this.getResource("/resources/rev" + nextRev + ".txt") : this.getResource("/resources/rev" + nextRev + "_sqlite.txt");
+			InputStream stream = this.getConfig().getString("db.type").equals("mysql") ? DragonsLairMain.class.getResourceAsStream("/resources/rev" + nextRev + ".txt") : DragonsLairMain.class.getResourceAsStream("/resources/rev" + nextRev + "_sqlite.txt");
 			if(stream == null && !this.getConfig().getString("db.type").equals("mysql"))
 			{
-				if(this.getResource("/resources/rev" + nextRev + ".txt") != null)
+				if(DragonsLairMain.class.getResourceAsStream("/resources/rev" + nextRev + ".txt") != null)
 					return;
 			}
 			
@@ -416,7 +416,7 @@ public class DragonsLairMain extends JavaPlugin
 				@Override
 				public int getValue()
 				{
-					return DragonsLairMain.getDungeonManager().getSpawnedNPCIDs().size();
+					return DragonsLairMain.getDungeonManager().getNPCManager().getSpawnedNPCIDs().size();
 				}
 				
 				@Override
