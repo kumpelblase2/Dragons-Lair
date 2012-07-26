@@ -183,7 +183,6 @@ public class DragonsLairMain extends JavaPlugin
 			this.manager.stopDungeons();
 			this.manager.saveCooldowns();
 		}
-		
 		instance = null;
 		try
 		{

@@ -27,7 +27,6 @@ public class NPCListDialog extends MessagePrompt
 		NPC[] npcs = DragonsLairMain.getSettings().getNPCs().values().toArray(new NPC[0]);
 		Arrays.sort(npcs, new Comparator<NPC>()
 		{
-
 			@Override
 			public int compare(NPC o1, NPC o2)
 			{
