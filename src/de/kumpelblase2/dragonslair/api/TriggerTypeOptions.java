@@ -4,23 +4,25 @@ import org.bukkit.ChatColor;
 
 public enum TriggerTypeOptions
 {
-	BLOCK_PLACE(new String[] { "world", "x", "y", "z" }, new String[] { "block_id", "delay", "cooldown" }),
-	NPC_INTERACT(new String[] { "npc_id" }, new String[] { "delay", "cooldown" }),
-	MOVEMENT(new String[] { "world", "x", "y", "z" }, new String[] { "delay", "x2", "y2", "z2", "cooldown" }),
-	BLOCK_BREAK(new String[] { "world", "x", "y", "z" }, new String[] { "block_id", "delay", "cooldown" }),
-	NPC_TOUCH(new String[] { "npc_id" }, new String[] { "delay", "cooldown" }),
-	DIALOG_OCCUR(new String[] { "npc_id", "dialog_id" }, new String[] { "delay", "cooldown" }),
-	BLOCK_INTERACT(new String[] { "world", "x", "y", "z" }, new String[] { "block_id", "delay", "cooldown" }),
-	CHAPTER_CHANGE(new String[] { "chapter_id" }, new String[] { "dungeon_id", "delay", "cooldown" }),
-	OBJECTIVE_CHANGE(new String[] { "objective_id" }, new String[] { "dungeon_id", "delay", "cooldown" }),
-	NPC_DAMAGE(new String[] { "npc_id" }, new String[] { "delay", "cooldown" }),
-	GATHER_ITEM(new String[] { "item_id", "amount" }, new String[] { "dungeon_id", "delay", "cooldown" }),
-	MOBS_KILLED(new String[] { "amount", "dungeon_id" }, new String[] { "mob_id", "spawned_by", "cooldown" }),
-	NPC_DEATH(new String[] { "npc_id" }, new String[] { "cooldown" }),
-	LEVEL_ACHIEVE(new String[] { "amount" }, new String[] { "dungeon_id", "delay", "cooldown" });
+	BLOCK_PLACE(new String[] { "world", "x", "y", "z" }, new String[] { "block_id", "x2", "y2", "z2" }),
+	NPC_INTERACT(new String[] { "npc_id" }, new String[0]),
+	MOVEMENT(new String[] { "world", "x", "y", "z" }, new String[] { "x2", "y2", "z2" }),
+	BLOCK_BREAK(new String[] { "world", "x", "y", "z" }, new String[] { "block_id", "x2", "y2", "z2" }),
+	NPC_TOUCH(new String[] { "npc_id" }, new String[0]),
+	DIALOG_OCCUR(new String[] { "npc_id", "dialog_id" }, new String[0]),
+	BLOCK_INTERACT(new String[] { "world", "x", "y", "z" }, new String[] { "block_id", "x2", "y2", "z2" }),
+	CHAPTER_CHANGE(new String[] { "chapter_id" }, new String[] { "dungeon_id" }),
+	OBJECTIVE_CHANGE(new String[] { "objective_id" }, new String[] { "dungeon_id" }),
+	NPC_DAMAGE(new String[] { "npc_id" }, new String[0]),
+	GATHER_ITEM(new String[] { "item_id", "amount" }, new String[] { "dungeon_id" }),
+	MOBS_KILLED(new String[] { "amount", "dungeon_id" }, new String[] { "mob_id", "spawned_by" }),
+	NPC_DEATH(new String[] { "npc_id" }, new String[0]),
+	LEVEL_ACHIEVE(new String[] { "amount" }, new String[] { "dungeon_id" }),
+	ITEM_CRAFT(new String[] { "item_id" }, new String[0]);
 	
 	private String[] requiredOptions;
 	private String[] optionalOptions;
+	private final String[] generalOptions = new String[] { "delay", "cooldown" };
 	private TriggerTypeOptions(String[] required, String[] optional)
 	{
 		this.requiredOptions = required;
@@ -34,7 +36,10 @@ public enum TriggerTypeOptions
 	
 	public String[] getOptionalOptions()
 	{
-		return this.optionalOptions;
+		String[] temp = new String[this.generalOptions.length + this.optionalOptions.length];
+		System.arraycopy(this.optionalOptions, 0, temp, 0, this.optionalOptions.length);
+		System.arraycopy(this.generalOptions, 0, temp, this.optionalOptions.length, this.generalOptions.length);
+		return temp;
 	}
 	
 	public boolean hasOption(String type)
@@ -56,18 +61,19 @@ public enum TriggerTypeOptions
 	public String getOptionString()
 	{
 		StringBuilder sb = new StringBuilder();
-		for(String required : this.requiredOptions)
+		for(String required : this.getRequiredOptions())
 		{
 			sb.append(ChatColor.AQUA + required + ChatColor.WHITE + ", ");
 		}
 		
-		if(this.optionalOptions.length == 0 && sb.length() > 2)
+		String[] optional = this.getOptionalOptions();
+		if(optional.length == 0 && sb.length() > 2)
 			sb.substring(0, sb.length() - 2);
 		
-		for(int i = 0; i < this.optionalOptions.length; i++)
+		for(int i = 0; i < optional.length; i++)
 		{
-			sb.append(ChatColor.YELLOW + this.optionalOptions[i] + ChatColor.WHITE);
-			if(i != this.optionalOptions.length - 1)
+			sb.append(ChatColor.YELLOW + optional[i] + ChatColor.WHITE);
+			if(i != optional.length - 1)
 				sb.append(", ");
 		}
 		return sb.toString();

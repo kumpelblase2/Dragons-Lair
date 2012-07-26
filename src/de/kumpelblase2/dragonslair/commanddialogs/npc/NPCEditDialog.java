@@ -107,7 +107,7 @@ public class NPCEditDialog extends ValidatingPrompt
 			
 			String option = (String)arg0.getSessionData("edit_option");
 			NPC n = DragonsLairMain.getSettings().getNPCByName((String)arg0.getSessionData("npc_name"));
-			boolean respawn = DragonsLairMain.getDungeonManager().despawnNPC(n.getName());
+			boolean respawn = DragonsLairMain.getDungeonManager().despawnNPC(n);
 			
 			if(option.equals("name"))
 			{
@@ -162,7 +162,7 @@ public class NPCEditDialog extends ValidatingPrompt
 			}
 			n.save();
 			if(respawn && n.shouldSpawnAtBeginning())
-				DragonsLairMain.getDungeonManager().spawnNPC(n.getName());
+				DragonsLairMain.getDungeonManager().spawnNPC(n);
 			
 			arg0.setSessionData("npc_name", null);
 			arg0.setSessionData("edit_option", null);

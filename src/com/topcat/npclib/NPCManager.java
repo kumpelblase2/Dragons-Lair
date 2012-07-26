@@ -27,13 +27,14 @@ import de.kumpelblase2.dragonslair.tasks.NPCRotationTask;
  */
 public class NPCManager
 {
-	private HashMap<String, NPC> npcs = new HashMap<String, NPC>();
-	private Map<String, Integer> npcRotationTasks = new HashMap<String, Integer>();
+	private final Map<Integer, NPC> npcs = Collections.synchronizedMap(new HashMap<Integer, NPC>());
+	private final Map<Integer, Integer> npcRotationTasks = new HashMap<Integer, Integer>();
 	private BServer server;
 	private int taskid;
-	private Map<World, BWorld> bworlds = new HashMap<World, BWorld>();
+	private final Map<World, BWorld> bworlds = new HashMap<World, BWorld>();
 	private NPCNetworkManager npcNetworkManager;
 	public static JavaPlugin plugin;
+	private final Set<Integer> spawnedIDs = Collections.synchronizedSet(new HashSet<Integer>());
 
 	public NPCManager(JavaPlugin plugin)
 	{
@@ -45,8 +46,8 @@ public class NPCManager
 				@Override
 				public void run()
 				{
-					HashSet<String> toRemove = new HashSet<String>();
-					for (String i : npcs.keySet())
+					HashSet<Integer> toRemove = new HashSet<Integer>();
+					for (Integer i : npcs.keySet())
 					{
 						Entity j = npcs.get(i).getEntity();
 						j.aA();
@@ -54,7 +55,7 @@ public class NPCManager
 							toRemove.add(i);
 					}
 					
-					for (String n : toRemove)
+					for (Integer n : toRemove)
 					{
 						((HumanNPC)npcs.get(n)).stopAttacking();
 						npcs.remove(n);
@@ -110,8 +111,10 @@ public class NPCManager
 		}
 	}
 
-	public NPC spawnHumanNPC(String name, Location l)
+	public NPC spawnHumanNPC(de.kumpelblase2.dragonslair.api.NPC inNpc)
 	{
+		Location l = inNpc.getLocation();
+		String name = inNpc.getName();
 		if(l.getWorld() == null)
 		{
 			DragonsLairMain.Log.info("Unable to spawn NPC '" + name + "' because the world doesn't exist.");
@@ -134,18 +137,12 @@ public class NPCManager
 			return null;
 		}
 		
-		int i = 0;
-		String id = name;
-		while (npcs.containsKey(id))
+		if(this.npcs.containsKey(inNpc.getID()))
 		{
-			id = name + i;
-			i++;
+			DragonsLairMain.Log.warning("Unable to spawn the same NPC twice.");
+			return null;
 		}
-		return spawnHumanNPC(name, l, id);
-	}
-
-	public NPC spawnHumanNPC(String name, Location l, String id)
-	{
+		
 		if (name.length() > 16)
 		{ // Check and nag if name is too long, spawn NPC anyway with shortened name.
 			String tmp = name.substring(0, 16);
@@ -153,25 +150,22 @@ public class NPCManager
 			server.getLogger().log(Level.WARNING, name + " has been shortened to " + tmp);
 			name = tmp;
 		}
-		if (npcs.containsKey(id))
-		{
-			server.getLogger().log(Level.WARNING, "NPC with that id already exists, existing NPC returned");
-			return npcs.get(id);
-		}
 		
 		BWorld world = getBWorld(l.getWorld());
 		NPCEntity npcEntity = new NPCEntity(this, world, name, new ItemInWorldManager(world.getWorldServer()));
 		npcEntity.setPositionRotation(l.getX(), l.getY(), l.getZ(), l.getYaw(), l.getPitch());
 		world.getWorldServer().addEntity(npcEntity); //the right way
 		NPC npc = new HumanNPC(npcEntity);
+		Integer id = inNpc.getID();
 		npcs.put(id, npc);
 		NPCRotationTask task = new NPCRotationTask(id);
 		this.npcRotationTasks.put(id, Bukkit.getScheduler().scheduleSyncRepeatingTask(DragonsLairMain.getInstance(), task, 2 * 20L, 2 * 20L));
-		DragonsLairMain.getDungeonManager().getSpawnedNPCIDs().put(name, id);
+		DragonsLairMain.getDungeonManager().getSpawnedNPCIDs().put(id, npc);
+		this.spawnedIDs.add(id);
 		return npc;
 	}
 
-	public void despawnById(String id)
+	public boolean despawnById(Integer id)
 	{
 		NPC npc = npcs.get(id);
 		if (npc != null)
@@ -180,7 +174,10 @@ public class NPCManager
 			this.npcRotationTasks.remove(id);
 			npcs.remove(id);
 			npc.removeFromWorld();
+			this.spawnedIDs.remove(id);
+			return true;
 		}
+		return false;
 	}
 
 	public void despawnHumanByName(String npcName)
@@ -188,8 +185,8 @@ public class NPCManager
 		if (npcName.length() > 16)
 			npcName = npcName.substring(0, 16); //Ensure you can still despawn
 		
-		HashSet<String> toRemove = new HashSet<String>();
-		for (String n : npcs.keySet())
+		HashSet<Integer> toRemove = new HashSet<Integer>();
+		for (Integer n : npcs.keySet())
 		{
 			NPC npc = npcs.get(n);
 			if (npc instanceof HumanNPC)
@@ -202,17 +199,18 @@ public class NPCManager
 			}
 		}
 		
-		for (String n : toRemove)
+		for (Integer n : toRemove)
 		{
 			Bukkit.getScheduler().cancelTask(this.npcRotationTasks.get(n));
 			this.npcRotationTasks.remove(n);
 			npcs.remove(n);
+			this.spawnedIDs.remove(n);
 		}
 	}
 
 	public void despawnAll()
 	{
-		for (Entry<String, NPC> entry : npcs.entrySet())
+		for (Entry<Integer, NPC> entry : npcs.entrySet())
 		{
 			if (entry.getValue() != null)
 				entry.getValue().removeFromWorld();
@@ -221,6 +219,7 @@ public class NPCManager
 		}
 		this.npcRotationTasks.clear();
 		npcs.clear();
+		this.spawnedIDs.clear();
 	}
 
 	public NPC getNPC(String id)
@@ -248,16 +247,21 @@ public class NPCManager
 		return ret;
 	}
 
-	public List<NPC> getNPCs()
+	public Map<Integer, NPC> getNPCs()
 	{
-		return new ArrayList<NPC>(npcs.values());
+		return this.npcs;
+	}
+	
+	public Set<Integer> getSpawnedNPCIDs()
+	{
+		return this.spawnedIDs;
 	}
 
-	public String getNPCIdFromEntity(org.bukkit.entity.Entity e)
+	public Integer getNPCIdFromEntity(org.bukkit.entity.Entity e)
 	{
 		if (e instanceof HumanEntity)
 		{
-			for (String i : npcs.keySet())
+			for (Integer i : npcs.keySet())
 			{
 				if (npcs.get(i).getBukkitEntity().getEntityId() == ((HumanEntity) e).getEntityId())
 					return i;
@@ -304,6 +308,11 @@ public class NPCManager
 	public NPCNetworkManager getNPCNetworkManager()
 	{
 		return npcNetworkManager;
+	}
+
+	public HumanNPC getNPC(Integer id)
+	{
+		return (HumanNPC)this.npcs.get(id);
 	}
 
 }

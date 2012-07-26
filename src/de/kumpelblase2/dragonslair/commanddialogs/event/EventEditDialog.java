@@ -64,6 +64,7 @@ public class EventEditDialog extends ValidatingPrompt
 	{
 		if(arg1.equals("cancel"))
 		{
+			this.e = null;
 			arg0.setSessionData("event_id", null);
 			arg0.setSessionData("option", null);
 			arg0.setSessionData("option_value", null);

@@ -5,7 +5,7 @@ import org.bukkit.*;
 import org.bukkit.entity.*;
 import de.kumpelblase2.dragonslair.DragonsLairMain;
 
-public class WorldUtility
+public final class WorldUtility
 {
 	public static LivingEntity getNearestEntity(Location loc, List<Entity> entites, List<EntityType> excluded)
 	{

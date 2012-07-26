@@ -3,7 +3,6 @@ package de.kumpelblase2.dragonslair.api;
 import java.sql.*;
 import java.util.*;
 import de.kumpelblase2.dragonslair.*;
-import de.kumpelblase2.dragonslair.utilities.GeneralUtilities;
 
 public class Event
 {
@@ -248,7 +247,7 @@ public class Event
 	{
 		if(this.getOption("cooldown") == null)
 		{
-			return GeneralUtilities.getDefaultCooldown(this.getActionType());
+			return 0;
 		}
 		else
 		{

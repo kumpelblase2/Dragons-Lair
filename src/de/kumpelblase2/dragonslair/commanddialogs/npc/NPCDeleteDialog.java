@@ -13,7 +13,7 @@ public class NPCDeleteDialog extends ValidatingPrompt
 	{
 		if(context.getSessionData("npc_name") == null)
 		{
-			return ChatColor.GREEN + "Please enter the name of the npc to delete:";
+			return ChatColor.GREEN + "Please enter the name or id of the npc to delete:";
 		}
 		else
 		{
@@ -35,7 +35,23 @@ public class NPCDeleteDialog extends ValidatingPrompt
 			if(input.equals("back"))
 				return new NPCManageDialog();
 			
-			context.setSessionData("npc_name", input);
+			Integer id = 0;
+			try
+			{
+				id = Integer.parseInt(input);
+			}
+			catch(Exception e)
+			{
+				NPC n = DragonsLairMain.getSettings().getNPCByName(input);
+				if(n == null)
+				{
+					context.getForWhom().sendRawMessage(ChatColor.RED + "Something bad happened. Please try again with the id of the npc instead of the name.");
+					return this;
+				}
+				
+				id = n.getID();
+			}
+			context.setSessionData("npc_name", id);
 			return this;
 		}
 		else
@@ -48,11 +64,11 @@ public class NPCDeleteDialog extends ValidatingPrompt
 			
 			if(input.equals("delete"))
 			{
-				String name = (String)context.getSessionData("npc_name");
-				DragonsLairMain.getDungeonManager().despawnNPC(name);
-				NPC npc = DragonsLairMain.getSettings().getNPCByName(name);
+				Integer id = (Integer)context.getSessionData("npc_name");
+				DragonsLairMain.getDungeonManager().despawnNPC(id);
+				NPC npc = DragonsLairMain.getSettings().getNPCs().get(id);
 				npc.remove();
-				DragonsLairMain.getSettings().getNPCs().remove(DragonsLairMain.getSettings().getNPCByName(name).getID());
+				DragonsLairMain.getSettings().getNPCs().remove(npc.getID());
 			}
 			context.setSessionData("npc_name", null);
 			return new NPCManageDialog();
@@ -67,10 +83,22 @@ public class NPCDeleteDialog extends ValidatingPrompt
 		
 		if(context.getSessionData("npc_name") == null)
 		{
-			if(DragonsLairMain.getSettings().getNPCByName(input) == null)
+			try
 			{
-				context.getForWhom().sendRawMessage(ChatColor.RED + "The npc doesn't exist.");
-				return false;
+				int id = Integer.parseInt(input);
+				if(DragonsLairMain.getSettings().getNPCs().get((Integer)id) == null)
+				{
+					context.getForWhom().sendRawMessage(ChatColor.RED + "The npc doesn't exist.");
+					return false;
+				}
+			}
+			catch(Exception e)
+			{
+				if(DragonsLairMain.getSettings().getNPCByName(input) == null )
+				{
+					context.getForWhom().sendRawMessage(ChatColor.RED + "The npc doesn't exist.");
+					return false;
+				}
 			}
 		}
 		return true;

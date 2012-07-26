@@ -168,7 +168,7 @@ public class NPCCreateDialog extends ValidatingPrompt
 			n.save();
 			DragonsLairMain.getSettings().getNPCs().put(n.getID(), n);
 			if(n.shouldSpawnAtBeginning())
-				DragonsLairMain.getDungeonManager().spawnNPC(n.getName());
+				DragonsLairMain.getDungeonManager().spawnNPC(n.getID());
 			
 			arg0.setSessionData("npc_name", null);
 			arg0.setSessionData("npc_skin", null);
@@ -189,11 +189,11 @@ public class NPCCreateDialog extends ValidatingPrompt
 		
 		if(arg0.getSessionData("npc_name") == null)
 		{
-			if(DragonsLairMain.getSettings().getNPCByName(arg1) != null)
+			/*if(DragonsLairMain.getSettings().getNPCByName(arg1) != null)
 			{
 				arg0.getForWhom().sendRawMessage(ChatColor.RED + "A npc with that name already exists.");
 				return false;
-			}
+			}*/
 			return true;
 		}
 		else if(arg0.getSessionData("npc_skin") == null)

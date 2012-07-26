@@ -25,17 +25,27 @@ public class TriggerLocationEntry
 	
 	public void addTrigger(Trigger t)
 	{
-		this.triggers.put(t.getType(), new HashSet<Trigger>());
-		this.triggers.get(t.getType()).add(t);
+		Set<Trigger> temp = new HashSet<Trigger>();
+		temp.add(t);
+		this.triggers.put(t.getType(), temp);
 	}
 	
 	public Set<Trigger> getTriggersForType(TriggerType type)
 	{
-		return this.triggers.get(type);
+		Set<Trigger> triggers = this.triggers.get(type);
+		if(triggers != null)
+			return triggers;
+		else
+			return new HashSet<Trigger>();
 	}
 	
-	public boolean equals(Location loc)
+	public boolean equals(Object o)
 	{
+		if(!(o instanceof Location))
+			return false;
+		
+		Location loc = (Location)o;
+		
 		return this.location.getWorld().getName().equals(loc.getWorld().getName()) && this.location.getBlockX() == loc.getBlockX() && this.location.getBlockY() == loc.getBlockY() && this.location.getBlockZ() == loc.getBlockZ();
 	}
 }

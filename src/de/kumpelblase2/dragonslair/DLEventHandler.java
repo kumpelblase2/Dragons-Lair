@@ -8,6 +8,7 @@ import org.bukkit.entity.*;
 import org.bukkit.event.*;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.*;
+import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.*;
@@ -58,8 +59,6 @@ public class DLEventHandler implements Listener
 				y2 = t.getOption("y2");
 				z2 = t.getOption("z2");
 				String world = t.getOption("world");
-				if(x == null || y == null || z == null)
-					continue;
 				
 				if(x2 == null)
 					x2 = x;
@@ -68,13 +67,21 @@ public class DLEventHandler implements Listener
 				if(z2 == null)
 					z2 = z;
 				
-				int minx, maxx, miny, maxy, minz, maxz;
-				minx = Integer.parseInt(x);
-				maxx = Integer.parseInt(x2);
-				miny = Integer.parseInt(y);
-				maxy = Integer.parseInt(y2);
-				minz = Integer.parseInt(z);
-				maxz = Integer.parseInt(z2);
+				int minx = 0, maxx = 0, miny = 0, maxy = 0, minz = 0, maxz = 0;
+				try
+				{
+					minx = Integer.parseInt(x);
+					maxx = Integer.parseInt(x2);
+					miny = Integer.parseInt(y);
+					maxy = Integer.parseInt(y2);
+					minz = Integer.parseInt(z);
+					maxz = Integer.parseInt(z2);
+				}
+				catch(Exception e)
+				{
+					DragonsLairMain.Log.warning("The was an error parsing the location of trigger " + t.getID() + ".");
+					continue;
+				}
 				
 				for(int posx = minx; posx <= maxx; posx++ )
 				{
@@ -823,5 +830,28 @@ public class DLEventHandler implements Listener
 			return;
 		
 		DragonsLairMain.getInstance().getLoggingManager().logBlockDataChange(ad, clicked.getState());
+	}
+	
+	
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+	public void onPlayerCraft(CraftItemEvent event)
+	{
+		Material outcome = event.getRecipe().getResult().getType();
+		
+		for(Trigger t : this.triggers.get(TriggerType.ITEM_CRAFT))
+		{
+			Material m;
+			try
+			{
+				m = Material.getMaterial(Integer.parseInt(t.getOption("item_id")));
+			}
+			catch(Exception e)
+			{
+				m = Material.getMaterial(t.getOption("item_id").replace(" ", "_").toUpperCase());
+			}
+			
+			if(m == outcome)
+				DragonsLairMain.getDungeonManager().callTrigger(t, (Player)event.getWhoClicked());
+		}
 	}
 }

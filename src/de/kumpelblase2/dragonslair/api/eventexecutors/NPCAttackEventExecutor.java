@@ -20,13 +20,13 @@ public class NPCAttackEventExecutor implements EventExecutor
 			NPC n = DragonsLairMain.getSettings().getNPCByName(npcid);
 			if(n == null)
 			{
-				int id = Integer.parseInt(npcid);
+				Integer id = Integer.parseInt(npcid);
 				n = DragonsLairMain.getSettings().getNPCs().get(id);
 				if(n == null)
 					return false;
 			}
 			String target = e.getOption("target");
-			HumanNPC npc = DragonsLairMain.getDungeonManager().getNPCByName(n.getName());
+			HumanNPC npc = DragonsLairMain.getDungeonManager().getNPCByID(n.getID());
 			List<EntityType> types = new ArrayList<EntityType>();
 			if(target == null || target.equals("enemy"))
 			{
