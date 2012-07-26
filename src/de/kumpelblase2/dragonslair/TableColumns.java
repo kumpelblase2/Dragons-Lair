@@ -49,7 +49,7 @@ public abstract class TableColumns
 		public static final String SKIN = "npc_skin";
 		public static final String LOCATION = "npc_location";
 		public static final String HELD_ITEM_ID = "npc_held_item";
-		public static final String ARMOR = "npc_item";
+		public static final String ARMOR = "npc_armor";
 		public static final String SHOULD_SPAWN_AT_BEGINNING = "npc_spawned_from_beginning";
 		public static final String INVINCIBLE = "npc_invincible";
 	}
