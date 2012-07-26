@@ -16,7 +16,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Bed;
 import org.bukkit.material.Door;
-import com.topcat.npclib.entity.HumanNPC;
 import com.topcat.npclib.nms.*;
 import com.topcat.npclib.nms.NpcEntityTargetEvent.NpcTargetReason;
 import de.kumpelblase2.dragonslair.api.*;
@@ -125,8 +124,7 @@ public class DLEventHandler implements Listener
 				if(!this.triggers.containsKey(TriggerType.NPC_INTERACT))
 					return;
 				
-				HumanNPC entitynpc = DragonsLairMain.getDungeonManager().getNPCByEntity(event.getEntity());
-				NPC npc = DragonsLairMain.getSettings().getNPCByName(entitynpc.getName());
+				NPC npc = DragonsLairMain.getDungeonManager().getNPCByNPCEntity(event.getEntity());
 				
 				for(Trigger t : this.triggers.get(TriggerType.NPC_INTERACT))
 				{
@@ -145,8 +143,7 @@ public class DLEventHandler implements Listener
 				if(!this.triggers.containsKey(TriggerType.NPC_TOUCH))
 					return;
 				
-				HumanNPC entitynpc = DragonsLairMain.getDungeonManager().getNPCByEntity(event.getEntity());
-				NPC npc = DragonsLairMain.getSettings().getNPCByName(entitynpc.getName());
+				NPC npc = DragonsLairMain.getDungeonManager().getNPCByNPCEntity(event.getEntity());
 				
 				for(Trigger t : this.triggers.get(TriggerType.NPC_TOUCH))
 				{
@@ -175,8 +172,7 @@ public class DLEventHandler implements Listener
 		if(!DragonsLairMain.isWorldEnabled(event.getDamager().getWorld().getName()))
 			return;
 		
-		HumanNPC entitynpc = DragonsLairMain.getDungeonManager().getNPCByEntity(event.getDamager());
-		NPC npc = DragonsLairMain.getSettings().getNPCByName(entitynpc.getName());
+		NPC npc = DragonsLairMain.getDungeonManager().getNPCByNPCEntity(event.getEntity());
 		
 		for(Trigger t : this.triggers.get(TriggerType.NPC_DAMAGE))
 		{

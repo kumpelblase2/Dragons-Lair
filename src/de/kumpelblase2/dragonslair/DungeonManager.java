@@ -78,6 +78,11 @@ public class DungeonManager
 		return (HumanNPC)this.npcManager.getNPC(this.npcManager.getNPCIdFromEntity(e));
 	}
 	
+	public de.kumpelblase2.dragonslair.api.NPC getNPCByNPCEntity(Entity npc)
+	{
+		return this.getSettings().getNPCs().get(this.npcManager.getNPCIdFromEntity(npc));
+	}
+	
 	public boolean executeEvent(Event e, Player p)
 	{
 		ActiveDungeon ad = this.getDungeonOfPlayer(p.getName());
