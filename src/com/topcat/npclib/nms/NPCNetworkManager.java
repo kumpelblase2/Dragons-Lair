@@ -1,5 +1,6 @@
 package com.topcat.npclib.nms;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import net.minecraft.server.*;
 
@@ -10,7 +11,7 @@ import net.minecraft.server.*;
 public class NPCNetworkManager extends NetworkManager
 {
 
-	public NPCNetworkManager() 
+	public NPCNetworkManager() throws IOException
 	{
 		super(new NullSocket(), "NPC Manager", new NetHandler()
 		{
