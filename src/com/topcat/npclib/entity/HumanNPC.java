@@ -85,7 +85,7 @@ public class HumanNPC extends NPC
 
 	public void setSneaking()
 	{
-		getEntity().setSneak(true);
+		getEntity().setSneaking(true);
 	}
 
 	public SpoutPlayer getSpoutPlayer()
@@ -126,7 +126,7 @@ public class HumanNPC extends NPC
 	public void setYaw(float newYaw)
 	{
 		getEntity().yaw = newYaw;
-		((EntityPlayer)getEntity()).X = newYaw;
+		((EntityPlayer)getEntity()).as = newYaw;
 	}
 	
 	public void setPitch(float newPitch)

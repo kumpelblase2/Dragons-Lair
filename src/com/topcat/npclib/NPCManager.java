@@ -50,7 +50,7 @@ public class NPCManager
 					for (Integer i : npcs.keySet())
 					{
 						Entity j = npcs.get(i).getEntity();
-						j.aA();
+						j.z();
 						if (j.dead)
 							toRemove.add(i);
 					}

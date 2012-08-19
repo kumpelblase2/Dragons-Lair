@@ -70,8 +70,8 @@ public class BServer
 
 	public void sendConsoleCommand(String cmd)
 	{
-		if (!mcServer.isStopped && MinecraftServer.isRunning(mcServer))
-			mcServer.issueCommand(cmd, mcServer);
+		if (mcServer.isRunning())
+			((DedicatedServer)mcServer).issueCommand(cmd, mcServer);
 	}
 
 	public Logger getLogger()
@@ -91,12 +91,7 @@ public class BServer
 
 	public PropertyManager getPropertyManager()
 	{
-		return mcServer.propertyManager;
-	}
-
-	public NetworkListenThread getNetworkThread()
-	{
-		return mcServer.networkListenThread;
+		return mcServer.getPropertyManager();
 	}
 
 	public Server getServer()

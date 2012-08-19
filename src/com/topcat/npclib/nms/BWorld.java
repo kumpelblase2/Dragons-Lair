@@ -58,7 +58,7 @@ public class BWorld
 
 	public PlayerManager getPlayerManager()
 	{
-		return wServer.manager;
+		return wServer.getPlayerManager();
 	}
 
 	public CraftWorld getCraftWorld()
