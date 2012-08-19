@@ -279,6 +279,8 @@ public class BlockEntry implements Recoverable
 				NoteBlock n = (NoteBlock)inState;
 				n.setRawNote(Byte.parseByte(options.get("note")));
 				break;
+			default:
+				break;
 		}
 		inState.update();
 	}

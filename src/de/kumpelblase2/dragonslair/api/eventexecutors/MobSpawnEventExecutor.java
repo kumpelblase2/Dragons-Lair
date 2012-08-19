@@ -2,6 +2,7 @@ package de.kumpelblase2.dragonslair.api.eventexecutors;
 
 import org.bukkit.*;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import de.kumpelblase2.dragonslair.*;
 import de.kumpelblase2.dragonslair.api.*;
@@ -34,9 +35,9 @@ public class MobSpawnEventExecutor implements EventExecutor
 			for(int i = 0; i < amount; i++)
 			{
 				if(ad != null)
-					dm.getSpawnedMobs().add(new EventMonster(e, ad, w.spawnCreature(l, mobType)));
+					dm.getSpawnedMobs().add(new EventMonster(e, ad, (LivingEntity)w.spawnEntity(l, mobType)));
 				else
-					w.spawnCreature(l, mobType);
+					w.spawnEntity(l, mobType);
 			}
 		}
 		catch(Exception ex)

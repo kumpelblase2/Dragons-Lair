@@ -259,7 +259,7 @@ public class DLEventHandler implements Listener
 	}
 	
 	@EventHandler(ignoreCancelled = true)
-	public void onPlayerChat(PlayerChatEvent event)
+	public void onPlayerChat(AsyncPlayerChatEvent event)
 	{
 		Player p = event.getPlayer();
 		if(!DragonsLairMain.isWorldEnabled(p.getWorld().getName()))
@@ -360,6 +360,8 @@ public class DLEventHandler implements Listener
 						DragonsLairMain.getInstance().getLoggingManager().logBlockBreak(ad, placed.getRelative(BlockFace.DOWN).getState());
 					else
 						DragonsLairMain.getInstance().getLoggingManager().logBlockBreak(ad, placed.getRelative(BlockFace.UP).getState());
+					break;
+				default:
 					break;
 			}
 		}

@@ -318,12 +318,13 @@ public class DragonsLairMain extends JavaPlugin
 					return;
 			}
 			
-			BufferedReader r = new BufferedReader(new InputStreamReader(stream));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
 			String s = "";
-			while((s = r.readLine()) != null)
+			while((s = reader.readLine()) != null)
 			{
 				createStatement(s).execute();
 			}
+			reader.close();
 		}
 		catch (Exception e)
 		{

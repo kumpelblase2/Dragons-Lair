@@ -82,7 +82,6 @@ public class NPCManager
 
 	private class SL implements Listener
 	{
-		@SuppressWarnings("unused")
 		@EventHandler
 		public void onPluginDisable(PluginDisableEvent event)
 		{
@@ -96,7 +95,6 @@ public class NPCManager
 
 	private class WL implements Listener
 	{
-		@SuppressWarnings("unused")
 		@EventHandler
 		public void onChunkLoad(ChunkLoadEvent event)
 		{
