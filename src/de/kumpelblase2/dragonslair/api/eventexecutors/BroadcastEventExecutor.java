@@ -16,26 +16,24 @@ public class BroadcastEventExecutor implements EventExecutor
 		String message = e.getOption("message");
 		String dungeon = e.getOption("dungeon_id");
 		String permission = e.getOption("permission");
+		ActiveDungeon ad = null;
+		if(dungeon != null)
+		{
+			try
+			{
+				Integer id = Integer.parseInt(dungeon);
+				ad = DragonsLairMain.getDungeonManager().getActiveDungeonByID(id);
+			}
+			catch(Exception ex)
+			{
+				ad = DragonsLairMain.getDungeonManager().getActiveDungeonByName(dungeon);
+			}
+		}
 		
 		try
 		{
-			if(dungeon != null)
-			{
-				int id = Integer.parseInt(dungeon);
-				ActiveDungeon ad;
-				ad = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
-				if(ad == null || ad.getInfo().getID() != id)
-				{
-					for(ActiveDungeon a : DragonsLairMain.getDungeonManager().getActiveDungeons())
-					{
-						if(ad.getInfo().getID() == id)
-						{
-							ad = a;
-							break;
-						}
-					}
-				}
-				
+			if(ad != null)
+			{	
 				for(String member : ad.getCurrentParty().getMembers())
 				{
 					Player pl = Bukkit.getPlayer(member);

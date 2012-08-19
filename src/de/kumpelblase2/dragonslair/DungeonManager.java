@@ -14,6 +14,8 @@ import de.kumpelblase2.dragonslair.api.*;
 import de.kumpelblase2.dragonslair.api.eventexecutors.EventExecutor;
 import de.kumpelblase2.dragonslair.events.EventCallEvent;
 import de.kumpelblase2.dragonslair.events.TriggerCallEvent;
+import de.kumpelblase2.dragonslair.events.dungeon.DungeonEndEvent;
+import de.kumpelblase2.dragonslair.events.dungeon.DungeonStartEvent;
 import de.kumpelblase2.dragonslair.map.DLMap;
 import de.kumpelblase2.dragonslair.map.MapList;
 import de.kumpelblase2.dragonslair.settings.Settings;
@@ -85,7 +87,10 @@ public class DungeonManager
 	
 	public boolean executeEvent(Event e, Player p)
 	{
-		ActiveDungeon ad = this.getDungeonOfPlayer(p.getName());
+		if(e == null)
+			return false;
+		
+		ActiveDungeon ad = (p != null ? this.getDungeonOfPlayer(p.getName()) : null);
 		String name = (ad == null) ? "_GENERAL_" : ad.getInfo().getName();
 		boolean onCD = this.isOnCooldown(name, e);
 		EventCallEvent event = new EventCallEvent(e, p, onCD);		
@@ -284,6 +289,11 @@ public class DungeonManager
 	public ActiveDungeon startDungeon(int id, String[] players)
 	{
 		Dungeon d = this.getSettings().getDungeons().get(id);
+		DungeonStartEvent event = new DungeonStartEvent(d);
+		Bukkit.getPluginManager().callEvent(event);
+		if(event.isCancelled())
+			return null;
+		
 		ActiveDungeon ad = new ActiveDungeon(d, Party.getPartyOfPlayers(players, id));
 		this.activeDungeons.add(ad);
 		for(String p : players)
@@ -331,6 +341,8 @@ public class DungeonManager
 			ActiveDungeon ad = dungeons.next();
 			if(ad.getInfo().getID() == id)
 			{
+				DungeonEndEvent event = new DungeonEndEvent(ad);
+				Bukkit.getPluginManager().callEvent(event);
 				for(String p : ad.getCurrentParty().getMembers())
 				{
 					this.maps.removeMap(Bukkit.getPlayer(p));
@@ -421,7 +433,11 @@ public class DungeonManager
 
 	public void stopDungeons()
 	{
-		
+		for(ActiveDungeon ad : this.activeDungeons)
+		{
+			ad.stop(true);
+		}
+		this.activeDungeons.clear();
 	}
 	
 	public void addCooldown(String name, Trigger t)
@@ -461,10 +477,16 @@ public class DungeonManager
 	
 	public Event getEventFromMob(LivingEntity entity)
 	{
+		EventMonster mob = this.getEventMonsterByEntity(entity);
+		return (mob == null ? null : mob.getEvent());
+	}
+	
+	public EventMonster getEventMonsterByEntity(LivingEntity entity)
+	{
 		for(EventMonster mob : this.spawnedEntities)
 		{
 			if(mob.equals(entity))
-				return mob.getEvent();
+				return mob;
 		}
 		return null;
 	}
@@ -653,6 +675,15 @@ public class DungeonManager
 				return ad;
 		}
 		return null;
+	}
+	
+	public ActiveDungeon getActiveDungeonByID(Integer id)
+	{
+		Dungeon d = DragonsLairMain.getSettings().getDungeons().get(id);
+		if(d == null)
+			return null;
+		
+		return this.getActiveDungeonByName(d.getName());
 	}
 
 	public HumanNPC getNPCByID(Integer npcID)

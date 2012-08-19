@@ -19,6 +19,7 @@ public class Dungeon
 	private String startMessage;
 	private String endMessage;
 	private String readyMessage;
+	private boolean breakableBlocks;
 	
 	public Dungeon()
 	{
@@ -48,6 +49,8 @@ public class Dungeon
 			this.readyMessage = result.getString(TableColumns.Dungeons.PARTY_READY_MESSAGE);
 			if(result.wasNull())
 				this.readyMessage = "";
+			
+			this.breakableBlocks = result.getBoolean(TableColumns.Dungeons.BREAKABLE_BLOCKS);
 		}
 		catch (SQLException e)
 		{
@@ -160,6 +163,16 @@ public class Dungeon
 		this.readyMessage = message;
 	}
 	
+	public boolean areBlocksBreakable()
+	{
+		return this.breakableBlocks;
+	}
+	
+	public void setBlocksBreakable(boolean breakable)
+	{
+		this.breakableBlocks = breakable;
+	}
+	
 	public void save()
 	{
 		try
@@ -177,8 +190,9 @@ public class Dungeon
 						"dungeon_max_players," +
 						"dungeon_start_message," +
 						"dungeon_end_message," +
-						"dungeon_party_ready_message" +
-						") VALUES(?,?,?,?,?,?,?,?,?,?,?)");
+						"dungeon_party_ready_message," +
+						"dungeon_blocks_breakable" +
+						") VALUES(?,?,?,?,?,?,?,?,?,?,?,?)");
 				st.setInt(1, this.id);
 				st.setString(2, this.name);
 				st.setInt(3, this.startingObjective.getID());
@@ -190,6 +204,7 @@ public class Dungeon
 				st.setString(9, this.startMessage);
 				st.setString(10, this.endMessage);
 				st.setString(11, this.readyMessage);
+				st.setBoolean(12, this.breakableBlocks);
 				st.execute();
 			}
 			else
@@ -204,8 +219,9 @@ public class Dungeon
 						"dungeon_max_players," +
 						"dungeon_start_message," +
 						"dungeon_end_message," +
-						"dungeon_party_ready_message" +
-						") VALUES(?,?,?,?,?,?,?,?,?,?)");
+						"dungeon_party_ready_message," +
+						"dungeon_blocks_breakable" +
+						") VALUES(?,?,?,?,?,?,?,?,?,?,?)");
 				st.setString(1, this.name);
 				st.setInt(2, this.startingObjective.getID());
 				st.setInt(3, this.startingChapter.getID());
@@ -216,6 +232,7 @@ public class Dungeon
 				st.setString(8, this.startMessage);
 				st.setString(9, this.endMessage);
 				st.setString(10, this.readyMessage);
+				st.setBoolean(11, this.breakableBlocks);
 				st.execute();
 				ResultSet keys = st.getGeneratedKeys();
 				if(keys.next())

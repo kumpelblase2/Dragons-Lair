@@ -6,12 +6,14 @@ import org.bukkit.entity.Player;
 import de.kumpelblase2.dragonslair.DragonsLairMain;
 import de.kumpelblase2.dragonslair.api.ActiveDungeon;
 import de.kumpelblase2.dragonslair.api.Dungeon;
+import de.kumpelblase2.dragonslair.conversation.AnswerConverter;
+import de.kumpelblase2.dragonslair.conversation.AnswerType;
 import de.kumpelblase2.dragonslair.utilities.GeneralUtilities;
 import de.kumpelblase2.dragonslair.utilities.WorldUtility;
 
 public class DungeonEditDialog extends ValidatingPrompt
 {
-	public final String[] options = new String[] { "name", "starting objective", "starting chapter", "starting pos", "safe word", "min players", "max players", "starting message", "ending message", "ready message" };
+	public final String[] options = new String[] { "name", "starting objective", "starting chapter", "starting pos", "safe word", "min players", "max players", "starting message", "ending message", "ready message", "breakable blocks" };
 	
 	@Override
 	public String getPromptText(ConversationContext context)
@@ -59,9 +61,13 @@ public class DungeonEditDialog extends ValidatingPrompt
 			{
 				return ChatColor.GREEN + "Please enter a new ending message:";
 			}
-			else
+			else if(option.equals("reapty message"))
 			{
 				return ChatColor.GREEN + "Please enter a new ready message:";
+			}
+			else
+			{
+				return ChatColor.GREEN + "Should blocks be breakable?";
 			}
 		}
 		
@@ -165,6 +171,11 @@ public class DungeonEditDialog extends ValidatingPrompt
 			else if(option.equals("ready message"))
 			{
 				d.setPartyReadyMessage(arg1);
+			}
+			else
+			{
+				AnswerType answer = new AnswerConverter(arg1).convert();
+				d.setBlocksBreakable((answer == AnswerType.AGREEMENT || answer == AnswerType.CONSIDERING_AGREEMENT));
 			}
 			
 			d.save();

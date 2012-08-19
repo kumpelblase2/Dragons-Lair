@@ -67,6 +67,18 @@ public class Party
 		this.members[inNumber - 1] = inName;
 	}
 	
+	public String getMemberString()
+	{
+		StringBuilder sb = new StringBuilder();
+		for(int i = 0; i < this.members.length; i++)
+		{
+			sb.append(this.members[i]);
+			if(i != this.members.length - 1)
+				sb.append(",");
+		}
+		return sb.toString();
+	}
+	
 	public void setCurrentChapter(int id)
 	{
 		this.chapterID = id;
@@ -96,11 +108,8 @@ public class Party
 	{
 		try
 		{
-			String memberstring = "";
-			for(int i = 0; i < this.members.length; i++)
-			{
-				memberstring += this.members[i] + ((i == this.members.length - 1) ? "" : ",");
-			}
+			String memberstring = this.getMemberString();
+			
 			if(this.id != -1)
 			{
 				PreparedStatement st = DragonsLairMain.createStatement("REPLACE INTO " + Tables.PARTIES + "(" +

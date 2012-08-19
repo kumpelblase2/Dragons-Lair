@@ -28,7 +28,9 @@ public enum EventActionOptions
 	CHANGE_LEVEL(new String[] { "amount", "change_type" }, new String[] { "scope" }),
 	CHANGE_HEALTH(new String[] { "amount", "change_type" }, new String[] { "scope" }),
 	CHANGE_HUNGER(new String[] { "amout", "change_type" }, new String[] { "scope" }),
-	EXECUTE_COMMAND(new String[] { "command" }, new String[] { "execute_as" });
+	EXECUTE_COMMAND(new String[] { "command" }, new String[] { "execute_as" }),
+	START_SCHEDULED_EVENT(new String[] { "event_id" }, new String[0]),
+	STOP_SCHEDULED_EVENT(new String[] { "event_id" }, new String[0]);
 	
 	private String[] requiredOptions;
 	private String[] optionalOptions;

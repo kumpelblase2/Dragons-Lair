@@ -12,6 +12,7 @@ public class ConversationHandler implements ConversationAbandonedListener
 {
 	private Map<String, NPCConversation> conversations = new HashMap<String, NPCConversation>();
 	private Set<String> safeWordConversations = new HashSet<String>();
+	private Set<String> respawnConversations = new HashSet<String>();
 	
     public static Prompt getPromptByID(int id, String npc)
     {
@@ -70,13 +71,29 @@ public class ConversationHandler implements ConversationAbandonedListener
 	public void startSafeWordConversation(Player p)
 	{
 		ConversationFactory f = DragonsLairMain.getDungeonManager().getConversationFactory();
-    	Conversation c = f.withFirstPrompt(new SafeWordPrompt()).buildConversation(p);
-    	p.beginConversation(c);
+    	f.withFirstPrompt(new SafeWordPrompt()).buildConversation(p).begin();
     	this.safeWordConversations.add(p.getName());
 	}
 	
 	public void removeSafeWordConversation(Player p)
 	{
 		this.safeWordConversations.remove(p.getName());
+	}
+	
+	public void startRespawnConversation(Player p)
+	{
+		ConversationFactory f = DragonsLairMain.getDungeonManager().getConversationFactory();
+		f.withFirstPrompt(new RespawnPrompt()).buildConversation(p).begin();
+		this.respawnConversations.add(p.getName());
+	}
+	
+	public void removeRespawnConversation(Player p)
+	{
+		this.respawnConversations.remove(p.getName());
+	}
+	
+	public boolean isInRespawnConversation(Player p)
+	{
+		return this.respawnConversations.contains(p.getName());
 	}
 }

@@ -21,6 +21,7 @@ import com.topcat.npclib.nms.NpcEntityTargetEvent.NpcTargetReason;
 import de.kumpelblase2.dragonslair.api.*;
 import de.kumpelblase2.dragonslair.api.Event;
 import de.kumpelblase2.dragonslair.api.NPC;
+import de.kumpelblase2.dragonslair.conversation.ConversationHandler;
 import de.kumpelblase2.dragonslair.events.conversation.*;
 import de.kumpelblase2.dragonslair.events.dungeon.*;
 import de.kumpelblase2.dragonslair.logging.TNTList;
@@ -33,6 +34,7 @@ public class DLEventHandler implements Listener
 	private Map<TriggerType, Set<Trigger>> triggers = new HashMap<TriggerType, Set<Trigger>>();
 	private Set<TriggerLocationEntry> locations = new HashSet<TriggerLocationEntry>();
 	private TNTList tntList = new TNTList();
+	private Set<String> deadPlayers = new HashSet<String>();
 	
 	public void reloadTriggers()
 	{
@@ -111,6 +113,11 @@ public class DLEventHandler implements Listener
 		}
 	}
 	
+	public void removePlayerFromDeathObserving(String player)
+	{
+		this.deadPlayers.remove(player);
+	}
+	
 	@EventHandler(ignoreCancelled = true)
 	public void onInteractNPC(EntityTargetEvent event)
 	{
@@ -180,9 +187,16 @@ public class DLEventHandler implements Listener
 			if(npcid == null)
 				continue;
 			
-			if(npcid.equals(npc.getID() + ""))
+			try
 			{
-				DragonsLairMain.getDungeonManager().callTrigger(t, (Player)event.getDamager());
+				Integer id = Integer.parseInt(npcid);
+				if(id == (Integer)npc.getID())
+					DragonsLairMain.getDungeonManager().callTrigger(t, (Player)event.getDamager());
+			}
+			catch(Exception e)
+			{
+				if(npc.getName().equals(npcid))
+					DragonsLairMain.getDungeonManager().callTrigger(t, (Player)event.getDamager());
 			}
 		}
 		
@@ -323,6 +337,12 @@ public class DLEventHandler implements Listener
 		ActiveDungeon ad = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
 		if(ad != null)
 		{
+			if(!ad.getInfo().areBlocksBreakable())
+			{
+				event.setCancelled(true);
+				return;
+			}
+			
 			DragonsLairMain.getInstance().getLoggingManager().logBlockBreak(ad, placed.getState());
 			switch(placed.getType())
 			{
@@ -383,7 +403,7 @@ public class DLEventHandler implements Listener
 	public void onExplode(EntityExplodeEvent event)
 	{
 		TNTEntry e = this.tntList.getEntry(event.getLocation());
-		if(e != null)
+		if(e != null && event.getEntityType() == EntityType.PRIMED_TNT)
 		{
 			ActiveDungeon ad = DragonsLairMain.getDungeonManager().getActiveDungeonByName(e.getDungeon());
 			if(ad == null)
@@ -393,6 +413,20 @@ public class DLEventHandler implements Listener
 			for(Block b : blocks)
 			{
 				DragonsLairMain.getInstance().getLoggingManager().logBlockBreak(ad, b.getState());				
+			}
+		}
+		
+		if(event.getEntityType() == EntityType.CREEPER)
+		{
+			EventMonster en = DragonsLairMain.getDungeonManager().getEventMonsterByEntity((LivingEntity)event.getEntity());
+			if(en == null)
+				return;
+			
+			ActiveDungeon ad = en.getDungeon();
+			if(!ad.getInfo().areBlocksBreakable())
+			{
+				event.blockList().clear(); //TODO does this actually work, because it didn't used to work properly?
+				return;
 			}
 		}
 	}
@@ -852,5 +886,68 @@ public class DLEventHandler implements Listener
 			if(m == outcome)
 				DragonsLairMain.getDungeonManager().callTrigger(t, (Player)event.getWhoClicked());
 		}
+	}
+	
+	@EventHandler(priority = EventPriority.HIGH)
+	public void onRespawn(PlayerRespawnEvent event) //TODO should this really happen when a player dies? Maybe something like a ghost mode or being able to get revived?
+	{
+		ActiveDungeon ad = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(event.getPlayer().getName());
+		if(ad != null)
+		{
+			event.setRespawnLocation(ad.getInfo().getStartingPosition());
+		}
+	}
+	
+	@EventHandler
+	public void onPlayerDeath(EntityDeathEvent event)
+	{
+		if(!(event.getEntity() instanceof Player))
+			return;
+		
+		Player p = (Player)event.getEntity();
+		ActiveDungeon ad = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
+		if(ad == null)
+			return;
+		
+		ad.playerDies(p.getName());
+		this.deadPlayers.add(p.getName());
+	}
+	
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onDungeonEnd(DungeonEndEvent event)
+	{
+		for(String member : event.getDungeon().getCurrentParty().getMembers())
+		{
+			this.deadPlayers.remove(member);
+		}
+	}
+	
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+	public void onDeadPlayerMove(PlayerMoveEvent event)
+	{
+		Player p = event.getPlayer();
+		if(!this.deadPlayers.contains(p.getName()))
+			return;
+		
+		Location from = event.getFrom();
+		Location to = event.getTo();
+		if(from.getBlockX() == to.getBlockX() && from.getBlockY() == to.getBlockY())
+			return;
+		
+		ActiveDungeon ad = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
+		Location deathLoc = ad.getDeathLocationForPlayer(p.getName()).getDeathLocation();
+		ConversationHandler h = DragonsLairMain.getInstance().getConversationHandler();
+		if(to.distanceSquared(deathLoc) <= 100 && !h.isInRespawnConversation(p))
+			h.startRespawnConversation(p);
+	}
+	
+	@EventHandler
+	public void onDeadPickup(PlayerPickupItemEvent event)
+	{
+		Player p = event.getPlayer();
+		if(!this.deadPlayers.contains(p.getName()))
+			return;
+		
+		event.setCancelled(true);
 	}
 }
