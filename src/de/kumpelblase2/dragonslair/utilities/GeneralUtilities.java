@@ -336,7 +336,7 @@ public final class GeneralUtilities
 		else if(option.equals("breakable blocks"))
 		{
 			AnswerType answer = new AnswerConverter(arg1).convert();
-			return answer == AnswerType.AGREEMENT || answer == AnswerType.CONSIDERING_AGREEMENT;
+			return answer != AnswerType.NOTHING;
 		}
 		else if(option.equals("event_id"))
 		{

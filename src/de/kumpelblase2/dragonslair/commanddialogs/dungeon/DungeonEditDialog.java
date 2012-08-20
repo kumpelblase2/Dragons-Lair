@@ -97,7 +97,17 @@ public class DungeonEditDialog extends ValidatingPrompt
 			if(arg1.equals("back"))
 				return new DungeonManageDialog();
 			
-			arg0.setSessionData("dungeon", arg1);
+			try
+			{
+				Integer id = Integer.parseInt(arg1);
+				arg0.setSessionData("dungeon", id);
+			}
+			catch(Exception e)
+			{
+				Dungeon d = DragonsLairMain.getSettings().getDungeonByName(arg1);
+				arg0.setSessionData("dungeon", (Integer)d.getID());
+			}
+			
 		}
 		else if(arg0.getSessionData("option") == null)
 		{
@@ -117,7 +127,7 @@ public class DungeonEditDialog extends ValidatingPrompt
 				return this;
 			}
 			
-			Dungeon d = DragonsLairMain.getSettings().getDungeonByName((String)arg0.getSessionData("dungeon"));
+			Dungeon d = DragonsLairMain.getSettings().getDungeons().get((Integer)arg0.getSessionData("dungeon"));
 			if(d == null)
 			{
 				arg0.getForWhom().sendRawMessage(ChatColor.RED + "An error occurred.");
@@ -195,11 +205,25 @@ public class DungeonEditDialog extends ValidatingPrompt
 		
 		if(arg0.getSessionData("dungeon") == null)
 		{
-			Dungeon d = DragonsLairMain.getSettings().getDungeonByName(arg1);
-			if(d == null)
+			Dungeon d = null;
+			try
 			{
-				arg0.getForWhom().sendRawMessage(ChatColor.RED + "The dungeon does not exist.");
-				return false;
+				Integer id = Integer.parseInt(arg1);
+				d = DragonsLairMain.getSettings().getDungeons().get(id);
+				if(d == null)
+				{
+					arg0.getForWhom().sendRawMessage(ChatColor.RED + "A dungeon with that id doesn't exists.");
+					return false;
+				}
+			}
+			catch(Exception e)
+			{
+				d = DragonsLairMain.getSettings().getDungeonByName(arg1);
+				if(d == null)
+				{
+					arg0.getForWhom().sendRawMessage(ChatColor.RED + "The dungeon does not exist.");
+					return false;
+				}
 			}
 			
 			for(ActiveDungeon ad : DragonsLairMain.getDungeonManager().getActiveDungeons())
@@ -212,7 +236,7 @@ public class DungeonEditDialog extends ValidatingPrompt
 			}
 			return true;
 		}
-		else if(arg0.getSessionData("dungeon") != null && arg0.getSessionData("option") == null)
+		else if(arg0.getSessionData("option") == null)
 		{
 			for(String option : this.options)
 			{
@@ -221,12 +245,10 @@ public class DungeonEditDialog extends ValidatingPrompt
 			}
 			return false;
 		}
-		else if(arg0.getSessionData("option") != null)
+		else
 		{
-			String option = (String)arg0.getSessionData("option");
-			return GeneralUtilities.isValidOptionInput(arg0, arg1, option);
-		}	
-		return true;
+			return GeneralUtilities.isValidOptionInput(arg0, arg1, (String)arg0.getSessionData("option"));
+		}
 	}
 
 }

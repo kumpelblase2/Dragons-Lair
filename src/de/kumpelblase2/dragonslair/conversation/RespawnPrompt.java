@@ -44,7 +44,7 @@ public class RespawnPrompt extends ValidatingPrompt
 		}
 		else
 		{
-			if(arg1.equals("yes") || arg1.equals("'yes'"))
+			if(arg1.replace("'", "").equals("yes"))
 			{
 				Player p = (Player)arg0.getForWhom();
 				DragonsLairMain.getInstance().getConversationHandler().removeRespawnConversation(p);

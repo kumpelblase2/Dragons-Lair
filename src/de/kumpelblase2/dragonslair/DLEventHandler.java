@@ -427,7 +427,7 @@ public class DLEventHandler implements Listener
 			ActiveDungeon ad = en.getDungeon();
 			if(!ad.getInfo().areBlocksBreakable())
 			{
-				event.blockList().clear(); //TODO does this actually work, because it didn't used to work properly?
+				event.blockList().clear();
 				return;
 			}
 		}

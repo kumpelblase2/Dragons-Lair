@@ -174,7 +174,7 @@ public class DungeonCreateDialog extends ValidatingPrompt
 			
 			context.setSessionData("end_message", input);
 		}
-		else if(context.getSessionData("party_ready_mesage") == null)
+		else if(context.getSessionData("party_ready_message") == null)
 		{
 			if(input.equals("back"))
 			{
@@ -328,7 +328,7 @@ public class DungeonCreateDialog extends ValidatingPrompt
 				return false;
 			}
 		}
-		if(context.getSessionData("party_ready_message") != null)
+		else if(context.getSessionData("party_ready_message") != null)
 		{
 			AnswerType answer = new AnswerConverter(input).convert();
 			return answer != AnswerType.NOTHING;

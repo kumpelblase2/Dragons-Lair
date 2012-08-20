@@ -540,14 +540,15 @@ public class DragonsLairMain extends JavaPlugin
 	{
 		try
 		{
-			if(getInstance().getConfig().getString("db.type").equals("mysql"))
-				getInstance().getMysqlConnection().prepareStatement("DO 1").execute();
-			return true;
+			if(!getInstance().getMysqlConnection().isValid(3))
+				return false;
 		}
-		catch(Exception e)
+		catch (SQLException e)
 		{
 			return false;
 		}
+
+		return true;
 	}
 	
 	public static EventScheduler getEventScheduler()
