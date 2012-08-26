@@ -6,7 +6,9 @@ import java.util.Iterator;
 import net.minecraft.server.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.event.player.PlayerMoveEvent;
 import de.kumpelblase2.npclib.NPCManager;
+import de.kumpelblase2.npclib.nms.NPCEntity;
 import de.kumpelblase2.npclib.pathing.*;
 
 public class NPC
@@ -149,6 +151,13 @@ public class NPC
 						angle = (float) Math.toDegrees(Math.atan2(last.b.getX() - n.b.getX(), n.b.getZ() - last.b.getZ()));
 						look = (float) (Math.toDegrees(Math.asin(last.b.getY() - n.b.getY())) / 2);
 					}
+					PlayerMoveEvent event = new PlayerMoveEvent(((NPCEntity)getEntity()).getBukkitEntity(), getEntity().getBukkitEntity().getLocation(), n.b.getLocation());
+					Bukkit.getPluginManager().callEvent(event);
+					if(event.isCancelled())
+					{
+						this.path.cancel = true;
+						return;
+					}
 					getEntity().setPositionRotation(n.b.getX() + 0.5, n.b.getY(), n.b.getZ() + 0.5, angle, look);
 					((EntityPlayer)getEntity()).as = angle;
 				}
@@ -171,12 +180,16 @@ public class NPC
 	public void stopWalking()
 	{
 		if(this.path != null)
+		{
 			this.path.cancel = true;
+			Bukkit.getServer().getScheduler().cancelTask(taskid);
+			taskid = 0;
+		}
 	}
 
 	public boolean isWalking()
 	{
-		return (this.pathIterator != null && this.pathIterator.hasNext()) && this.path != null;
+		return (this.pathIterator != null && this.pathIterator.hasNext()) && this.path != null && !this.path.cancel;
 	}
 
 }
