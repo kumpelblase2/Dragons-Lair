@@ -115,5 +115,7 @@ public final class TableColumns
 		public static final String PLAYER_NAME = "player_name";
 		public static final String PARTY_ID = "party_id";
 		public static final String DEATH_LOCATION = "death_location";
+		public static final String ARMOR = "armor";
+		public static final String INVENTORY = "inventory";
 	}
 }

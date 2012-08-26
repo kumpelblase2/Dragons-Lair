@@ -911,6 +911,8 @@ public class DLEventHandler implements Listener
 		if(ad == null)
 			return;
 		
+		event.getDrops().clear();
+		event.setDroppedExp(0);
 		ad.playerDies(p.getName());
 		this.deadPlayers.add(p.getName());
 	}

@@ -8,6 +8,7 @@ import org.bukkit.conversations.ValidatingPrompt;
 import org.bukkit.entity.Player;
 import de.kumpelblase2.dragonslair.DragonsLairMain;
 import de.kumpelblase2.dragonslair.api.ActiveDungeon;
+import de.kumpelblase2.dragonslair.api.DeathLocation;
 
 public class RespawnPrompt extends ValidatingPrompt
 {
@@ -59,8 +60,15 @@ public class RespawnPrompt extends ValidatingPrompt
 					
 					Bukkit.getPlayer(member).showPlayer(p);
 				}
+				
+				if(((String)arg0.getSessionData("selected_option")).equals("resurrect"))
+				{
+					DeathLocation dloc = ad.getDeathLocationForPlayer(p.getName());
+					p.getInventory().setArmorContents(dloc.getArmor());
+					p.getInventory().setContents(dloc.getInventory());
+				}
+				ad.removeDeathLocation(p.getName());
 				DragonsLairMain.getInstance().getEventHandler().removePlayerFromDeathObserving(p.getName());
-				//TODO How should resurrection get handled?
 			}
 			else
 			{

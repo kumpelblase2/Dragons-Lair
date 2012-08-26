@@ -14,6 +14,7 @@ import de.kumpelblase2.dragonslair.TableColumns;
 import de.kumpelblase2.dragonslair.logging.LoggingManager;
 import de.kumpelblase2.dragonslair.logging.Recoverable;
 import de.kumpelblase2.dragonslair.map.DLMapRenderer;
+import de.kumpelblase2.dragonslair.utilities.InventoryUtilities;
 import de.kumpelblase2.dragonslair.utilities.WorldUtility;
 
 public class ActiveDungeon
@@ -83,7 +84,9 @@ public class ActiveDungeon
 				String player = result.getString(TableColumns.Death_Locations.PLAYER_NAME);
 				int party = result.getInt(TableColumns.Death_Locations.PARTY_ID);
 				Location loc = WorldUtility.stringToLocation(result.getString(TableColumns.Death_Locations.DEATH_LOCATION));
-				DeathLocation dloc = new DeathLocation(player, loc, party);
+				ItemStack[] armor = InventoryUtilities.stringToItems(result.getString(TableColumns.Death_Locations.ARMOR));
+				ItemStack[] inv = InventoryUtilities.stringToItems(result.getString(TableColumns.Death_Locations.INVENTORY));
+				DeathLocation dloc = new DeathLocation(player, loc, party, armor, inv);
 				this.deathLocations.put(player, dloc);
 			}
 			DragonsLairMain.createStatement("DELETE FROM `death_locations` WHERE `party_id` = " + p.getID()).execute();
@@ -253,7 +256,12 @@ public class ActiveDungeon
 	
 	public void createDeathLocation(String player, Location loc)
 	{
-		this.deathLocations.put(player, new DeathLocation(player, loc, this.currentParty.getID()));
+		this.createDeathLocation(player, loc, new ItemStack[0], new ItemStack[0]);
+	}
+	
+	public void createDeathLocation(String player, Location loc, ItemStack[] armor, ItemStack[] inventory)
+	{
+		this.deathLocations.put(player, new DeathLocation(player, loc, this.currentParty.getID(), armor, inventory));
 	}
 	
 	public Map<String, SavedPlayer> getSavedPlayers()
@@ -271,6 +279,6 @@ public class ActiveDungeon
 			
 			Bukkit.getPlayer(member).hidePlayer(dead);
 		}
-		this.createDeathLocation(dead.getName(), dead.getLocation());
+		this.createDeathLocation(dead.getName(), dead.getLocation(), dead.getInventory().getArmorContents(), dead.getInventory().getContents());
 	}
 }

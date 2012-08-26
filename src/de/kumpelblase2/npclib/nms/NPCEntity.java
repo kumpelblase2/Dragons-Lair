@@ -1,4 +1,4 @@
-package de.kumpelblase2.npclib.nms;
+ package de.kumpelblase2.npclib.nms;
 //original provided by Topcat, modified by kumpelblase2
 
 import net.minecraft.server.*;
