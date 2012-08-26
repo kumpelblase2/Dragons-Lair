@@ -1,4 +1,5 @@
-package com.topcat.npclib.nms;
+package de.kumpelblase2.npclib.nms;
+//original provided by Topcat, modified by kumpelblase2
 
 import java.io.*;
 import java.net.Socket;

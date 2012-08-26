@@ -8,8 +8,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import com.topcat.npclib.NPCManager;
-import com.topcat.npclib.entity.HumanNPC;
 import de.kumpelblase2.dragonslair.api.*;
 import de.kumpelblase2.dragonslair.api.eventexecutors.EventExecutor;
 import de.kumpelblase2.dragonslair.events.EventCallEvent;
@@ -20,6 +18,8 @@ import de.kumpelblase2.dragonslair.map.DLMap;
 import de.kumpelblase2.dragonslair.map.MapList;
 import de.kumpelblase2.dragonslair.settings.Settings;
 import de.kumpelblase2.dragonslair.utilities.EnumChange;
+import de.kumpelblase2.npclib.NPCManager;
+import de.kumpelblase2.npclib.entity.HumanNPC;
 
 public class DungeonManager
 {
@@ -61,7 +61,7 @@ public class DungeonManager
 		return this.settings;
 	}
 	
-	public Map<Integer, com.topcat.npclib.entity.NPC> getSpawnedNPCIDs()
+	public Map<Integer, de.kumpelblase2.npclib.entity.NPC> getSpawnedNPCIDs()
 	{
 		return this.npcManager.getNPCs();
 	}

@@ -1,10 +1,10 @@
 package de.kumpelblase2.dragonslair.events.conversation;
 
 import org.bukkit.conversations.Conversation;
-import com.topcat.npclib.entity.HumanNPC;
 import de.kumpelblase2.dragonslair.DragonsLairMain;
 import de.kumpelblase2.dragonslair.api.NPC;
 import de.kumpelblase2.dragonslair.events.BaseEvent;
+import de.kumpelblase2.npclib.entity.HumanNPC;
 
 public class ConversationEvent extends BaseEvent
 {

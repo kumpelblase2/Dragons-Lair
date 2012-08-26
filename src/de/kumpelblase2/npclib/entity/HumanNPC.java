@@ -1,4 +1,5 @@
-package com.topcat.npclib.entity;
+package de.kumpelblase2.npclib.entity;
+//original provided by Topcat, modified by kumpelblase2
 
 import net.minecraft.server.EntityPlayer;
 import net.minecraft.server.Packet18ArmAnimation;
@@ -9,9 +10,9 @@ import org.bukkit.entity.*;
 import org.bukkit.inventory.*;
 import org.getspout.spout.player.SpoutCraftPlayer;
 import org.getspout.spoutapi.player.SpoutPlayer;
-import com.topcat.npclib.nms.NPCEntity;
 import de.kumpelblase2.dragonslair.DragonsLairMain;
 import de.kumpelblase2.dragonslair.tasks.NPCAttackTask;
+import de.kumpelblase2.npclib.nms.NPCEntity;
 
 public class HumanNPC extends NPC
 {

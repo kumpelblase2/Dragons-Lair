@@ -5,8 +5,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityTargetEvent;
-import com.topcat.npclib.nms.NpcEntityTargetEvent;
 import de.kumpelblase2.dragonslair.api.NPC;
+import de.kumpelblase2.npclib.nms.NpcEntityTargetEvent;
 
 public class DLCitizenHandler implements Listener
 {

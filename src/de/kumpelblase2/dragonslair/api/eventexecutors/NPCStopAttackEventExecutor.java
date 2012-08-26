@@ -1,10 +1,10 @@
 package de.kumpelblase2.dragonslair.api.eventexecutors;
 
 import org.bukkit.entity.Player;
-import com.topcat.npclib.entity.HumanNPC;
 import de.kumpelblase2.dragonslair.DragonsLairMain;
 import de.kumpelblase2.dragonslair.api.Event;
 import de.kumpelblase2.dragonslair.api.NPC;
+import de.kumpelblase2.npclib.entity.HumanNPC;
 
 public class NPCStopAttackEventExecutor implements EventExecutor
 {

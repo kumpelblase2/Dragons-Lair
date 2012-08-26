@@ -1,12 +1,13 @@
-package com.topcat.npclib.nms;
+package de.kumpelblase2.npclib.nms;
+//original provided by Topcat, modified by kumpelblase2
 
 import net.minecraft.server.*;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityTargetEvent;
-import com.topcat.npclib.NPCManager;
 import de.kumpelblase2.dragonslair.DragonsLairMain;
+import de.kumpelblase2.npclib.NPCManager;
 
 /**
  *

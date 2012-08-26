@@ -16,8 +16,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Bed;
 import org.bukkit.material.Door;
-import com.topcat.npclib.nms.*;
-import com.topcat.npclib.nms.NpcEntityTargetEvent.NpcTargetReason;
 import de.kumpelblase2.dragonslair.api.*;
 import de.kumpelblase2.dragonslair.api.Event;
 import de.kumpelblase2.dragonslair.api.NPC;
@@ -28,6 +26,8 @@ import de.kumpelblase2.dragonslair.logging.TNTList;
 import de.kumpelblase2.dragonslair.logging.TNTList.TNTEntry;
 import de.kumpelblase2.dragonslair.map.DLMap;
 import de.kumpelblase2.dragonslair.utilities.InventoryUtilities;
+import de.kumpelblase2.npclib.nms.*;
+import de.kumpelblase2.npclib.nms.NpcEntityTargetEvent.NpcTargetReason;
 
 public class DLEventHandler implements Listener
 {

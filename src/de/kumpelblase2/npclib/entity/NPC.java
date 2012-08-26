@@ -1,12 +1,13 @@
-package com.topcat.npclib.entity;
+package de.kumpelblase2.npclib.entity;
+//original provided by Topcat, modified by kumpelblase2
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import net.minecraft.server.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import com.topcat.npclib.NPCManager;
-import com.topcat.npclib.pathing.*;
+import de.kumpelblase2.npclib.NPCManager;
+import de.kumpelblase2.npclib.pathing.*;
 
 public class NPC
 {
