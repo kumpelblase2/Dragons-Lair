@@ -6,10 +6,10 @@ import de.kumpelblase2.dragonslair.DragonsLairMain;
 
 public class PlayerQueue
 {
-	private Set<QueuedPlayer> players = new HashSet<QueuedPlayer>();
+	private List<QueuedPlayer> players = new ArrayList<QueuedPlayer>();
 	
 	public ActiveDungeon start(Dungeon dungeon)
-	{	
+	{
 		if(!this.hasEnoughPeople(dungeon))
 			return null;
 		
@@ -20,14 +20,14 @@ public class PlayerQueue
 			QueuedPlayer player = it.next();
 			if(player.getDungeon().equals(dungeon.getName()))
 			{
-				if(dungeon.getMaxPlayers() != 0 && startingPlayers.size() <= dungeon.getMaxPlayers())
+				if(dungeon.getMaxPlayers() != 0 && startingPlayers.size() > dungeon.getMaxPlayers())
 					break;
 				
 				startingPlayers.add(player.getPlayer().getName());
 				it.remove();
 			}
 		}
-		
+
 		return DragonsLairMain.getDungeonManager().startDungeon(dungeon.getID(), startingPlayers.toArray(new String[0]));
 	}
 	
