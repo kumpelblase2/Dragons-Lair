@@ -52,12 +52,16 @@ public class PlayerQueue
 		if(this.isInQueue(p))
 			return;
 		
-		
 		this.players.add(new QueuedPlayer(dungeon, p));
 	}
 	
 	public boolean isInQueue(Player p)
 	{
-		return players.contains(p);
+		for(QueuedPlayer qp : this.players)
+		{
+			if(qp.equals(p))
+				return true;
+		}
+		return false;
 	}
 }

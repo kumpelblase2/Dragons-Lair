@@ -79,7 +79,7 @@ public final class GeneralUtilities
 			}
 			return true;
 		}
-		else if(option.equalsIgnoreCase("x") || option.equalsIgnoreCase("y") || option.equalsIgnoreCase("z") || option.equalsIgnoreCase("x2") || option.equalsIgnoreCase("y2") || option.equalsIgnoreCase("z2") || option.equalsIgnoreCase("amount") || option.equalsIgnoreCase("damage") || option.equalsIgnoreCase("cooldown") || option.equalsIgnoreCase("duration") || option.equalsIgnoreCase("amplifier"))
+		else if(option.equalsIgnoreCase("x") || option.equalsIgnoreCase("y") || option.equalsIgnoreCase("z") || option.equalsIgnoreCase("x2") || option.equalsIgnoreCase("y2") || option.equalsIgnoreCase("z2") || option.equalsIgnoreCase("amount") || option.equalsIgnoreCase("damage") || option.equalsIgnoreCase("cooldown") || option.equalsIgnoreCase("delay") || option.equalsIgnoreCase("duration") || option.equalsIgnoreCase("amplifier") )
 		{
 			try
 			{
