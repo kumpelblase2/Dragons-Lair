@@ -7,6 +7,8 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.potion.PotionEffectType;
 import de.kumpelblase2.dragonslair.DragonsLairMain;
 import de.kumpelblase2.dragonslair.api.*;
+import de.kumpelblase2.dragonslair.conversation.AnswerConverter;
+import de.kumpelblase2.dragonslair.conversation.AnswerType;
 
 public final class GeneralUtilities
 {
@@ -330,6 +332,29 @@ public final class GeneralUtilities
 		else if(option.equalsIgnoreCase("execute_as"))
 		{
 			return arg1.equals("player") || arg1.equals("console");
+		}
+		else if(option.equals("breakable blocks"))
+		{
+			AnswerType answer = new AnswerConverter(arg1).convert();
+			return answer != AnswerType.NOTHING;
+		}
+		else if(option.equals("event_id"))
+		{
+			try
+			{
+				Integer id = Integer.parseInt(arg1);
+				if(DragonsLairMain.getEventScheduler().getEventByID(id) == null)
+				{
+					arg0.getForWhom().sendRawMessage(ChatColor.RED + "An event with that id doesn't exist.");
+					return false;
+				}
+				return true;
+			}
+			catch(Exception e)
+			{
+				arg0.getForWhom().sendRawMessage(ChatColor.RED + "Not a valid number.");
+				return false;
+			}
 		}
 		else
 		{

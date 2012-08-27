@@ -5,8 +5,8 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import com.topcat.npclib.entity.HumanNPC;
 import de.kumpelblase2.dragonslair.utilities.InventoryUtilities;
+import de.kumpelblase2.npclib.entity.HumanNPC;
 
 public class NPCAttackTask implements Runnable
 {

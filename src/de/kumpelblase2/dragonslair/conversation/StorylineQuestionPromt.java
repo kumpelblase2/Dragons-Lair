@@ -35,7 +35,11 @@ public class StorylineQuestionPromt extends ValidatingPrompt
 		if(event.isCancelled())
 			return this;
 		
-		return ConversationHandler.getPromptByID(this.dialog.getNextID(type), this.npcname);
+		Integer next = this.dialog.getNextID(type);
+		if(next == 0)
+			return END_OF_CONVERSATION;
+		
+		return ConversationHandler.getPromptByID(next, this.npcname);
 	}
 
 	@Override

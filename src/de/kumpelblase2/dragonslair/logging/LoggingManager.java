@@ -51,17 +51,16 @@ public class LoggingManager
 				switch(type)
 				{
 					case BLOCK_CHANGE:
-					{
 						entry = new BlockContentChangeEntry(dungeon, party, loc, before, after);
-					}
+						break;
 					case BLOCK_REMOVE:
-					{
 						entry = new BlockBreakEntry(dungeon, party, loc, before, after);
-					}
+						break;
 					case BLOCK_PLACE:
-					{
 						entry = new BlockPlaceEntry(dungeon, party, loc, before, after);
-					}
+						break;
+					default:
+						break;
 					
 				}
 				this.addEntry(dungeon, party, entry);

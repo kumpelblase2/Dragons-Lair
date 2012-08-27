@@ -360,45 +360,48 @@ public class Metrics {
 
         // Mineshafter creates a socks proxy, so we can safely bypass it
         // It does not reroute POST requests so we need to go around it
-        if (isMineshafterPresent()) {
-            connection = url.openConnection(Proxy.NO_PROXY);
-        } else {
-            connection = url.openConnection();
+        try
+        {
+	        if (isMineshafterPresent()) {
+	            connection = url.openConnection(Proxy.NO_PROXY);
+	        } else {
+	            connection = url.openConnection();
+	        }
+	        connection.setDoOutput(true);
+	
+	        // Write the data
+	        final OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+	        writer.write(data.toString());
+	        writer.flush();
+	
+	        // Now read the response
+	        final BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+	        final String response = reader.readLine();
+	
+	        // close resources
+	        writer.close();
+	        reader.close();
+	
+	        if (response == null || response.startsWith("ERR")) {
+	            throw new IOException(response); //Throw the exception
+	        } else {
+	            // Is this the first update this hour?
+	            if (response.contains("OK This is your first update this hour")) {
+	                synchronized (graphs) {
+	                    final Iterator<Graph> iter = graphs.iterator();
+	
+	                    while (iter.hasNext()) {
+	                        final Graph graph = iter.next();
+	
+	                        for (Plotter plotter : graph.getPlotters()) {
+	                            plotter.reset();
+	                        }
+	                    }
+	                }
+	            }
+	        }
         }
-
-        connection.setDoOutput(true);
-
-        // Write the data
-        final OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
-        writer.write(data.toString());
-        writer.flush();
-
-        // Now read the response
-        final BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-        final String response = reader.readLine();
-
-        // close resources
-        writer.close();
-        reader.close();
-
-        if (response == null || response.startsWith("ERR")) {
-            throw new IOException(response); //Throw the exception
-        } else {
-            // Is this the first update this hour?
-            if (response.contains("OK This is your first update this hour")) {
-                synchronized (graphs) {
-                    final Iterator<Graph> iter = graphs.iterator();
-
-                    while (iter.hasNext()) {
-                        final Graph graph = iter.next();
-
-                        for (Plotter plotter : graph.getPlotters()) {
-                            plotter.reset();
-                        }
-                    }
-                }
-            }
-        }
+        catch(Exception e){}
         //if (response.startsWith("OK")) - We should get "OK" followed by an optional description if everything goes right
     }
 

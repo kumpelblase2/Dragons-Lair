@@ -1,4 +1,5 @@
-package com.topcat.npclib;
+package de.kumpelblase2.npclib;
+// original provided by Topcat, modified by kumpelblase2
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -15,11 +16,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.plugin.java.JavaPlugin;
-import com.topcat.npclib.entity.HumanNPC;
-import com.topcat.npclib.entity.NPC;
-import com.topcat.npclib.nms.*;
 import de.kumpelblase2.dragonslair.DragonsLairMain;
 import de.kumpelblase2.dragonslair.tasks.NPCRotationTask;
+import de.kumpelblase2.npclib.entity.HumanNPC;
+import de.kumpelblase2.npclib.entity.NPC;
+import de.kumpelblase2.npclib.nms.*;
 
 /**
  *
@@ -38,35 +39,41 @@ public class NPCManager
 
 	public NPCManager(JavaPlugin plugin)
 	{
-		server = BServer.getInstance();
-		npcNetworkManager = new NPCNetworkManager();
-		NPCManager.plugin = plugin;
-		taskid = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable()
-			{
-				@Override
-				public void run()
+		try
+		{
+			server = BServer.getInstance();
+			npcNetworkManager = new NPCNetworkManager();
+			NPCManager.plugin = plugin;
+			taskid = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable()
 				{
-					HashSet<Integer> toRemove = new HashSet<Integer>();
-					for (Integer i : npcs.keySet())
+					@Override
+					public void run()
 					{
-						Entity j = npcs.get(i).getEntity();
-						j.aA();
-						if (j.dead)
-							toRemove.add(i);
-					}
-					
-					for (Integer n : toRemove)
-					{
-						((HumanNPC)npcs.get(n)).stopAttacking();
-						npcs.remove(n);
-						Bukkit.getScheduler().cancelTask(npcRotationTasks.get(n));
-						npcRotationTasks.remove(n);
+						HashSet<Integer> toRemove = new HashSet<Integer>();
+						for (Integer i : npcs.keySet())
+						{
+							Entity j = npcs.get(i).getEntity();
+							j.z();
+							if (j.dead)
+								toRemove.add(i);
+						}
 						
+						for (Integer n : toRemove)
+						{
+							((HumanNPC)npcs.get(n)).stopAttacking();
+							Bukkit.getScheduler().cancelTask(npcRotationTasks.get(n));
+							npcRotationTasks.remove(n);
+							npcs.remove(n);
+						}
 					}
-				}
-			}, 1L, 1L);
-		Bukkit.getServer().getPluginManager().registerEvents(new SL(), plugin);
-		Bukkit.getServer().getPluginManager().registerEvents(new WL(), plugin);
+				}, 1L, 1L);
+			Bukkit.getServer().getPluginManager().registerEvents(new SL(), plugin);
+			Bukkit.getServer().getPluginManager().registerEvents(new WL(), plugin);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	public BWorld getBWorld(World world)
@@ -82,7 +89,6 @@ public class NPCManager
 
 	private class SL implements Listener
 	{
-		@SuppressWarnings("unused")
 		@EventHandler
 		public void onPluginDisable(PluginDisableEvent event)
 		{
@@ -96,7 +102,6 @@ public class NPCManager
 
 	private class WL implements Listener
 	{
-		@SuppressWarnings("unused")
 		@EventHandler
 		public void onChunkLoad(ChunkLoadEvent event)
 		{

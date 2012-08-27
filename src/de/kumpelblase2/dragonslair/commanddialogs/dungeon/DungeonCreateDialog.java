@@ -6,6 +6,8 @@ import org.bukkit.conversations.*;
 import org.bukkit.entity.Player;
 import de.kumpelblase2.dragonslair.DragonsLairMain;
 import de.kumpelblase2.dragonslair.api.Dungeon;
+import de.kumpelblase2.dragonslair.conversation.AnswerConverter;
+import de.kumpelblase2.dragonslair.conversation.AnswerType;
 import de.kumpelblase2.dragonslair.utilities.WorldUtility;
 
 public class DungeonCreateDialog extends ValidatingPrompt
@@ -49,9 +51,13 @@ public class DungeonCreateDialog extends ValidatingPrompt
 		{
 			return ChatColor.GREEN + "Please enter a message that should be displayed when the dungeon ends:";
 		}
-		else
+		else if(context.getSessionData("party_ready_message") == null)
 		{
 			return ChatColor.GREEN + "Please enter a message that should be displayed when registered players can start:";
+		}
+		else
+		{
+			return ChatColor.GREEN + "Should blocks be breakable in the dungeon?";
 		}
 	}
 
@@ -69,6 +75,7 @@ public class DungeonCreateDialog extends ValidatingPrompt
 			context.setSessionData("max_players", null);
 			context.setSessionData("starting_message", null);
 			context.setSessionData("end_message", null);
+			context.setSessionData("party_ready_message", null);
 			return new DungeonManageDialog();
 		}
 		
@@ -167,7 +174,7 @@ public class DungeonCreateDialog extends ValidatingPrompt
 			
 			context.setSessionData("end_message", input);
 		}
-		else
+		else if(context.getSessionData("party_ready_message") == null)
 		{
 			if(input.equals("back"))
 			{
@@ -175,6 +182,10 @@ public class DungeonCreateDialog extends ValidatingPrompt
 				return this;
 			}
 			
+			context.setSessionData("party_ready_message", input);
+		}
+		else
+		{
 			String name = (String)context.getSessionData("dungeon_name");
 			int startObject = (Integer)context.getSessionData("starting_objective");
 			int startChapter = (Integer)context.getSessionData("starting_chapter");
@@ -184,7 +195,9 @@ public class DungeonCreateDialog extends ValidatingPrompt
 			int maxPlayers = (Integer)context.getSessionData("max_players");
 			String startingMessage = (String)context.getSessionData("starting_message");
 			String endMessage = (String)context.getSessionData("end_message");
-			String readyMessage = input;
+			String readyMessage = (String)context.getSessionData("party_ready_message");
+			AnswerType answer = new AnswerConverter(input).convert();
+			boolean blocksBreakable = (answer == AnswerType.AGREEMENT || answer == AnswerType.CONSIDERING_AGREEMENT);
 			Dungeon d = new Dungeon();
 			d.setName(name);
 			d.setStartingObjective(startObject);
@@ -196,6 +209,7 @@ public class DungeonCreateDialog extends ValidatingPrompt
 			d.setStartingMessage(startingMessage);
 			d.setEndMessage(endMessage);
 			d.setPartyReadyMessage(readyMessage);
+			d.setBlocksBreakable(blocksBreakable);
 			d.save();
 			DragonsLairMain.getSettings().getDungeons().put(d.getID(), d);
 			context.getForWhom().sendRawMessage(ChatColor.GREEN + "The dungeon is '" + context.getSessionData("dungeon_name") + "' created!");
@@ -209,6 +223,7 @@ public class DungeonCreateDialog extends ValidatingPrompt
 			context.setSessionData("max_players", null);
 			context.setSessionData("starting_message", null);
 			context.setSessionData("end_message", null);
+			context.setSessionData("party_ready_message", null);
 			return new DungeonManageDialog();
 		}
 		return this;
@@ -312,6 +327,11 @@ public class DungeonCreateDialog extends ValidatingPrompt
 				context.getForWhom().sendRawMessage(ChatColor.RED + "It's not a number.");
 				return false;
 			}
+		}
+		else if(context.getSessionData("party_ready_message") != null)
+		{
+			AnswerType answer = new AnswerConverter(input).convert();
+			return answer != AnswerType.NOTHING;
 		}
 		
 		return true;

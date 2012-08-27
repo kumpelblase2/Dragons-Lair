@@ -1,4 +1,5 @@
-package com.topcat.npclib.nms;
+package de.kumpelblase2.npclib.nms;
+//original provided by Topcat, modified by kumpelblase2
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +59,7 @@ public class BWorld
 
 	public PlayerManager getPlayerManager()
 	{
-		return wServer.manager;
+		return wServer.getPlayerManager();
 	}
 
 	public CraftWorld getCraftWorld()

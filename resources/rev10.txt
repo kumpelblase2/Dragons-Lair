@@ -1,0 +1,3 @@
+CREATE TABLE IF NOT EXISTS `scheduled_events` (`schedule_id` int(10) unsigned AUTO_INCREMENT,`event_ids` varchar(255) NOT NULL,`init_delay` int(10) unsigned,`repeating` tinyint(1) unsigned,`repeating_delay` int(10) unsigned,`auto_start` tinyint(1) unsigned, PRIMARY KEY (`schedule_id`)) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+ALTER TABLE `dungeons` ADD COLUMN `dungeon_blocks_breakable` tinyint(1) AFTER `dungeon_party_ready_message`;
+CREATE TABLE IF NOT EXISTS `death_locations` (`player_name`varchar(16) NOT NULL,`party_id` bigint(20) unsigned,`death_location` varchar(255) NOT NULL, `armor` varchar(255) NOT NULL, `inventory` text NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=latin1;

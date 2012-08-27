@@ -2,11 +2,11 @@ package de.kumpelblase2.dragonslair.api.eventexecutors;
 
 import java.util.*;
 import org.bukkit.entity.*;
-import com.topcat.npclib.entity.HumanNPC;
 import de.kumpelblase2.dragonslair.DragonsLairMain;
 import de.kumpelblase2.dragonslair.api.Event;
 import de.kumpelblase2.dragonslair.api.NPC;
 import de.kumpelblase2.dragonslair.utilities.WorldUtility;
+import de.kumpelblase2.npclib.entity.HumanNPC;
 
 public class NPCAttackEventExecutor implements EventExecutor
 {

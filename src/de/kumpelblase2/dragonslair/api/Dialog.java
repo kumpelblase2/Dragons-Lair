@@ -76,13 +76,10 @@ public class Dialog
 	
 	public void setNextID(AnswerType inType, int inId)
 	{
-		System.out.println(inId);
 		if(inId == 0)
 			this.nextIDs.remove(inType);
 		else
 			this.nextIDs.put(inType, inId);
-		
-		System.out.println(this.nextIDs.get(inType));
 	}
 	
 	public void setNextIDs(Map<AnswerType, Integer> inNext)
@@ -100,7 +97,11 @@ public class Dialog
 	
 	public int getNextID(AnswerType inType)
 	{
-		return this.nextIDs.get(inType);
+		Integer id = this.nextIDs.get(inType);
+		if(id == null || id == 0)
+			return 0;
+		
+		return id;
 	}
 	
 	public DialogType getType()
@@ -126,11 +127,6 @@ public class Dialog
 						"next_consider_disagreement_id," +
 						"next_consider_id" +
 						") VALUES(?,?,?,?,?,?,?)");
-				
-				for(Entry<AnswerType, Integer> entry : this.nextIDs.entrySet())
-				{
-					System.out.println(entry.getKey() + ":" + entry.getValue());
-				}
 				
 				
 				st.setInt(1, this.id);

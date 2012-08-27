@@ -1,5 +1,7 @@
 package de.kumpelblase2.dragonslair.api;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.*;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
@@ -8,9 +10,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.map.*;
 import org.bukkit.map.MapView.Scale;
 import de.kumpelblase2.dragonslair.DragonsLairMain;
+import de.kumpelblase2.dragonslair.TableColumns;
 import de.kumpelblase2.dragonslair.logging.LoggingManager;
 import de.kumpelblase2.dragonslair.logging.Recoverable;
 import de.kumpelblase2.dragonslair.map.DLMapRenderer;
+import de.kumpelblase2.dragonslair.utilities.InventoryUtilities;
 import de.kumpelblase2.dragonslair.utilities.WorldUtility;
 
 public class ActiveDungeon
@@ -20,6 +24,7 @@ public class ActiveDungeon
 	private Chapter currentChapter;
 	private Objective currentObjective;
 	private Map<String, SavedPlayer> playerSaves;
+	private Map<String, DeathLocation> deathLocations;
 	
 	public ActiveDungeon(Dungeon d, Party party)
 	{
@@ -28,6 +33,7 @@ public class ActiveDungeon
 		this.currentChapter = party.getCurrentChapter();
 		this.currentObjective = party.getCurrentObjective();
 		this.playerSaves = new HashMap<String, SavedPlayer>();
+		this.deathLocations = new HashMap<String, DeathLocation>();
 		this.loadParty(party);
 	}
 	
@@ -41,6 +47,12 @@ public class ActiveDungeon
 			this.playerSaves.get(playername).restore();
 		}
 		this.playerSaves.clear();
+		
+		for(DeathLocation loc : this.deathLocations.values())
+		{
+			loc.save();
+		}
+		this.deathLocations.clear();
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -61,6 +73,29 @@ public class ActiveDungeon
 		}
 		this.currentChapter = p.getCurrentChapter();
 		this.currentObjective = p.getCurrentObjective();
+		
+		try
+		{
+			PreparedStatement st = DragonsLairMain.createStatement("SELECT * FROM `death_locations` WHERE `party_id` = ?");
+			st.setInt(1, p.getID());
+			ResultSet result = st.executeQuery();
+			while(result.next())
+			{
+				String player = result.getString(TableColumns.Death_Locations.PLAYER_NAME);
+				int party = result.getInt(TableColumns.Death_Locations.PARTY_ID);
+				Location loc = WorldUtility.stringToLocation(result.getString(TableColumns.Death_Locations.DEATH_LOCATION));
+				ItemStack[] armor = InventoryUtilities.stringToItems(result.getString(TableColumns.Death_Locations.ARMOR));
+				ItemStack[] inv = InventoryUtilities.stringToItems(result.getString(TableColumns.Death_Locations.INVENTORY));
+				DeathLocation dloc = new DeathLocation(player, loc, party, armor, inv);
+				this.deathLocations.put(player, dloc);
+			}
+			DragonsLairMain.createStatement("DELETE FROM `death_locations` WHERE `party_id` = " + p.getID()).execute();
+		}
+		catch(Exception e)
+		{
+			DragonsLairMain.Log.warning("Unable to load death locations for party " + p.getID());
+			DragonsLairMain.Log.warning(e.getMessage());
+		}
 	}
 	
 	public Party getCurrentParty()
@@ -167,21 +202,7 @@ public class ActiveDungeon
 	{
 		for(String member : this.currentParty.getMembers())
 		{
-			ItemStack map = new ItemStack(Material.MAP);
-			map.addUnsafeEnchantment(Enchantment.ARROW_INFINITE, 1);
-            MapView mapview = Bukkit.getServer().getMap(map.getDurability());
-            mapview.setCenterX(0);
-            mapview.setCenterZ(0);
-            mapview.setScale(Scale.FARTHEST);
-            for(MapRenderer r : mapview.getRenderers())
-    		{
-    			mapview.removeRenderer(r);
-    		}
-    		mapview.addRenderer(new DLMapRenderer());
-            Player p = Bukkit.getPlayer(member);
-			p.sendMap(mapview);
-			p.getInventory().addItem(map);
-			DragonsLairMain.getDungeonManager().addMapHolder(p);
+			this.giveMap(Bukkit.getPlayer(member));
 		}
 	}
 	
@@ -209,8 +230,60 @@ public class ActiveDungeon
 		}
 	}
 	
+	public DeathLocation getDeathLocationForPlayer(String player)
+	{
+		return this.deathLocations.get(player);
+	}
+	
+	public void removeDeathLocation(String player)
+	{
+		this.deathLocations.remove(player);
+	}
+	
+	public void createDeathLocation(String player, Location loc)
+	{
+		this.createDeathLocation(player, loc, new ItemStack[0], new ItemStack[0]);
+	}
+	
+	public void createDeathLocation(String player, Location loc, ItemStack[] armor, ItemStack[] inventory)
+	{
+		this.deathLocations.put(player, new DeathLocation(player, loc, this.currentParty.getID(), armor, inventory));
+	}
+	
 	public Map<String, SavedPlayer> getSavedPlayers()
 	{
 		return this.playerSaves;
+	}
+	
+	public void playerDies(String player)
+	{
+		Player dead = Bukkit.getPlayer(player);
+		for(String member : this.getCurrentParty().getMembers())
+		{
+			if(member.equals(player))
+				continue;
+			
+			Bukkit.getPlayer(member).hidePlayer(dead);
+		}
+		DragonsLairMain.getDungeonManager().removeMapHolder(dead);
+		this.createDeathLocation(dead.getName(), dead.getLocation(), dead.getInventory().getArmorContents(), dead.getInventory().getContents());
+	}
+	
+	public void giveMap(Player p)
+	{
+		ItemStack map = new ItemStack(Material.MAP);
+		map.addUnsafeEnchantment(Enchantment.ARROW_INFINITE, 1);
+        MapView mapview = Bukkit.getServer().getMap(map.getDurability());
+        mapview.setCenterX(0);
+        mapview.setCenterZ(0);
+        mapview.setScale(Scale.FARTHEST);
+        for(MapRenderer r : mapview.getRenderers())
+		{
+			mapview.removeRenderer(r);
+		}
+		mapview.addRenderer(new DLMapRenderer());
+		p.sendMap(mapview);
+		p.getInventory().addItem(map);
+		DragonsLairMain.getDungeonManager().addMapHolder(p);
 	}
 }

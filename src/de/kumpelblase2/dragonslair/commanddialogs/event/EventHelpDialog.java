@@ -1,24 +1,23 @@
 package de.kumpelblase2.dragonslair.commanddialogs.event;
 
+import org.bukkit.ChatColor;
 import org.bukkit.conversations.ConversationContext;
-import org.bukkit.conversations.FixedSetPrompt;
+import org.bukkit.conversations.MessagePrompt;
 import org.bukkit.conversations.Prompt;
 
-public class EventHelpDialog extends FixedSetPrompt //TODO
+public class EventHelpDialog extends MessagePrompt
 {
 
 	@Override
 	public String getPromptText(ConversationContext arg0)
 	{
-
-		return null;
+		return ChatColor.GREEN + "Since the chat has limited space, there's a help page on bukkitdev.";
 	}
 
 	@Override
-	protected Prompt acceptValidatedInput(ConversationContext arg0, String arg1)
+	protected Prompt getNextPrompt(ConversationContext arg0)
 	{
-
-		return null;
+		return new EventManageDialog();
 	}
 
 }

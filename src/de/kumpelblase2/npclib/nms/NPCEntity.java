@@ -1,12 +1,13 @@
-package com.topcat.npclib.nms;
+ package de.kumpelblase2.npclib.nms;
+//original provided by Topcat, modified by kumpelblase2
 
 import net.minecraft.server.*;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityTargetEvent;
-import com.topcat.npclib.NPCManager;
 import de.kumpelblase2.dragonslair.DragonsLairMain;
+import de.kumpelblase2.npclib.NPCManager;
 
 /**
  *
@@ -22,7 +23,7 @@ public class NPCEntity extends EntityPlayer
 	{
 		super(npcManager.getServer().getMCServer(), world.getWorldServer(), s, itemInWorldManager);
 
-		itemInWorldManager.b(0);
+		itemInWorldManager.b(EnumGamemode.SURVIVAL);
 
 		netServerHandler = new NPCNetHandler(npcManager, this);
 		lastTargetId = -1;
@@ -37,17 +38,17 @@ public class NPCEntity extends EntityPlayer
 	}
 
 	@Override
-	public boolean b(EntityHuman entity)
+	public boolean c(EntityHuman entity)
 	{
 		EntityTargetEvent event = new NpcEntityTargetEvent(getBukkitEntity(), entity.getBukkitEntity(), NpcEntityTargetEvent.NpcTargetReason.NPC_RIGHTCLICKED);
 		CraftServer server = ((WorldServer) world).getServer();
 		server.getPluginManager().callEvent(event);
 
-		return super.b(entity);
+		return super.c(entity);
 	}
 
 	@Override
-	public void a_(EntityHuman entity)
+	public void b_(EntityHuman entity)
 	{		
 		if ((lastBounceId != entity.id || System.currentTimeMillis() - lastBounceTick > 1000) && entity.getBukkitEntity().getLocation().distanceSquared(getBukkitEntity().getLocation()) <= 1)
 		{
@@ -67,7 +68,7 @@ public class NPCEntity extends EntityPlayer
 			lastTargetId = entity.id;
 		}
 
-		super.a_(entity);
+		super.b_(entity);
 	}
 
 	@Override
@@ -88,7 +89,7 @@ public class NPCEntity extends EntityPlayer
 	}
 	
 	@Override
-	protected void c(DamageSource damage, int i)
+	protected int c(DamageSource damage, int i)
 	{
 		if(damage.getEntity() instanceof EntityPlayer)
 		{
@@ -97,7 +98,7 @@ public class NPCEntity extends EntityPlayer
 			server.getPluginManager().callEvent(event);
 			
 			if(event.isCancelled())
-				return;
+				return 0;
 			
 			i = event.getDamage();
 		}
@@ -105,7 +106,7 @@ public class NPCEntity extends EntityPlayer
 		if(DragonsLairMain.getSettings().getNPCByName(this.name).isInvincible())
 			i = 0;
 
-		super.c(damage, i);
+		return super.c(damage, i);
 	}
 
 	@Override

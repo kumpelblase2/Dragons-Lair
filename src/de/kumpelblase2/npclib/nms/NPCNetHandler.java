@@ -1,11 +1,12 @@
-package com.topcat.npclib.nms;
+package de.kumpelblase2.npclib.nms;
+//original provided by Topcat, modified by kumpelblase2
 
 import net.minecraft.server.*;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 
-import com.topcat.npclib.NPCManager;
+import de.kumpelblase2.npclib.NPCManager;
 
 /**
  * 
@@ -26,17 +27,12 @@ public class NPCNetHandler extends NetServerHandler
 	}
 
 	@Override
-	public void a()
+	public void d()
 	{
 	};
 
 	@Override
 	public void a(Packet10Flying packet10flying)
-	{
-	};
-
-	@Override
-	public void sendMessage(String s)
 	{
 	};
 

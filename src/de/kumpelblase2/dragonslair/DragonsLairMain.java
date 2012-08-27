@@ -14,6 +14,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.w3c.dom.*;
 import de.kumpelblase2.dragonslair.Metrics.Graph;
 import de.kumpelblase2.dragonslair.api.EventActionType;
+import de.kumpelblase2.dragonslair.api.EventScheduler;
 import de.kumpelblase2.dragonslair.api.eventexecutors.*;
 import de.kumpelblase2.dragonslair.conversation.ConversationHandler;
 import de.kumpelblase2.dragonslair.events.DragonsLairInitializeEvent;
@@ -31,9 +32,10 @@ public class DragonsLairMain extends JavaPlugin
 	private DLEventHandler eventHandler;
 	private ConversationHandler conversationHandler;
 	private LoggingManager logManager;
-	private final int DATABASE_REV = 9;
+	private final int DATABASE_REV = 10;
 	private boolean citizensEnabled = false;
 	private boolean economyEnabled = false;
+	private EventScheduler eventScheduler;
 	private Economy econ;
 	
 	public void onEnable()
@@ -53,6 +55,7 @@ public class DragonsLairMain extends JavaPlugin
 		this.economyEnabled = this.setupEconomy();
 		this.commandExecutor = new DLCommandExecutor();
 		this.eventHandler = new DLEventHandler();
+		this.eventScheduler = new EventScheduler();
 		getCommand("dragonslair").setExecutor(this.commandExecutor);
 		Bukkit.getPluginManager().registerEvents(this.eventHandler, this);
 		
@@ -71,6 +74,7 @@ public class DragonsLairMain extends JavaPlugin
 				
 				manager.getSettings().loadAll();
 				logManager.loadEntries();
+				eventScheduler.load();
 				manager.spawnNPCs();
 				eventHandler.reloadTriggers();
 				manager.setEventExecutor(EventActionType.NPC_DIALOG, new NPCDialogEventExecutor());
@@ -98,6 +102,9 @@ public class DragonsLairMain extends JavaPlugin
 				manager.setEventExecutor(EventActionType.CHANGE_HEALTH, new ChangeHealthEventExecutor());
 				manager.setEventExecutor(EventActionType.CHANGE_HUNGER, new ChangeHungerEventExecutor());
 				manager.setEventExecutor(EventActionType.EXECUTE_COMMAND, new ExecuteCommandEventExecutor());
+				manager.setEventExecutor(EventActionType.START_SCHEDULED_EVENT, new ScheduledEventStartEventExecutor());
+				manager.setEventExecutor(EventActionType.STOP_SCHEDULED_EVENT, new ScheduledEventStopEventExecutor());
+				
 				
 				createMetricsData();
 				if(checkCitizen())
@@ -112,6 +119,7 @@ public class DragonsLairMain extends JavaPlugin
 					Log.info("Loaded " + manager.getSettings().getDialogs().size() + " dialogs");
 					Log.info("Loaded " + manager.getSettings().getObjectives().size() + " objectivess");
 					Log.info("Loaded " + manager.getSettings().getChapters().size() + " chapters");
+					Log.info("Loaded " + eventScheduler.getEvents().size() + " scheduled events.");
 				}
 				Log.info("Done.");
 				Bukkit.getScheduler().scheduleSyncRepeatingTask(DragonsLairMain.getInstance(), new CooldownCleanup(), 200L, 200L);
@@ -310,12 +318,13 @@ public class DragonsLairMain extends JavaPlugin
 					return;
 			}
 			
-			BufferedReader r = new BufferedReader(new InputStreamReader(stream));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
 			String s = "";
-			while((s = r.readLine()) != null)
+			while((s = reader.readLine()) != null)
 			{
 				createStatement(s).execute();
 			}
+			reader.close();
 		}
 		catch (Exception e)
 		{
@@ -451,6 +460,7 @@ public class DragonsLairMain extends JavaPlugin
 		this.getConfig().set("update-notice", this.getConfig().getBoolean("update-notice", false));
 		this.getConfig().set("update-notice-interval", this.getConfig().getInt("update-notice-interval", 10));
 		this.getConfig().set("verbose-start", this.getConfig().getBoolean("verbose-start", false));
+		this.getConfig().set("resurrect_money", this.getConfig().getInt("resurrect", 500));
 		if(!this.getConfig().getKeys(false).contains("enabled-worlds"))
 			this.getConfig().set("enabled-worlds", new ArrayList<String>(Arrays.asList(new String[] { "world" })));
 		this.saveConfig();
@@ -530,13 +540,19 @@ public class DragonsLairMain extends JavaPlugin
 	{
 		try
 		{
-			if(getInstance().getConfig().getString("db.type").equals("mysql"))
-				getInstance().getMysqlConnection().prepareStatement("DO 1").execute();
-			return true;
+			if(!getInstance().getMysqlConnection().isValid(3))
+				return false;
 		}
-		catch(Exception e)
+		catch (SQLException e)
 		{
 			return false;
 		}
+
+		return true;
+	}
+	
+	public static EventScheduler getEventScheduler()
+	{
+		return getInstance().eventScheduler;
 	}
 }

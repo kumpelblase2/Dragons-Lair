@@ -1,0 +1,3 @@
+CREATE TABLE IF NOT EXISTS "scheduled_events" ("schedule_id" INTEGER PRIMARY KEY AUTOINCREMENT,"event_ids" text,"init_delay" INTEGER,"repeating" integer(1,0),"repeating_delay" INTEGER,"auto_start" integer(1,0));
+ALTER TABLE `dungeons` ADD COLUMN `dungeon_blocks_breakable` integer(1,0);
+CREATE TABLE IF NOT EXISTS "death_locations" ("player_name" text,"party_id" INTEGER,"death_location" text, "armor" text, "inventory" text);

@@ -96,6 +96,9 @@ public final class InventoryUtilities
 	
 	public static ItemStack[] stringToItems(String inv)
 	{
+		if(inv == null || inv.length() == 0)
+			return new ItemStack[0];
+		
 		ItemStack[] items;
 		String[] itemSplitt = inv.split(";");
 		items = new ItemStack[itemSplitt.length];
@@ -132,7 +135,7 @@ public final class InventoryUtilities
 	
 	public static String itemsToString(ItemStack[] items)
 	{
-		if(items.length == 0)
+		if(items == null || items.length == 0)
 			return "";
 		
 		StringBuilder itemString = new StringBuilder();
