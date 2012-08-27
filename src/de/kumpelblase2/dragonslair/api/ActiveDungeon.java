@@ -63,12 +63,12 @@ public class ActiveDungeon
 			Player pl = Bukkit.getPlayer(player);
 			this.playerSaves.put(player, new SavedPlayer(pl));
 			pl.getInventory().clear();
-			pl.updateInventory();
 			PlayerSave save = new PlayerSave(pl, p);
 			if(!save.restore())
 			{
 				WorldUtility.enhancedTelepot(pl, this.getInfo().getStartingPosition());
 			}
+			pl.updateInventory();
 			save.remove();
 		}
 		this.currentChapter = p.getCurrentChapter();
@@ -269,6 +269,7 @@ public class ActiveDungeon
 		this.createDeathLocation(dead.getName(), dead.getLocation(), dead.getInventory().getArmorContents(), dead.getInventory().getContents());
 	}
 	
+	@SuppressWarnings("deprecation")
 	public void giveMap(Player p)
 	{
 		ItemStack map = new ItemStack(Material.MAP);
@@ -284,6 +285,7 @@ public class ActiveDungeon
 		mapview.addRenderer(new DLMapRenderer());
 		p.sendMap(mapview);
 		p.getInventory().addItem(map);
+		p.updateInventory();
 		DragonsLairMain.getDungeonManager().addMapHolder(p);
 	}
 }

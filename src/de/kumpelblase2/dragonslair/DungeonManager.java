@@ -294,7 +294,6 @@ public class DungeonManager
 		if(event.isCancelled())
 			return null;
 		
-		System.out.println("test1");
 		ActiveDungeon ad = new ActiveDungeon(d, Party.getPartyOfPlayers(players, id));
 		this.activeDungeons.add(ad);
 		for(String p : players)

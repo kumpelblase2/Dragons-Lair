@@ -151,6 +151,9 @@ public class LoggingManager
 	
 	public void addEntry(String inDungeon, int inParty, Recoverable inEntry)
 	{
+		if(inEntry == null)
+			return;
+		
 		Map<Integer, Map<Location, Recoverable>> partyEntries = new HashMap<Integer, Map<Location, Recoverable>>();
 		if(this.m_logEntries.containsKey(inDungeon))
 		{
