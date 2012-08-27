@@ -9,7 +9,10 @@ public class PlayerQueue
 	private Set<QueuedPlayer> players = new HashSet<QueuedPlayer>();
 	
 	public ActiveDungeon start(Dungeon dungeon)
-	{
+	{	
+		if(!this.hasEnoughPeople(dungeon))
+			return null;
+		
 		List<String> startingPlayers = new ArrayList<String>();
 		Iterator<QueuedPlayer> it = players.iterator();
 		while(it.hasNext())
@@ -28,10 +31,27 @@ public class PlayerQueue
 		return DragonsLairMain.getDungeonManager().startDungeon(dungeon.getID(), startingPlayers.toArray(new String[0]));
 	}
 	
+	public boolean hasEnoughPeople(Dungeon dungeon)
+	{
+		return this.getQueueForDungeon(dungeon).size() >= dungeon.getMinPlayers();
+	}
+	
+	public Set<QueuedPlayer> getQueueForDungeon(Dungeon dungeon)
+	{
+		Set<QueuedPlayer> tempList = new HashSet<QueuedPlayer>();
+		for(QueuedPlayer player : this.players)
+		{
+			if(player.getDungeon().equals(dungeon.getName()))
+				tempList.add(player);
+		}
+		return tempList;
+	}
+	
 	public void queuePlayer(String dungeon, Player p)
 	{
 		if(this.isInQueue(p))
 			return;
+		
 		
 		this.players.add(new QueuedPlayer(dungeon, p));
 	}

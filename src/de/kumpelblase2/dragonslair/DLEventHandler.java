@@ -334,6 +334,12 @@ public class DLEventHandler implements Listener
 		if(!DragonsLairMain.isWorldEnabled(placed.getWorld().getName()))
 			return;
 		
+		if(this.deadPlayers.contains(p.getName()))
+		{
+			event.setCancelled(true);
+			return;
+		}
+		
 		ActiveDungeon ad = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
 		if(ad != null)
 		{
@@ -440,6 +446,12 @@ public class DLEventHandler implements Listener
 		Action a = event.getAction();
 		if(a != Action.LEFT_CLICK_BLOCK && a != Action.RIGHT_CLICK_BLOCK && a != Action.PHYSICAL)
 			return;
+		
+		if(this.deadPlayers.contains(p.getName()))
+		{
+			event.setCancelled(true);
+			return;
+		}
 		
 		Block interactedBlock = event.getClickedBlock();
 		Location interacted = interactedBlock.getLocation();
@@ -911,6 +923,8 @@ public class DLEventHandler implements Listener
 		if(ad == null)
 			return;
 		
+		if(DragonsLairMain.getDungeonManager().getMapOfPlayer(p) != null)
+			DragonsLairMain.getDungeonManager().removeMapHolder(p);
 		event.getDrops().clear();
 		event.setDroppedExp(0);
 		ad.playerDies(p.getName());

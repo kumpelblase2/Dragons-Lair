@@ -67,8 +67,13 @@ public class RespawnPrompt extends ValidatingPrompt
 					p.getInventory().setArmorContents(dloc.getArmor());
 					p.getInventory().setContents(dloc.getInventory());
 				}
+				else
+				{
+					ad.giveMap(p);
+				}
 				ad.removeDeathLocation(p.getName());
 				DragonsLairMain.getInstance().getEventHandler().removePlayerFromDeathObserving(p.getName());
+				return END_OF_CONVERSATION;
 			}
 			else
 			{

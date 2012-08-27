@@ -23,5 +23,4 @@ public class DungeonRegisterEventExecutor implements EventExecutor
 		}
 		return true;
 	}
-
 }

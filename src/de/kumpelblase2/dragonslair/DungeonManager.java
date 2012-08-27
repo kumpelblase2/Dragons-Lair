@@ -288,12 +288,13 @@ public class DungeonManager
 	
 	public ActiveDungeon startDungeon(int id, String[] players)
 	{
-		Dungeon d = this.getSettings().getDungeons().get(id);
+		Dungeon d = this.getSettings().getDungeons().get(id);		
 		DungeonStartEvent event = new DungeonStartEvent(d);
 		Bukkit.getPluginManager().callEvent(event);
 		if(event.isCancelled())
 			return null;
 		
+		System.out.println("test1");
 		ActiveDungeon ad = new ActiveDungeon(d, Party.getPartyOfPlayers(players, id));
 		this.activeDungeons.add(ad);
 		for(String p : players)
@@ -414,6 +415,16 @@ public class DungeonManager
 	public void queuePlayer(String name, String dungeon)
 	{
 		this.queue.queuePlayer(dungeon, Bukkit.getPlayer(name));
+		Dungeon d = this.settings.getDungeonByName(dungeon);
+		if(this.queue.hasEnoughPeople(d))
+		{
+			Set<QueuedPlayer> players = this.queue.getQueueForDungeon(d);
+			String readyMessage = d.getPartyReadyMessage();
+			for(QueuedPlayer player : players)
+			{
+				player.getPlayer().sendMessage(readyMessage);
+			}
+		}
 	}
 	
 	public void queuePlayer(String name, int id)
@@ -694,5 +705,10 @@ public class DungeonManager
 	public boolean despawnNPC(NPC n)
 	{
 		return this.despawnNPC(n.getID());
+	}
+
+	public void removeMapHolder(Player dead)
+	{
+		this.maps.removeMap(dead);
 	}
 }

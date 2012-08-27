@@ -74,7 +74,7 @@ public final class TableColumns
 	{
 		public static final String ID = "party_id";
 		public static final String MEMBERS = "party_members";
-		public static final String OBJECTIVE_ID = "party_objecitve_id";
+		public static final String OBJECTIVE_ID = "party_objective_id";
 		public static final String CHAPTER_ID = "party_chapter_id";
 		public static final String DUNGEON_ID = "party_dungeon_id";
 	}

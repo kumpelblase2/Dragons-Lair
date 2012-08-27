@@ -31,6 +31,9 @@ public class DLMapRenderer extends MapRenderer
 			return;
 		
 		DLMap map = DragonsLairMain.getDungeonManager().getMapOfPlayer(player);
+		if(map == null)
+			return;
+		
 		map.checkUpdate();
 		if(map.isRendered())
 			return;

@@ -202,21 +202,7 @@ public class ActiveDungeon
 	{
 		for(String member : this.currentParty.getMembers())
 		{
-			ItemStack map = new ItemStack(Material.MAP);
-			map.addUnsafeEnchantment(Enchantment.ARROW_INFINITE, 1);
-            MapView mapview = Bukkit.getServer().getMap(map.getDurability());
-            mapview.setCenterX(0);
-            mapview.setCenterZ(0);
-            mapview.setScale(Scale.FARTHEST);
-            for(MapRenderer r : mapview.getRenderers())
-    		{
-    			mapview.removeRenderer(r);
-    		}
-    		mapview.addRenderer(new DLMapRenderer());
-            Player p = Bukkit.getPlayer(member);
-			p.sendMap(mapview);
-			p.getInventory().addItem(map);
-			DragonsLairMain.getDungeonManager().addMapHolder(p);
+			this.giveMap(Bukkit.getPlayer(member));
 		}
 	}
 	
@@ -279,6 +265,25 @@ public class ActiveDungeon
 			
 			Bukkit.getPlayer(member).hidePlayer(dead);
 		}
+		DragonsLairMain.getDungeonManager().removeMapHolder(dead);
 		this.createDeathLocation(dead.getName(), dead.getLocation(), dead.getInventory().getArmorContents(), dead.getInventory().getContents());
+	}
+	
+	public void giveMap(Player p)
+	{
+		ItemStack map = new ItemStack(Material.MAP);
+		map.addUnsafeEnchantment(Enchantment.ARROW_INFINITE, 1);
+        MapView mapview = Bukkit.getServer().getMap(map.getDurability());
+        mapview.setCenterX(0);
+        mapview.setCenterZ(0);
+        mapview.setScale(Scale.FARTHEST);
+        for(MapRenderer r : mapview.getRenderers())
+		{
+			mapview.removeRenderer(r);
+		}
+		mapview.addRenderer(new DLMapRenderer());
+		p.sendMap(mapview);
+		p.getInventory().addItem(map);
+		DragonsLairMain.getDungeonManager().addMapHolder(p);
 	}
 }
