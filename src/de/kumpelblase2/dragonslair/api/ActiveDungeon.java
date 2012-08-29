@@ -23,8 +23,8 @@ public class ActiveDungeon
 	private Party currentParty;
 	private Chapter currentChapter;
 	private Objective currentObjective;
-	private Map<String, SavedPlayer> playerSaves;
-	private Map<String, DeathLocation> deathLocations;
+	private final Map<String, SavedPlayer> playerSaves;
+	private final Map<String, DeathLocation> deathLocations;
 	
 	public ActiveDungeon(Dungeon d, Party party)
 	{
@@ -190,7 +190,6 @@ public class ActiveDungeon
 		this.currentChapter = null;
 		this.currentObjective = null;
 		this.currentParty = null;
-		this.playerSaves = null;
 	}
 	
 	public void setNextChapter(int id)

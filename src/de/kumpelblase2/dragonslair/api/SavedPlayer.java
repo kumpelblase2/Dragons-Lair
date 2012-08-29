@@ -6,12 +6,12 @@ import org.bukkit.inventory.ItemStack;
 
 public class SavedPlayer
 {
-	private Player player;
-	private int food;
-	private int health;
-	private ItemStack[] items;
-	private ItemStack[] armor;
-	private Location loc;
+	private final Player player;
+	private final int food;
+	private final int health;
+	private final ItemStack[] items;
+	private final ItemStack[] armor;
+	private final Location loc;
 	
 	public SavedPlayer(Player p)
 	{

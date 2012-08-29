@@ -6,7 +6,7 @@ import de.kumpelblase2.dragonslair.api.Trigger;
 
 public class TriggerCallEvent extends BaseEvent
 {
-	private Trigger m_trigger;
+	private final Trigger m_trigger;
 	private final Player m_player;
 	private boolean m_onCooldown;
 	

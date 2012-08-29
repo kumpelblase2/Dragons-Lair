@@ -9,10 +9,10 @@ import de.kumpelblase2.npclib.entity.HumanNPC;
 
 public class NPCConversation
 {
-	private Player player;
-	private NPC npc;
-	private Conversation conv;
-	private HumanNPC hnpc;
+	private final Player player;
+	private final NPC npc;
+	private final Conversation conv;
+	private final HumanNPC hnpc;
 	
 	public NPCConversation(Player p, NPC n, Conversation c)
 	{

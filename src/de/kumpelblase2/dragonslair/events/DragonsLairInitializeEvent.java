@@ -4,7 +4,7 @@ import de.kumpelblase2.dragonslair.DragonsLairMain;
 
 public class DragonsLairInitializeEvent extends BaseEvent
 {
-	private DragonsLairMain instance;
+	private final DragonsLairMain instance;
 	
 	public DragonsLairInitializeEvent(DragonsLairMain plugin)
 	{

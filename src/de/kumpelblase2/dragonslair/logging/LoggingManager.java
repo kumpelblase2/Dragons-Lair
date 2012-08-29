@@ -11,7 +11,7 @@ import de.kumpelblase2.dragonslair.utilities.WorldUtility;
 
 public class LoggingManager
 {
-	private Map<String, Map<Integer, Map<Location, Recoverable>>> m_logEntries = new HashMap<String, Map<Integer, Map<Location, Recoverable>>>();
+	private final Map<String, Map<Integer, Map<Location, Recoverable>>> m_logEntries = new HashMap<String, Map<Integer, Map<Location, Recoverable>>>();
 	public static final String logQuery = "REPLACE INTO " + Tables.LOG + "(dungeon_name, party_id, log_type, location, before_data, after_data) VALUES(?,?,?,?,?,?)";
 	
 	public Map<String, Map<Integer, Map<Location, Recoverable>>> getEntries()

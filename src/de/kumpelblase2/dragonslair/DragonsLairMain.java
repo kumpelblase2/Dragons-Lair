@@ -15,6 +15,7 @@ import org.w3c.dom.*;
 import de.kumpelblase2.dragonslair.Metrics.Graph;
 import de.kumpelblase2.dragonslair.api.EventActionType;
 import de.kumpelblase2.dragonslair.api.EventScheduler;
+import de.kumpelblase2.dragonslair.api.ItemTracker;
 import de.kumpelblase2.dragonslair.api.eventexecutors.*;
 import de.kumpelblase2.dragonslair.conversation.ConversationHandler;
 import de.kumpelblase2.dragonslair.events.DragonsLairInitializeEvent;
@@ -461,6 +462,7 @@ public class DragonsLairMain extends JavaPlugin
 		this.getConfig().set("update-notice-interval", this.getConfig().getInt("update-notice-interval", 10));
 		this.getConfig().set("verbose-start", this.getConfig().getBoolean("verbose-start", false));
 		this.getConfig().set("resurrect_money", this.getConfig().getInt("resurrect", 500));
+		this.getConfig().set("interacting_between_players", false);
 		if(!this.getConfig().getKeys(false).contains("enabled-worlds"))
 			this.getConfig().set("enabled-worlds", new ArrayList<String>(Arrays.asList(new String[] { "world" })));
 		this.saveConfig();
@@ -554,5 +556,15 @@ public class DragonsLairMain extends JavaPlugin
 	public static EventScheduler getEventScheduler()
 	{
 		return getInstance().eventScheduler;
+	}
+	
+	public static ItemTracker getItemTracker()
+	{
+		return getDungeonManager().getItemTracker();
+	}
+	
+	public static boolean canPlayersInteract()
+	{
+		return getInstance().getConfig().getBoolean("interacting_between_players");
 	}
 }

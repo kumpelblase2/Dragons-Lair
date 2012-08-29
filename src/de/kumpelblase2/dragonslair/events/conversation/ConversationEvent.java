@@ -8,9 +8,9 @@ import de.kumpelblase2.npclib.entity.HumanNPC;
 
 public class ConversationEvent extends BaseEvent
 {
-	protected NPC npc;
-	protected HumanNPC hnpc;
-	protected Conversation conv;
+	protected final NPC npc;
+	protected final HumanNPC hnpc;
+	protected final Conversation conv;
 	
 	public ConversationEvent(String inName, Conversation inConv)
 	{

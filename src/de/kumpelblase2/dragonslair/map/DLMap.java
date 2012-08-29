@@ -10,7 +10,7 @@ import de.kumpelblase2.dragonslair.api.ActiveDungeon;
 
 public class DLMap
 {
-	private String player;
+	private final String player;
 	private int line = 0;
 	private int objectiveid = -1;
 	private int chapterid = -1;

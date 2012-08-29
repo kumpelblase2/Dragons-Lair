@@ -34,6 +34,7 @@ public class DungeonManager
 	private final Map<String, Integer> m_playerDungeons = new HashMap<String, Integer>();
 	private final Set<EventMonster> spawnedEntities = Collections.synchronizedSet(new HashSet<EventMonster>());
 	private final Map<String, Map<Integer, Map<EntityType, Integer>>> killedMobs = new HashMap<String, Map<Integer, Map<EntityType, Integer>>>();
+	private final ItemTracker itemTracker = new ItemTracker();
 	
 	public DungeonManager()
 	{
@@ -709,5 +710,10 @@ public class DungeonManager
 	public void removeMapHolder(Player dead)
 	{
 		this.maps.removeMap(dead);
+	}
+	
+	public ItemTracker getItemTracker()
+	{
+		return this.itemTracker;
 	}
 }

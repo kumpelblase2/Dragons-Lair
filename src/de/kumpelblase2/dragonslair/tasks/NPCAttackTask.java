@@ -10,7 +10,7 @@ import de.kumpelblase2.npclib.entity.HumanNPC;
 
 public class NPCAttackTask implements Runnable
 {
-	private HumanNPC npc;
+	private final HumanNPC npc;
 	private LivingEntity target;
 	private long lastAttack = 0;
 	

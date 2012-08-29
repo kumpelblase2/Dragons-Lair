@@ -7,8 +7,8 @@ import de.kumpelblase2.dragonslair.utilities.GeneralUtilities;
 
 public class StorylineMessagePrompt extends MessagePrompt
 {
-	private Dialog dialog;
-	private String npcname;
+	private final Dialog dialog;
+	private final String npcname;
 	
 	public StorylineMessagePrompt(Dialog d, String name)
 	{

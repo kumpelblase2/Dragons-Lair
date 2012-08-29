@@ -6,8 +6,8 @@ import de.kumpelblase2.dragonslair.events.BaseEvent;
 
 public class ChapterChangeEvent extends BaseEvent
 {
-	private ActiveDungeon dungeon;
-	private Chapter nextChapter;
+	private final ActiveDungeon dungeon;
+	private final Chapter nextChapter;
 	
 	public ChapterChangeEvent(ActiveDungeon dungeon, Chapter chapter)
 	{

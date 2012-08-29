@@ -11,8 +11,8 @@ import de.kumpelblase2.dragonslair.utilities.GeneralUtilities;
 
 public class StorylineQuestionPromt extends ValidatingPrompt
 {
-	private Dialog dialog;
-	private String npcname;
+	private final Dialog dialog;
+	private final String npcname;
 	
 	public StorylineQuestionPromt(Dialog d, String name)
 	{

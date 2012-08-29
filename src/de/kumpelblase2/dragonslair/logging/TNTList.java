@@ -5,12 +5,12 @@ import org.bukkit.Location;
 
 public class TNTList
 {
-	private Set<TNTEntry> tntEntries = new HashSet<TNTEntry>();
+	private final Set<TNTEntry> tntEntries = new HashSet<TNTEntry>();
 	
 	public class TNTEntry
 	{
-		private Location loc;
-		private String dungeon;
+		private final Location loc;
+		private final String dungeon;
 		
 		public TNTEntry(Location l, String d)
 		{

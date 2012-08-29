@@ -2,8 +2,8 @@ package de.kumpelblase2.dragonslair.api;
 
 public class Cooldown
 {
-	private String dungeon;
-	private long endTime;
+	private final String dungeon;
+	private final long endTime;
 	
 	public Cooldown(ActiveDungeon ad, int cd)
 	{

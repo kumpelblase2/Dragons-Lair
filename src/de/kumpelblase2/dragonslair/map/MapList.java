@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 
 public class MapList
 {
-	private Set<MapEntry> maps = new HashSet<MapEntry>();
+	private final Set<MapEntry> maps = new HashSet<MapEntry>();
 	
 	public DLMap getMapOfPlayer(Player p)
 	{

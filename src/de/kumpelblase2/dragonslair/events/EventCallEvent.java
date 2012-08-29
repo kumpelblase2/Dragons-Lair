@@ -7,7 +7,7 @@ import de.kumpelblase2.dragonslair.api.Event;
 public class EventCallEvent extends BaseEvent
 {
 	private final Player m_player;
-	private Event m_event;
+	private final Event m_event;
 	private boolean m_onCooldown;
 	
 	public EventCallEvent(Event e, final Player p, boolean onCD)

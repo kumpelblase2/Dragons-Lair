@@ -5,8 +5,8 @@ import org.bukkit.entity.Player;
 
 public class QueuedPlayer
 {
-	private String dungeon;
-	private String player;
+	private final String dungeon;
+	private final String player;
 	
 	public QueuedPlayer(String dungeon, Player p)
 	{

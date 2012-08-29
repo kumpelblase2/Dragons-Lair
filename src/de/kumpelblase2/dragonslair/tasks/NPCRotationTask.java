@@ -8,7 +8,7 @@ import de.kumpelblase2.npclib.entity.HumanNPC;
 
 public class NPCRotationTask implements Runnable
 {
-	private Integer npcID;
+	private final Integer npcID;
 	private boolean looked = false;
 	
 	public NPCRotationTask(Integer id)

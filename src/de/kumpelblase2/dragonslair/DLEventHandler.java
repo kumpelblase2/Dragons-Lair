@@ -118,7 +118,7 @@ public class DLEventHandler implements Listener
 		this.deadPlayers.remove(player);
 	}
 	
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onInteractNPC(EntityTargetEvent event)
 	{
 		if(!DragonsLairMain.isWorldEnabled(event.getEntity().getWorld().getName()))
@@ -204,7 +204,7 @@ public class DLEventHandler implements Listener
 			event.setDamage(0);
 	}
 	
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onMove(PlayerMoveEvent event)
 	{		
 		Location from = event.getFrom();
@@ -233,7 +233,7 @@ public class DLEventHandler implements Listener
 		}
 	}
 	
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onNextDialog(ConversationNextDialogEvent event)
 	{
 		if(!DragonsLairMain.isWorldEnabled(((Player)event.getConversation().getForWhom()).getWorld().getName()))
@@ -258,7 +258,7 @@ public class DLEventHandler implements Listener
 		}
 	}
 	
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onPlayerChat(AsyncPlayerChatEvent event)
 	{
 		Player p = event.getPlayer();
@@ -273,7 +273,7 @@ public class DLEventHandler implements Listener
 			DragonsLairMain.getInstance().getConversationHandler().startSafeWordConversation(p);	
 	}
 	
-	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onBlockPlace(BlockPlaceEvent event)
 	{
 		Player p = event.getPlayer();
@@ -493,7 +493,7 @@ public class DLEventHandler implements Listener
 		}
 	}
 	
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onChapterChange(ChapterChangeEvent event)
 	{		
 		if(!this.triggers.containsKey(TriggerType.CHAPTER_CHANGE))
@@ -521,7 +521,7 @@ public class DLEventHandler implements Listener
 		}
 	}
 	
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onObjectiveChange(ObjectiveChangeEvent event)
 	{
 		if(!this.triggers.containsKey(TriggerType.OBJECTIVE_CHANGE))
@@ -588,7 +588,7 @@ public class DLEventHandler implements Listener
 			event.setCancelled(true);
 	}
 	
-	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onInventoryClick(InventoryClickEvent event)
 	{
 		Player p = (Player)event.getWhoClicked();
@@ -628,7 +628,7 @@ public class DLEventHandler implements Listener
 		}
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerExit(PlayerQuitEvent event)
 	{
 		Player p = event.getPlayer();
@@ -639,7 +639,7 @@ public class DLEventHandler implements Listener
 		DragonsLairMain.getDungeonManager().stopDungeon(ad.getInfo().getName());
 	}
 	
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onPickup(PlayerPickupItemEvent event)
 	{
 		Player p = event.getPlayer();
@@ -726,7 +726,7 @@ public class DLEventHandler implements Listener
 		}
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onEntityDeath(EntityDeathEvent event)
 	{
 		if(!this.triggers.containsKey(TriggerType.MOBS_KILLED) && !this.triggers.containsKey(TriggerType.NPC_DEATH))
@@ -813,7 +813,7 @@ public class DLEventHandler implements Listener
 		}
 	}
 	
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onLevelChange(PlayerLevelChangeEvent event)
 	{
 		if(!this.triggers.containsKey(TriggerType.LEVEL_ACHIEVE))
@@ -852,7 +852,7 @@ public class DLEventHandler implements Listener
 		}
 	}
 	
-	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onInteractLog(PlayerInteractEvent event)
 	{
 		Player p = event.getPlayer();
@@ -877,7 +877,7 @@ public class DLEventHandler implements Listener
 	}
 	
 	
-	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onPlayerCraft(CraftItemEvent event)
 	{
 		Material outcome = event.getRecipe().getResult().getType();
@@ -940,21 +940,21 @@ public class DLEventHandler implements Listener
 		}
 	}
 	
-	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onDeadPlayerMove(PlayerMoveEvent event)
 	{
-		Player p = event.getPlayer();
+		final Player p = event.getPlayer();
 		if(!this.deadPlayers.contains(p.getName()))
 			return;
 		
-		Location from = event.getFrom();
-		Location to = event.getTo();
+		final Location from = event.getFrom();
+		final Location to = event.getTo();
 		if(from.getBlockX() == to.getBlockX() && from.getBlockY() == to.getBlockY())
 			return;
 		
-		ActiveDungeon ad = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
-		Location deathLoc = ad.getDeathLocationForPlayer(p.getName()).getDeathLocation();
-		ConversationHandler h = DragonsLairMain.getInstance().getConversationHandler();
+		final ActiveDungeon ad = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
+		final Location deathLoc = ad.getDeathLocationForPlayer(p.getName()).getDeathLocation();
+		final ConversationHandler h = DragonsLairMain.getInstance().getConversationHandler();
 		if(to.distanceSquared(deathLoc) <= 100 && !h.isInRespawnConversation(p))
 			h.startRespawnConversation(p);
 	}
@@ -967,5 +967,29 @@ public class DLEventHandler implements Listener
 			return;
 		
 		event.setCancelled(true);
+	}
+	
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+	public void onDungeonPlayerDropItem(PlayerDropItemEvent event)
+	{
+		final ActiveDungeon ad = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(event.getPlayer().getName());
+		final String dungeonName = (ad == null ? "_GENERAL_" : ad.getInfo().getName());
+		
+		DragonsLairMain.getItemTracker().addItem(event.getItemDrop(), dungeonName);
+	}
+	
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+	public void onDungeonPlayerPickup(PlayerPickupItemEvent event)
+	{
+		if(!DragonsLairMain.getItemTracker().canCollect(event.getItem(), event.getPlayer()))
+			event.setCancelled(true);
+		else
+			DragonsLairMain.getItemTracker().removeItem(event.getItem());
+	}
+	
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+	public void onDungeonItemDespawn(ItemDespawnEvent event)
+	{
+		DragonsLairMain.getItemTracker().removeItem(event.getEntity());
 	}
 }

@@ -7,14 +7,11 @@ import de.kumpelblase2.dragonslair.api.Dialog;
 
 public class ConversationNextDialogEvent extends ConversationEvent
 {
-	protected int nextDialog;
+	protected final int nextDialog;
 	
 	public ConversationNextDialogEvent(String inName, Conversation inConv, int next)
 	{
 		super(inName, inConv);
-		this.npc = DragonsLairMain.getSettings().getNPCByName(inName);
-		this.hnpc = DragonsLairMain.getDungeonManager().getNPCByName(inName);
-		this.conv = inConv;
 		this.nextDialog = next;
 	}
 	

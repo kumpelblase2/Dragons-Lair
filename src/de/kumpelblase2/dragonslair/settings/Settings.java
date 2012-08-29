@@ -10,13 +10,13 @@ import de.kumpelblase2.dragonslair.api.*;
 
 public class Settings
 {
-	private Map<Integer, Event> events = new HashMap<Integer, Event>();
-	private Map<Integer, Trigger> triggers = new HashMap<Integer, Trigger>();
-	private Map<Integer, Chapter> chapers = new HashMap<Integer, Chapter>();
-	private Map<Integer, Dialog> dialogs = new HashMap<Integer, Dialog>();
-	private Map<Integer, Dungeon> dungeons = new HashMap<Integer, Dungeon>();
-	private Map<Integer, Objective> objectives = new HashMap<Integer, Objective>();
-	private Map<Integer, NPC> npcs = new HashMap<Integer, NPC>();
+	private final Map<Integer, Event> events = new HashMap<Integer, Event>();
+	private final Map<Integer, Trigger> triggers = new HashMap<Integer, Trigger>();
+	private final Map<Integer, Chapter> chapers = new HashMap<Integer, Chapter>();
+	private final Map<Integer, Dialog> dialogs = new HashMap<Integer, Dialog>();
+	private final Map<Integer, Dungeon> dungeons = new HashMap<Integer, Dungeon>();
+	private final Map<Integer, Objective> objectives = new HashMap<Integer, Objective>();
+	private final Map<Integer, NPC> npcs = new HashMap<Integer, NPC>();
 	
 	public void loadAll()
 	{

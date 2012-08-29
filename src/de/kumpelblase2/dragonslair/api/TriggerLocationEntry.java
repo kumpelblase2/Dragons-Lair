@@ -5,8 +5,8 @@ import org.bukkit.Location;
 
 public class TriggerLocationEntry
 {
-	private Map<TriggerType, Set<Trigger>> triggers = new HashMap<TriggerType, Set<Trigger>>();
-	private Location location;
+	private final Map<TriggerType, Set<Trigger>> triggers = new HashMap<TriggerType, Set<Trigger>>();
+	private final Location location;
 	
 	public TriggerLocationEntry(Location loc)
 	{

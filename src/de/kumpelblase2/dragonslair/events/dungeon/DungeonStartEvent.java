@@ -6,7 +6,7 @@ import de.kumpelblase2.dragonslair.events.BaseEvent;
 
 public class DungeonStartEvent extends BaseEvent
 {
-	private Dungeon dungeon;
+	private final Dungeon dungeon;
 	
 	public DungeonStartEvent(Dungeon dungeon)
 	{

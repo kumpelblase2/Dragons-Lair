@@ -6,7 +6,7 @@ import de.kumpelblase2.dragonslair.DragonsLairMain;
 
 public class PlayerQueue
 {
-	private List<QueuedPlayer> players = new ArrayList<QueuedPlayer>();
+	private final List<QueuedPlayer> players = new ArrayList<QueuedPlayer>();
 	
 	public ActiveDungeon start(Dungeon dungeon)
 	{

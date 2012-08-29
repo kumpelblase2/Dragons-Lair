@@ -10,7 +10,7 @@ public class NPC
 {
 	private int id;
 	private String name;
-	private String skin; // does not work at the moment
+	private String skin;
 	private Location loc;
 	private Material heldItem;
 	private ItemStack[] armor;

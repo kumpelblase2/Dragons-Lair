@@ -2,7 +2,7 @@ package de.kumpelblase2.dragonslair.conversation;
 
 public class AnswerConverter
 {
-	private String answer;
+	private final String answer;
 	
 	public AnswerConverter(String answer)
 	{

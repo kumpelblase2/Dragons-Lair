@@ -16,9 +16,9 @@ import de.kumpelblase2.dragonslair.utilities.WorldUtility;
 public class BlockEntry implements Recoverable
 {
 	protected Map<String, String> m_before = new HashMap<String, String>();
-	protected Location m_loc;
-	protected String m_dungeon;
-	protected int m_party;
+	protected final Location m_loc;
+	protected final String m_dungeon;
+	protected final int m_party;
 	protected Map<String, String> m_new = new HashMap<String, String>();
 	
 	public BlockEntry(BlockState inState, ActiveDungeon ad)

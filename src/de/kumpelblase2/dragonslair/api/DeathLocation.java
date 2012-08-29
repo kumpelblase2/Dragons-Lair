@@ -9,9 +9,9 @@ import de.kumpelblase2.dragonslair.utilities.WorldUtility;
 
 public class DeathLocation
 {
-	private Location deathLocation;
-	private int partyID;
-	private String player;
+	private final Location deathLocation;
+	private final int partyID;
+	private final String player;
 	private ItemStack[] armor;
 	private ItemStack[] inventory;
 	

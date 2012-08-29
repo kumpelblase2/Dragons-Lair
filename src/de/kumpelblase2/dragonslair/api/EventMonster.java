@@ -4,9 +4,9 @@ import org.bukkit.entity.LivingEntity;
 
 public class EventMonster
 {
-	private LivingEntity mob;
-	private Event event;
-	private ActiveDungeon dungeon;
+	private final LivingEntity mob;
+	private final Event event;
+	private final ActiveDungeon dungeon;
 	
 	public EventMonster(Event e, ActiveDungeon ad, LivingEntity entity)
 	{

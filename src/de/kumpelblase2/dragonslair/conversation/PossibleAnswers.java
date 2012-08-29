@@ -4,9 +4,9 @@ import java.util.*;
 
 public class PossibleAnswers
 {
-	public static Set<String> approvalWords;
-	public static Set<String> disapprovalWords;
-	public static Set<String> considerationWords;
+	public static final Set<String> approvalWords;
+	public static final Set<String> disapprovalWords;
+	public static final Set<String> considerationWords;
 	
 	static {
 		String[] approvals = new String[] { "yes", "sure",  "yeah", "why not", "possibly", "ok", "k", "kk", "of cause", "no problem", "yep", "yip", "yea" };

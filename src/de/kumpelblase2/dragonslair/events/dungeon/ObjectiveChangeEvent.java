@@ -6,8 +6,8 @@ import de.kumpelblase2.dragonslair.events.BaseEvent;
 
 public class ObjectiveChangeEvent extends BaseEvent
 {
-	private ActiveDungeon dungeon;
-	private Objective nextObjective;
+	private final ActiveDungeon dungeon;
+	private final Objective nextObjective;
 	
 	public ObjectiveChangeEvent(ActiveDungeon d, Objective objective)
 	{
