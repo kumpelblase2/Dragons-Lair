@@ -58,6 +58,7 @@ public class ActiveDungeon
 	@SuppressWarnings("deprecation")
 	public void loadParty(Party p)
 	{
+		Set<String> playersSet = new HashSet<String>(Arrays.asList(p.getMembers()));
 		for(String player : p.getMembers())
 		{
 			Player pl = Bukkit.getPlayer(player);
@@ -70,6 +71,13 @@ public class ActiveDungeon
 			}
 			pl.updateInventory();
 			save.remove();
+			for(Player pla : Bukkit.getOnlinePlayers())
+			{
+				if(pla.getName().equals(player) || playersSet.contains(pla) || (DragonsLairMain.getDungeonManager().getDungeonOfPlayer(pla.getName()) != null && !DragonsLairMain.canPlayersInteract()))
+					continue;
+				
+				pl.hidePlayer(pl);
+			}
 		}
 		this.currentChapter = p.getCurrentChapter();
 		this.currentObjective = p.getCurrentObjective();

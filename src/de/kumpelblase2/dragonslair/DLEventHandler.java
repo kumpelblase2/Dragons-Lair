@@ -938,6 +938,19 @@ public class DLEventHandler implements Listener
 		{
 			this.deadPlayers.remove(member);
 		}
+		
+		Set<String> playerSet = new HashSet<String>(Arrays.asList(event.getDungeon().getCurrentParty().getMembers()));
+		for(String member : event.getDungeon().getCurrentParty().getMembers())
+		{
+			Player player = Bukkit.getPlayer(member);
+			for(Player pl : Bukkit.getOnlinePlayers())
+			{
+				if(pl.getName().equals(member) || playerSet.contains(pl.getName()) || (DragonsLairMain.getDungeonManager().getDungeonOfPlayer(pl.getName()) != null && !DragonsLairMain.canPlayersInteract()))
+					continue;
+				
+				player.hidePlayer(pl);
+			}
+		}
 	}
 	
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -991,5 +1004,42 @@ public class DLEventHandler implements Listener
 	public void onDungeonItemDespawn(ItemDespawnEvent event)
 	{
 		DragonsLairMain.getItemTracker().removeItem(event.getEntity());
+	}
+	
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onPlayerJoin(PlayerJoinEvent event)
+	{
+		for(final Player p : Bukkit.getOnlinePlayers())
+		{
+			if(DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName()) != null && !DragonsLairMain.canPlayersInteract())
+				event.getPlayer().hidePlayer(p);
+		}
+	}
+	
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+	public void onDungeonPlayerDamageEvent(EntityDamageByEntityEvent event)
+	{
+		if(!(event.getEntity() instanceof Player) || !(event.getDamager() instanceof Player))
+			return;
+		
+		final Player p = (Player)event.getEntity();
+		final Player damager = (Player)event.getDamager();
+		final ActiveDungeon pDungeon = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
+		final ActiveDungeon damagerDungeon = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(damager.getName());
+		if(pDungeon == null)
+		{
+			if(damagerDungeon != null && DragonsLairMain.canPlayersInteract())
+				event.setCancelled(true);
+		}
+		else if(pDungeon != null)
+		{
+			if(damagerDungeon == null && DragonsLairMain.canPlayersInteract())
+				event.setCancelled(true);
+			else
+			{
+				if(!pDungeon.getInfo().getName().equals(damagerDungeon.getInfo().getName()) && DragonsLairMain.canPlayersInteract())
+					event.setCancelled(true);
+			}
+		}
 	}
 }
