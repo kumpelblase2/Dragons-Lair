@@ -462,7 +462,7 @@ public class DragonsLairMain extends JavaPlugin
 		this.getConfig().set("update-notice-interval", this.getConfig().getInt("update-notice-interval", 10));
 		this.getConfig().set("verbose-start", this.getConfig().getBoolean("verbose-start", false));
 		this.getConfig().set("resurrect_money", this.getConfig().getInt("resurrect", 500));
-		this.getConfig().set("interacting_between_players", false);
+		this.getConfig().set("interacting_between_players", this.getConfig().getBoolean("interacting_between_players", false));
 		if(!this.getConfig().getKeys(false).contains("enabled-worlds"))
 			this.getConfig().set("enabled-worlds", new ArrayList<String>(Arrays.asList(new String[] { "world" })));
 		this.saveConfig();
