@@ -10,25 +10,25 @@ import de.kumpelblase2.dragonslair.api.NPC;
 public class NPCListDialog extends MessagePrompt
 {
 	private int page;
-	
+
 	public NPCListDialog()
 	{
 		this(0);
 	}
-	
-	public NPCListDialog(int page)
+
+	public NPCListDialog(final int page)
 	{
 		this.page = page;
 	}
-	
+
 	@Override
-	public String getPromptText(ConversationContext arg0)
+	public String getPromptText(final ConversationContext arg0)
 	{
-		NPC[] npcs = DragonsLairMain.getSettings().getNPCs().values().toArray(new NPC[0]);
+		final NPC[] npcs = DragonsLairMain.getSettings().getNPCs().values().toArray(new NPC[0]);
 		Arrays.sort(npcs, new Comparator<NPC>()
 		{
 			@Override
-			public int compare(NPC o1, NPC o2)
+			public int compare(final NPC o1, final NPC o2)
 			{
 				if(o1.getID() > o2.getID())
 					return 1;
@@ -39,21 +39,15 @@ public class NPCListDialog extends MessagePrompt
 		});
 		arg0.getForWhom().sendRawMessage(ChatColor.GREEN + "There is/are " + npcs.length + " npc(s) avaiblable.");
 		if(12 * this.page > npcs.length)
-		{
-			this.page = (int)(npcs.length / 12);
-		}
-		
+			this.page = npcs.length / 12;
 		for(int i = 12 * this.page; i < npcs.length && i < 12 * this.page + 12; i++)
-		{
 			arg0.getForWhom().sendRawMessage("   " + npcs[i].getID() + " - " + npcs[i].getName());
-		}
-		return "---------------- Page " + (this.page + 1) + "/" + ((int)(npcs.length / 12) + 1);
+		return "---------------- Page " + (this.page + 1) + "/" + (npcs.length / 12 + 1);
 	}
 
 	@Override
-	protected Prompt getNextPrompt(ConversationContext arg0)
+	protected Prompt getNextPrompt(final ConversationContext arg0)
 	{
 		return new NPCManageDialog();
 	}
-
 }

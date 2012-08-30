@@ -1,6 +1,6 @@
- package de.kumpelblase2.npclib.nms;
-//original provided by Topcat, modified by kumpelblase2
+package de.kumpelblase2.npclib.nms;
 
+// original provided by Topcat, modified by kumpelblase2
 import net.minecraft.server.*;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -10,7 +10,7 @@ import de.kumpelblase2.dragonslair.DragonsLairMain;
 import de.kumpelblase2.npclib.NPCManager;
 
 /**
- *
+ * 
  * @author martin
  */
 public class NPCEntity extends EntityPlayer
@@ -19,99 +19,86 @@ public class NPCEntity extends EntityPlayer
 	private long lastBounceTick;
 	private int lastBounceId;
 
-	public NPCEntity(NPCManager npcManager, BWorld world, String s, ItemInWorldManager itemInWorldManager)
+	public NPCEntity(final NPCManager npcManager, final BWorld world, final String s, final ItemInWorldManager itemInWorldManager)
 	{
 		super(npcManager.getServer().getMCServer(), world.getWorldServer(), s, itemInWorldManager);
-
 		itemInWorldManager.b(EnumGamemode.SURVIVAL);
-
-		netServerHandler = new NPCNetHandler(npcManager, this);
-		lastTargetId = -1;
-		lastBounceId = -1;
-		lastBounceTick = 0;
-		fauxSleeping = true;
+		this.netServerHandler = new NPCNetHandler(npcManager, this);
+		this.lastTargetId = -1;
+		this.lastBounceId = -1;
+		this.lastBounceTick = 0;
+		this.fauxSleeping = true;
 	}
 
-	public void setBukkitEntity(org.bukkit.entity.Entity entity)
+	public void setBukkitEntity(final org.bukkit.entity.Entity entity)
 	{
-		bukkitEntity = entity;
+		this.bukkitEntity = entity;
 	}
 
 	@Override
-	public boolean c(EntityHuman entity)
+	public boolean c(final EntityHuman entity)
 	{
-		EntityTargetEvent event = new NpcEntityTargetEvent(getBukkitEntity(), entity.getBukkitEntity(), NpcEntityTargetEvent.NpcTargetReason.NPC_RIGHTCLICKED);
-		CraftServer server = ((WorldServer) world).getServer();
+		final EntityTargetEvent event = new NpcEntityTargetEvent(this.getBukkitEntity(), entity.getBukkitEntity(), NpcEntityTargetEvent.NpcTargetReason.NPC_RIGHTCLICKED);
+		final CraftServer server = ((WorldServer)this.world).getServer();
 		server.getPluginManager().callEvent(event);
-
 		return super.c(entity);
 	}
 
 	@Override
-	public void b_(EntityHuman entity)
-	{		
-		if ((lastBounceId != entity.id || System.currentTimeMillis() - lastBounceTick > 1000) && entity.getBukkitEntity().getLocation().distanceSquared(getBukkitEntity().getLocation()) <= 1)
+	public void b_(final EntityHuman entity)
+	{
+		if((this.lastBounceId != entity.id || System.currentTimeMillis() - this.lastBounceTick > 1000) && entity.getBukkitEntity().getLocation().distanceSquared(this.getBukkitEntity().getLocation()) <= 1)
 		{
-			EntityTargetEvent event = new NpcEntityTargetEvent(getBukkitEntity(), entity.getBukkitEntity(), NpcEntityTargetEvent.NpcTargetReason.NPC_BOUNCED);
-			CraftServer server = ((WorldServer) world).getServer();
+			final EntityTargetEvent event = new NpcEntityTargetEvent(this.getBukkitEntity(), entity.getBukkitEntity(), NpcEntityTargetEvent.NpcTargetReason.NPC_BOUNCED);
+			final CraftServer server = ((WorldServer)this.world).getServer();
 			server.getPluginManager().callEvent(event);
-
-			lastBounceTick = System.currentTimeMillis();
-			lastBounceId = entity.id;
+			this.lastBounceTick = System.currentTimeMillis();
+			this.lastBounceId = entity.id;
 		}
-		
-		if (lastTargetId == -1 || lastTargetId != entity.id)
+		if(this.lastTargetId == -1 || this.lastTargetId != entity.id)
 		{
-			EntityTargetEvent event = new NpcEntityTargetEvent(getBukkitEntity(), entity.getBukkitEntity(), NpcEntityTargetEvent.NpcTargetReason.CLOSEST_PLAYER);
-			CraftServer server = ((WorldServer) world).getServer();
+			final EntityTargetEvent event = new NpcEntityTargetEvent(this.getBukkitEntity(), entity.getBukkitEntity(), NpcEntityTargetEvent.NpcTargetReason.CLOSEST_PLAYER);
+			final CraftServer server = ((WorldServer)this.world).getServer();
 			server.getPluginManager().callEvent(event);
-			lastTargetId = entity.id;
+			this.lastTargetId = entity.id;
 		}
-
 		super.b_(entity);
 	}
 
 	@Override
-	public void c(Entity entity)
+	public void c(final Entity entity)
 	{
-		if (lastBounceId != entity.id || System.currentTimeMillis() - lastBounceTick > 1000)
+		if(this.lastBounceId != entity.id || System.currentTimeMillis() - this.lastBounceTick > 1000)
 		{
-			EntityTargetEvent event = new NpcEntityTargetEvent(getBukkitEntity(), entity.getBukkitEntity(), NpcEntityTargetEvent.NpcTargetReason.NPC_BOUNCED);
-			CraftServer server = ((WorldServer) world).getServer();
+			final EntityTargetEvent event = new NpcEntityTargetEvent(this.getBukkitEntity(), entity.getBukkitEntity(), NpcEntityTargetEvent.NpcTargetReason.NPC_BOUNCED);
+			final CraftServer server = ((WorldServer)this.world).getServer();
 			server.getPluginManager().callEvent(event);
-
-			lastBounceTick = System.currentTimeMillis();
+			this.lastBounceTick = System.currentTimeMillis();
 		}
-
-		lastBounceId = entity.id;
-
+		this.lastBounceId = entity.id;
 		super.c(entity);
 	}
-	
+
 	@Override
-	protected int c(DamageSource damage, int i)
+	protected int c(final DamageSource damage, int i)
 	{
 		if(damage.getEntity() instanceof EntityPlayer)
 		{
-			EntityDamageByEntityEvent event = new NpcDamageEvent(getBukkitEntity(), damage.getEntity().getBukkitEntity(), DamageCause.ENTITY_ATTACK, i);
-			CraftServer server = ((WorldServer) world).getServer();
+			final EntityDamageByEntityEvent event = new NpcDamageEvent(this.getBukkitEntity(), damage.getEntity().getBukkitEntity(), DamageCause.ENTITY_ATTACK, i);
+			final CraftServer server = ((WorldServer)this.world).getServer();
 			server.getPluginManager().callEvent(event);
-			
 			if(event.isCancelled())
 				return 0;
-			
 			i = event.getDamage();
 		}
-		
 		if(DragonsLairMain.getSettings().getNPCByName(this.name).isInvincible())
 			i = 0;
-
 		return super.c(damage, i);
 	}
 
 	@Override
-	public void move(double arg0, double arg1, double arg2) {
-		setPosition(arg0, arg1, arg2);
+	public void move(final double arg0, final double arg1, final double arg2)
+	{
+		this.setPosition(arg0, arg1, arg2);
 	}
-
 }

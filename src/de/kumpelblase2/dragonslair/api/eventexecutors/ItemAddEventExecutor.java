@@ -11,34 +11,27 @@ import de.kumpelblase2.dragonslair.api.Event;
 
 public class ItemAddEventExecutor implements EventExecutor
 {
-
 	@Override
-	public boolean executeEvent(Event e, Player p)
+	public boolean executeEvent(final Event e, final Player p)
 	{
 		try
 		{
-			String scope = e.getOption("scope");
+			final String scope = e.getOption("scope");
 			Material itemMat = Material.AIR;
 			if(e.getOption("item_id").equals("money"))
 			{
 				if(DragonsLairMain.getInstance().isEconomyEnabled())
 				{
-					double amount = Double.parseDouble(e.getOption("amount"));
-					Economy ec = DragonsLairMain.getInstance().getEconomy();
+					final double amount = Double.parseDouble(e.getOption("amount"));
+					final Economy ec = DragonsLairMain.getInstance().getEconomy();
 					if(scope == null || scope.equalsIgnoreCase("single"))
-					{
 						ec.depositPlayer(p.getName(), amount);
-					}
 					else
 					{
-						ActiveDungeon d = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
+						final ActiveDungeon d = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
 						if(d != null)
-						{
-							for(String member : d.getCurrentParty().getMembers())
-							{
+							for(final String member : d.getCurrentParty().getMembers())
 								ec.depositPlayer(member, amount);
-							}
-						}
 					}
 				}
 			}
@@ -48,29 +41,22 @@ public class ItemAddEventExecutor implements EventExecutor
 					itemMat = Material.getMaterial(Integer.parseInt(e.getOption("item_id")));
 				else
 					itemMat = Material.getMaterial(e.getOption("item_id").replace(" ", "_").toUpperCase());
-				
-				int amount = Integer.parseInt(e.getOption("amount"));
-				String damageString = e.getOption("damage");
-				short damage = (damageString != null) ? Short.parseShort(damageString) : 0;
-				ItemStack item = new ItemStack(itemMat, amount, damage);
+				final int amount = Integer.parseInt(e.getOption("amount"));
+				final String damageString = e.getOption("damage");
+				final short damage = (damageString != null) ? Short.parseShort(damageString) : 0;
+				final ItemStack item = new ItemStack(itemMat, amount, damage);
 				if(scope == null || scope.equalsIgnoreCase("single"))
-				{
 					p.getInventory().addItem(item);
-				}
 				else
 				{
-					ActiveDungeon d = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
+					final ActiveDungeon d = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
 					if(d != null)
-					{
-						for(String member : d.getCurrentParty().getMembers())
-						{
+						for(final String member : d.getCurrentParty().getMembers())
 							Bukkit.getPlayer(member).getInventory().addItem(item);
-						}
-					}
 				}
 			}
 		}
-		catch(Exception ex)
+		catch(final Exception ex)
 		{
 			DragonsLairMain.Log.warning("Couldn't execute event with id: " + e.getID());
 			DragonsLairMain.Log.warning(ex.getMessage());
@@ -78,5 +64,4 @@ public class ItemAddEventExecutor implements EventExecutor
 		}
 		return true;
 	}
-
 }

@@ -7,16 +7,16 @@ public class EventMonster
 	private final LivingEntity mob;
 	private final Event event;
 	private final ActiveDungeon dungeon;
-	
-	public EventMonster(Event e, ActiveDungeon ad, LivingEntity entity)
+
+	public EventMonster(final Event e, final ActiveDungeon ad, final LivingEntity entity)
 	{
 		this.event = e;
 		this.dungeon = ad;
 		this.mob = entity;
 	}
-	
+
 	@Override
-	public boolean equals(Object object)
+	public boolean equals(final Object object)
 	{
 		if(object instanceof LivingEntity)
 			return this.mob.equals(object);
@@ -24,17 +24,17 @@ public class EventMonster
 			return ((EventMonster)object).getMonster().equals(this.mob);
 		return false;
 	}
-	
+
 	public ActiveDungeon getDungeon()
 	{
 		return this.dungeon;
 	}
-	
+
 	public Event getEvent()
 	{
 		return this.event;
 	}
-	
+
 	public LivingEntity getMonster()
 	{
 		return this.mob;

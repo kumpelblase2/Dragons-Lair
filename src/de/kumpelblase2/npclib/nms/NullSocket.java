@@ -1,20 +1,19 @@
 package de.kumpelblase2.npclib.nms;
-//original provided by Topcat, modified by kumpelblase2
 
+// original provided by Topcat, modified by kumpelblase2
 import java.io.*;
 import java.net.Socket;
 
 /**
- *
+ * 
  * @author martin
  */
 public class NullSocket extends Socket
 {
-
 	@Override
 	public InputStream getInputStream()
 	{
-		byte[] buf = new byte[5];
+		final byte[] buf = new byte[5];
 		return new ByteArrayInputStream(buf);
 	}
 
@@ -23,5 +22,4 @@ public class NullSocket extends Socket
 	{
 		return new ByteArrayOutputStream();
 	}
-
 }

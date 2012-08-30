@@ -12,17 +12,17 @@ public class HelpDialog extends FixedSetPrompt
 	public HelpDialog()
 	{
 		super("dungeons", "npcs", "triggers", "events");
-	}	
-	
+	}
+
 	@Override
-	public String getPromptText(ConversationContext arg0)
+	public String getPromptText(final ConversationContext arg0)
 	{
 		arg0.getForWhom().sendRawMessage(ChatColor.GREEN + "What do you need help with?");
 		return ChatColor.AQUA + "dungeons, npcs, triggers, events, system";
 	}
 
 	@Override
-	protected Prompt acceptValidatedInput(ConversationContext arg0, String arg1)
+	protected Prompt acceptValidatedInput(final ConversationContext arg0, final String arg1)
 	{
 		if(arg1.equals("dungeons"))
 			return new DungeonHelpDialog();
@@ -34,5 +34,4 @@ public class HelpDialog extends FixedSetPrompt
 			return new EventHelpDialog();
 		return this;
 	}
-
 }

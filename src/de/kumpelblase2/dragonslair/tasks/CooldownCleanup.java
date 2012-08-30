@@ -7,21 +7,15 @@ import de.kumpelblase2.dragonslair.api.Trigger;
 
 public class CooldownCleanup implements Runnable
 {
+	@Override
 	public void run()
 	{
-		DungeonManager manager = DragonsLairMain.getDungeonManager();
+		final DungeonManager manager = DragonsLairMain.getDungeonManager();
 		if(manager == null)
 			return;
-		
-		for(Trigger t : manager.getSettings().getTriggers().values())
-		{
+		for(final Trigger t : manager.getSettings().getTriggers().values())
 			t.clearCooldowns();
-		}
-		
-		for(Event e : manager.getSettings().getEvents().values())
-		{
+		for(final Event e : manager.getSettings().getEvents().values())
 			e.clearCooldowns();
-		}
 	}
-
 }

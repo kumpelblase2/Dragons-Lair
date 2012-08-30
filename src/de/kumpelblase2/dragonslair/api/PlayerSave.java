@@ -10,36 +10,28 @@ public class PlayerSave
 {
 	private Player player;
 	private int partyid;
-	
+
 	public PlayerSave()
 	{
 	}
-	
-	public PlayerSave(Player p, Party pa)
+
+	public PlayerSave(final Player p, final Party pa)
 	{
 		this.player = p;
 		this.partyid = pa.getID();
 	}
-	
-	public PlayerSave(Player p, int paid)
+
+	public PlayerSave(final Player p, final int paid)
 	{
 		this.player = p;
 		this.partyid = paid;
 	}
-	
+
 	public void save()
 	{
 		try
 		{
-			PreparedStatement st = DragonsLairMain.createStatement("INSERT INTO " + Tables.PLAYER_SAVES + "(" +
-					"player_name," +
-					"player_armor," +
-					"player_items," +
-					"player_health," +
-					"player_hunger," +
-					"player_location," +
-					"player_party_id" +
-					") VALUES(?,?,?,?,?,?,?)");
+			final PreparedStatement st = DragonsLairMain.createStatement("INSERT INTO " + Tables.PLAYER_SAVES + "(" + "player_name," + "player_armor," + "player_items," + "player_health," + "player_hunger," + "player_location," + "player_party_id" + ") VALUES(?,?,?,?,?,?,?)");
 			st.setString(1, this.player.getName());
 			st.setString(2, InventoryUtilities.armorToString(this.player));
 			st.setString(3, InventoryUtilities.inventoryToString(this.player));
@@ -49,7 +41,7 @@ public class PlayerSave
 			st.setInt(7, this.partyid);
 			st.executeUpdate();
 		}
-		catch(Exception e)
+		catch(final Exception e)
 		{
 			DragonsLairMain.Log.warning("Unable to save info for player " + this.player.getName() + ".");
 			DragonsLairMain.Log.warning(e.getMessage());
@@ -60,13 +52,12 @@ public class PlayerSave
 	{
 		try
 		{
-			PreparedStatement st = DragonsLairMain.createStatement("SELECT * FROM " + Tables.PLAYER_SAVES + " WHERE (`player_name` = ?) AND (`player_party_id` = ?)");
+			final PreparedStatement st = DragonsLairMain.createStatement("SELECT * FROM " + Tables.PLAYER_SAVES + " WHERE (`player_name` = ?) AND (`player_party_id` = ?)");
 			st.setString(1, this.player.getName());
 			st.setInt(2, this.partyid);
-			ResultSet result = st.executeQuery();
+			final ResultSet result = st.executeQuery();
 			if(result == null || !result.next())
-				return false;			
-			
+				return false;
 			this.player.setHealth(result.getInt(TableColumns.Player_Saves.HEALTH));
 			this.player.setFoodLevel(result.getInt(TableColumns.Player_Saves.HUNGER));
 			this.player.getInventory().setArmorContents(InventoryUtilities.stringToItems(result.getString(TableColumns.Player_Saves.ARMOR)));
@@ -74,24 +65,24 @@ public class PlayerSave
 			this.player.teleport(WorldUtility.stringToLocation(result.getString(TableColumns.Player_Saves.LOCATION)));
 			return true;
 		}
-		catch(Exception e)
+		catch(final Exception e)
 		{
 			DragonsLairMain.Log.warning("Unable to parse save state for player " + this.player.getName());
 			DragonsLairMain.Log.warning(e.getMessage());
 			return false;
 		}
 	}
-	
+
 	public void remove()
 	{
 		try
 		{
-			PreparedStatement st = DragonsLairMain.createStatement("DELETE FROM " + Tables.PLAYER_SAVES + " WHERE (player_name = ?) AND (player_party_id = ?)");
+			final PreparedStatement st = DragonsLairMain.createStatement("DELETE FROM " + Tables.PLAYER_SAVES + " WHERE (player_name = ?) AND (player_party_id = ?)");
 			st.setString(1, this.player.getName());
 			st.setInt(2, this.partyid);
 			st.executeUpdate();
 		}
-		catch(Exception e)
+		catch(final Exception e)
 		{
 			DragonsLairMain.Log.warning("Unable to remove player save for player: " + this.player.getName());
 			DragonsLairMain.Log.warning(e.getMessage());

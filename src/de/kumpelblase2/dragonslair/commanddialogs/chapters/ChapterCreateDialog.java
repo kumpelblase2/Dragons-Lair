@@ -8,18 +8,17 @@ import de.kumpelblase2.dragonslair.api.Chapter;
 public class ChapterCreateDialog extends ValidatingPrompt
 {
 	@Override
-	public String getPromptText(ConversationContext context)
+	public String getPromptText(final ConversationContext context)
 	{
 		return ChatColor.AQUA + "Please enter a name for the chapter:";
 	}
 
 	@Override
-	protected Prompt acceptValidatedInput(ConversationContext context, String input)
+	protected Prompt acceptValidatedInput(final ConversationContext context, final String input)
 	{
 		if(input.equals("back") || input.equals("cancel"))
 			return new ChapterManageDialog();
-		
-		Chapter c = new Chapter();
+		final Chapter c = new Chapter();
 		c.setName(input);
 		c.save();
 		DragonsLairMain.getSettings().getChapters().put(c.getID(), c);
@@ -28,7 +27,7 @@ public class ChapterCreateDialog extends ValidatingPrompt
 	}
 
 	@Override
-	protected boolean isInputValid(ConversationContext context, String input)
+	protected boolean isInputValid(final ConversationContext context, final String input)
 	{
 		return true;
 	}

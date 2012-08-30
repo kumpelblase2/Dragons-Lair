@@ -12,8 +12,8 @@ public class SavedPlayer
 	private final ItemStack[] items;
 	private final ItemStack[] armor;
 	private final Location loc;
-	
-	public SavedPlayer(Player p)
+
+	public SavedPlayer(final Player p)
 	{
 		this.player = p;
 		this.food = p.getFoodLevel();
@@ -22,7 +22,7 @@ public class SavedPlayer
 		this.armor = p.getInventory().getArmorContents();
 		this.loc = p.getLocation();
 	}
-	
+
 	public void restore()
 	{
 		this.player.setHealth(this.health);

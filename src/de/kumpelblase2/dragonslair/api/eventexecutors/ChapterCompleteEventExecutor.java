@@ -8,27 +8,24 @@ import de.kumpelblase2.dragonslair.events.dungeon.ChapterChangeEvent;
 
 public class ChapterCompleteEventExecutor implements EventExecutor
 {
-
 	@Override
-	public boolean executeEvent(Event e, Player p)
+	public boolean executeEvent(final Event e, final Player p)
 	{
 		try
 		{
-			ActiveDungeon d = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
+			final ActiveDungeon d = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
 			if(d == null)
 				return false;
-			
-			Integer id = Integer.parseInt(e.getOption("chapter_id"));
-			
-			Chapter next = DragonsLairMain.getSettings().getChapters().get(id);
+			final Integer id = Integer.parseInt(e.getOption("chapter_id"));
+			final Chapter next = DragonsLairMain.getSettings().getChapters().get(id);
 			if(next == null)
 				return false;
-			ChapterChangeEvent event = new ChapterChangeEvent(d, next);
+			final ChapterChangeEvent event = new ChapterChangeEvent(d, next);
 			Bukkit.getPluginManager().callEvent(event);
 			if(!event.isCancelled())
 				d.setNextChapter(event.getNextChapter());
 		}
-		catch(Exception ex)
+		catch(final Exception ex)
 		{
 			DragonsLairMain.Log.warning("Couldn't execute event with id: " + e.getID());
 			DragonsLairMain.Log.warning(ex.getMessage());
@@ -36,5 +33,4 @@ public class ChapterCompleteEventExecutor implements EventExecutor
 		}
 		return true;
 	}
-
 }

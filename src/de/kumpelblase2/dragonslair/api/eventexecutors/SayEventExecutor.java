@@ -5,12 +5,10 @@ import de.kumpelblase2.dragonslair.api.Event;
 
 public class SayEventExecutor implements EventExecutor
 {
-
 	@Override
-	public boolean executeEvent(Event e, Player p)
+	public boolean executeEvent(final Event e, final Player p)
 	{
 		p.sendRawMessage(e.getOption("message"));
 		return true;
 	}
-
 }

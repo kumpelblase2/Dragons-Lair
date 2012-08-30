@@ -35,23 +35,23 @@ public class DungeonManager
 	private final Set<EventMonster> spawnedEntities = Collections.synchronizedSet(new HashSet<EventMonster>());
 	private final Map<String, Map<Integer, Map<EntityType, Integer>>> killedMobs = new HashMap<String, Map<Integer, Map<EntityType, Integer>>>();
 	private final ItemTracker itemTracker = new ItemTracker();
-	
+
 	public DungeonManager()
 	{
 		this.cfactory = new ConversationFactory(DragonsLairMain.getInstance());
 		this.npcManager = new NPCManager(DragonsLairMain.getInstance());
 	}
-	
+
 	public ConversationFactory getConversationFactory()
 	{
 		return this.cfactory;
 	}
-	
+
 	public Map<String, Dungeon> getDungeons()
 	{
 		return this.dungeons;
 	}
-	
+
 	public NPCManager getNPCManager()
 	{
 		return this.npcManager;
@@ -61,103 +61,89 @@ public class DungeonManager
 	{
 		return this.settings;
 	}
-	
+
 	public Map<Integer, de.kumpelblase2.npclib.entity.NPC> getSpawnedNPCIDs()
 	{
 		return this.npcManager.getNPCs();
 	}
-	
-	public HumanNPC getNPCByName(String inName)
+
+	public HumanNPC getNPCByName(final String inName)
 	{
-		NPC n = DragonsLairMain.getSettings().getNPCByName(inName);
+		final NPC n = DragonsLairMain.getSettings().getNPCByName(inName);
 		if(n == null)
 			return null;
-		
 		return this.npcManager.getNPC(n.getID());
 	}
-	
-	public HumanNPC getNPCByEntity(Entity e)
+
+	public HumanNPC getNPCByEntity(final Entity e)
 	{
-		return (HumanNPC)this.npcManager.getNPC(this.npcManager.getNPCIdFromEntity(e));
+		return this.npcManager.getNPC(this.npcManager.getNPCIdFromEntity(e));
 	}
-	
-	public de.kumpelblase2.dragonslair.api.NPC getNPCByNPCEntity(Entity npc)
+
+	public de.kumpelblase2.dragonslair.api.NPC getNPCByNPCEntity(final Entity npc)
 	{
 		return this.getSettings().getNPCs().get(this.npcManager.getNPCIdFromEntity(npc));
 	}
-	
-	public boolean executeEvent(Event e, Player p)
+
+	public boolean executeEvent(final Event e, final Player p)
 	{
 		if(e == null)
 			return false;
-		
-		ActiveDungeon ad = (p != null ? this.getDungeonOfPlayer(p.getName()) : null);
-		String name = (ad == null) ? "_GENERAL_" : ad.getInfo().getName();
-		boolean onCD = this.isOnCooldown(name, e);
-		EventCallEvent event = new EventCallEvent(e, p, onCD);		
+		final ActiveDungeon ad = (p != null ? this.getDungeonOfPlayer(p.getName()) : null);
+		final String name = (ad == null) ? "_GENERAL_" : ad.getInfo().getName();
+		final boolean onCD = this.isOnCooldown(name, e);
+		final EventCallEvent event = new EventCallEvent(e, p, onCD);
 		Bukkit.getPluginManager().callEvent(event);
 		if(event.isCancelled())
 		{
 			if(event.isOnCooldown() != onCD)
-			{
 				if(event.isOnCooldown())
 					this.addCooldown(name, e);
 				else
 					this.removeCooldown(name, e);
-			}
 			return true;
 		}
-		
 		DragonsLairMain.debugLog("Executing event with id '" + e.getID() + "' for player '" + (p != null ? p.getName() : "") + "'");
 		if(this.executors.containsKey(e.getActionType()) && !this.isOnCooldown(name, e))
 		{
-			boolean result = this.executors.get(e.getActionType()).executeEvent(e, p);
+			final boolean result = this.executors.get(e.getActionType()).executeEvent(e, p);
 			if(result)
 				this.addCooldown(name, e);
-			
 			return result;
 		}
-		
 		return false;
 	}
-	
+
 	public void callTrigger(final Trigger t, final Player p)
 	{
 		if(t == null)
 			return;
-		
-		ActiveDungeon ad = this.getDungeonOfPlayer(p.getName());
+		final ActiveDungeon ad = this.getDungeonOfPlayer(p.getName());
 		final String name = (ad == null) ? "_GENERAL_" : ad.getInfo().getName();
-		boolean onCD = this.isOnCooldown(name, t);
-		TriggerCallEvent event = new TriggerCallEvent(t, p, onCD);
+		final boolean onCD = this.isOnCooldown(name, t);
+		final TriggerCallEvent event = new TriggerCallEvent(t, p, onCD);
 		Bukkit.getPluginManager().callEvent(event);
 		if(event.isCancelled())
 		{
 			if(event.isOnCooldown() != onCD)
-			{
 				if(!event.isOnCooldown())
 					this.removeCooldown(name, t);
 				else
 					this.addCooldown(name, t);
-			}
 			return;
 		}
-		
 		if(event.isOnCooldown())
 			return;
-		
 		int delay = 0;
 		if(t.getOption("delay") != null)
-		{
 			try
 			{
 				delay = Integer.parseInt(t.getOption("delay"));
 			}
-			catch(Exception e)
+			catch(final Exception e)
 			{
 				DragonsLairMain.Log.info("Unable to parse delay for trigger: " + t.getOption("delay"));
 			}
-		}
 		DragonsLairMain.debugLog("Executing trigger with id '" + t.getID() + "' by player '" + (p != null ? p.getName() : "") + "'");
 		if(delay > 0)
 			Bukkit.getScheduler().scheduleSyncDelayedTask(DragonsLairMain.getInstance(), new Runnable()
@@ -165,83 +151,69 @@ public class DungeonManager
 				@Override
 				public void run()
 				{
-					List<Integer> ids = t.getEventIDs();
-					for(Integer eid : ids)
+					final List<Integer> ids = t.getEventIDs();
+					for(final Integer eid : ids)
 					{
 						if(eid == 0)
 							continue;
-						
 						final Event e = DragonsLairMain.getSettings().getEvents().get(eid);
 						if(e == null)
 							continue;
-						
 						if(e.getOption("delay") != null)
-						{
 							Bukkit.getScheduler().scheduleSyncDelayedTask(DragonsLairMain.getInstance(), new Runnable()
 							{
-								
 								@Override
 								public void run()
 								{
 									DragonsLairMain.getDungeonManager().executeEvent(e, p);
 								}
 							}, Integer.parseInt(e.getOption("delay")) * 20L);
-						}
 						else
-						{
 							DragonsLairMain.getDungeonManager().executeEvent(e, p);
-						}
 					}
 					t.use(name);
 				}
 			}, delay * 20);
 		else
 		{
-			List<Integer> ids = t.getEventIDs();
-			for(Integer eid : ids)
+			final List<Integer> ids = t.getEventIDs();
+			for(final Integer eid : ids)
 			{
 				if(eid == 0)
 					continue;
-				
 				final Event e = DragonsLairMain.getSettings().getEvents().get(eid);
 				if(e == null)
 					continue;
-				
 				if(e.getOption("delay") != null)
-				{
 					Bukkit.getScheduler().scheduleSyncDelayedTask(DragonsLairMain.getInstance(), new Runnable()
 					{
-						
 						@Override
 						public void run()
 						{
 							DragonsLairMain.getDungeonManager().executeEvent(e, p);
 						}
 					}, Integer.parseInt(e.getOption("delay")) * 20L);
-				}
 				else
-				{
 					DragonsLairMain.getDungeonManager().executeEvent(e, p);
-				}
 			}
 			t.use(name);
 		}
 	}
-	
-	public void setEventExecutor(EventActionType action, EventExecutor executor)
+
+	public void setEventExecutor(final EventActionType action, final EventExecutor executor)
 	{
 		this.executors.put(action, executor);
 	}
-	
-	public void spawnNPC(String name)
+
+	public void spawnNPC(final String name)
 	{
-		NPC npc = DragonsLairMain.getSettings().getNPCByName(name);
+		final NPC npc = DragonsLairMain.getSettings().getNPCByName(name);
 		this.spawnNPC(npc);
 	}
-	
-	public void spawnNPC(Integer id)
+
+	public void spawnNPC(final Integer id)
 	{
-		NPC npc = DragonsLairMain.getSettings().getNPCs().get(id);
+		final NPC npc = DragonsLairMain.getSettings().getNPCs().get(id);
 		if(npc == null)
 		{
 			DragonsLairMain.Log.warning("Unable to spawn NPC with id " + id + ".");
@@ -249,110 +221,103 @@ public class DungeonManager
 		}
 		this.spawnNPC(npc);
 	}
-	
-	public void spawnNPC(NPC npc)
+
+	public void spawnNPC(final NPC npc)
 	{
-		HumanNPC hnpc = (HumanNPC)this.getNPCManager().spawnHumanNPC(npc);
+		final HumanNPC hnpc = (HumanNPC)this.getNPCManager().spawnHumanNPC(npc);
 		if(hnpc != null)
 		{
 			DragonsLairMain.debugLog("Spawning NPC with id '" + npc.getID() + "'");
 			if(npc.getSkin() != null && !npc.getSkin().equals(""))
 				hnpc.setSkin(npc.getSkin());
-			
 			hnpc.setItemInHand(npc.getHeldItem());
 			hnpc.getInventory().setArmorContents(npc.getArmorParts());
 		}
 	}
-	
-	public boolean despawnNPC(String name)
+
+	public boolean despawnNPC(final String name)
 	{
-		NPC n = DragonsLairMain.getSettings().getNPCByName(name);
+		final NPC n = DragonsLairMain.getSettings().getNPCByName(name);
 		if(n == null)
 			return false;
-		
 		return this.despawnNPC(n.getID());
 	}
-	
-	public boolean despawnNPC(Integer id)
+
+	public boolean despawnNPC(final Integer id)
 	{
 		DragonsLairMain.debugLog("Despawning NPC with id '" + id + "'");
 		return this.npcManager.despawnById(id);
 	}
-	
+
 	public void spawnNPCs()
 	{
-		Bukkit.getScheduler().scheduleSyncDelayedTask(DragonsLairMain.getInstance(), new Runnable() {
+		Bukkit.getScheduler().scheduleSyncDelayedTask(DragonsLairMain.getInstance(), new Runnable()
+		{
+			@Override
 			public void run()
 			{
-				for(NPC n : DragonsLairMain.getSettings().getNPCs().values())
-				{
+				for(final NPC n : DragonsLairMain.getSettings().getNPCs().values())
 					if(n.shouldSpawnAtBeginning())
 						DragonsLairMain.getDungeonManager().spawnNPC(n);
-				}
 			}
 		});
 	}
-	
-	public ActiveDungeon startDungeon(int id, String[] players)
+
+	public ActiveDungeon startDungeon(final int id, final String[] players)
 	{
-		Dungeon d = this.getSettings().getDungeons().get(id);		
-		DungeonStartEvent event = new DungeonStartEvent(d);
+		final Dungeon d = this.getSettings().getDungeons().get(id);
+		final DungeonStartEvent event = new DungeonStartEvent(d);
 		Bukkit.getPluginManager().callEvent(event);
 		if(event.isCancelled())
 			return null;
-		
-		ActiveDungeon ad = new ActiveDungeon(d, Party.getPartyOfPlayers(players, id));
+		final ActiveDungeon ad = new ActiveDungeon(d, Party.getPartyOfPlayers(players, id));
 		this.activeDungeons.add(ad);
-		for(String p : players)
-		{
+		for(final String p : players)
 			this.m_playerDungeons.put(p, ad.getInfo().getID());
-		}
 		ad.giveMaps();
 		ad.sendMessage(ad.getInfo().getStartingMessage());
 		ad.reloadProgress();
 		DragonsLairMain.debugLog("Started dungeon '" + d.getName() + "'");
 		return ad;
 	}
-	
-	public ActiveDungeon startDungeon(String name)
-	{		
+
+	public ActiveDungeon startDungeon(final String name)
+	{
 		if(this.isDungeonStarted(name))
 			return null;
-		
-		Dungeon d = this.getSettings().getDungeonByName(name);
+		final Dungeon d = this.getSettings().getDungeonByName(name);
 		if(d == null)
 			return null;
-		
 		return this.queue.start(d);
 	}
-	
-	public ActiveDungeon startDungeon(int id)
+
+	public ActiveDungeon startDungeon(final int id)
 	{
 		return this.startDungeon(this.getSettings().getDungeons().get(id).getName());
 	}
-	
-	public boolean hasRegistered(String player)
+
+	public boolean hasRegistered(final String player)
 	{
 		return this.queue.isInQueue(Bukkit.getPlayer(player));
 	}
-	
-	public void stopDungeon(int id)
+
+	public void stopDungeon(final int id)
 	{
 		this.stopDungeon(id, true);
 	}
-	
-	public void stopDungeon(int id, boolean save)
+
+	public void stopDungeon(final int id, final boolean save)
 	{
-		Iterator<ActiveDungeon> dungeons = this.activeDungeons.iterator();
+		final Iterator<ActiveDungeon> dungeons = this.activeDungeons.iterator();
 		while(dungeons.hasNext())
 		{
-			ActiveDungeon ad = dungeons.next();
+			final ActiveDungeon ad = dungeons.next();
 			if(ad.getInfo().getID() == id)
 			{
-				DungeonEndEvent event = new DungeonEndEvent(ad);
+				final DungeonEndEvent event = new DungeonEndEvent(ad);
 				Bukkit.getPluginManager().callEvent(event);
 				DragonsLairMain.debugLog("Stopped dungeon '" + ad.getInfo().getName() + "'");
-				for(String p : ad.getCurrentParty().getMembers())
+				for(final String p : ad.getCurrentParty().getMembers())
 				{
 					this.maps.removeMap(Bukkit.getPlayer(p));
 					this.m_playerDungeons.remove(p);
@@ -365,129 +330,119 @@ public class DungeonManager
 			}
 		}
 	}
-	
-	public void stopDungeon(String name)
+
+	public void stopDungeon(final String name)
 	{
 		this.stopDungeon(name, true);
 	}
-	
-	public void stopDungeon(String name, boolean save)
+
+	public void stopDungeon(final String name, final boolean save)
 	{
 		int id = -1;
-		for(ActiveDungeon d : this.activeDungeons)
-		{
+		for(final ActiveDungeon d : this.activeDungeons)
 			if(d.getInfo().getName().equals(name))
 			{
 				id = d.getInfo().getID();
 				break;
 			}
-		}
 		if(id != -1)
 			this.stopDungeon(id, save);
 	}
-	
-	public ActiveDungeon getDungeonOfPlayer(String name)
+
+	public ActiveDungeon getDungeonOfPlayer(final String name)
 	{
 		if(this.m_playerDungeons.containsKey(name))
 		{
-			int id = this.m_playerDungeons.get(name);
-			for(ActiveDungeon ad : this.activeDungeons)
-			{
+			final int id = this.m_playerDungeons.get(name);
+			for(final ActiveDungeon ad : this.activeDungeons)
 				if(ad.getInfo().getID() == id)
 					return ad;
-			}
 		}
 		return null;
 	}
-	
+
 	public Set<ActiveDungeon> getActiveDungeons()
 	{
 		return this.activeDungeons;
 	}
-	
+
 	public PlayerQueue getQueue()
 	{
 		return this.queue;
 	}
-	
-	public boolean isDungeonStarted(String name)
+
+	public boolean isDungeonStarted(final String name)
 	{
-		for(ActiveDungeon d : this.activeDungeons)
-		{
+		for(final ActiveDungeon d : this.activeDungeons)
 			if(d.getInfo().getName().equalsIgnoreCase(name))
 				return true;
-		}
 		return false;
 	}
-	
-	public void queuePlayer(String name, String dungeon)
+
+	public void queuePlayer(final String name, final String dungeon)
 	{
 		this.queue.queuePlayer(dungeon, Bukkit.getPlayer(name));
-		Dungeon d = this.settings.getDungeonByName(dungeon);
+		final Dungeon d = this.settings.getDungeonByName(dungeon);
 		if(this.queue.hasEnoughPeople(d))
 		{
-			List<QueuedPlayer> players = this.queue.getQueueForDungeon(d);
-			String readyMessage = d.getPartyReadyMessage();
-			for(QueuedPlayer player : players)
-			{
+			final List<QueuedPlayer> players = this.queue.getQueueForDungeon(d);
+			final String readyMessage = d.getPartyReadyMessage();
+			for(final QueuedPlayer player : players)
 				player.getPlayer().sendMessage(readyMessage);
-			}
 		}
 	}
-	
-	public void queuePlayer(String name, int id)
+
+	public void queuePlayer(final String name, final int id)
 	{
 		this.queuePlayer(name, this.getSettings().getDungeons().get(id).getName());
 	}
-	
-	public void addMapHolder(Player player)
+
+	public void addMapHolder(final Player player)
 	{
 		if(player == null)
 			return;
 		DragonsLairMain.debugLog("Giving dungeon map to '" + player.getName() + "'");
 		this.maps.addMap(player, new DLMap(player));
 	}
-	
-	public DLMap getMapOfPlayer(Player p)
+
+	public DLMap getMapOfPlayer(final Player p)
 	{
 		return this.maps.getMapOfPlayer(p);
 	}
 
 	public void stopDungeons()
 	{
-		for(ActiveDungeon ad : this.activeDungeons)
-		{
+		for(final ActiveDungeon ad : this.activeDungeons)
 			ad.stop(true);
-		}
 		this.activeDungeons.clear();
 	}
-	
-	public void addCooldown(String name, Trigger t)
+
+	public void addCooldown(final String name, final Trigger t)
 	{
 		t.use(name);
 	}
-	
-	public boolean isOnCooldown(String name, Trigger t)
+
+	public boolean isOnCooldown(final String name, final Trigger t)
 	{
 		return t.canUse(name);
 	}
-	
-	public void addCooldown(String name, Event e)
+
+	public void addCooldown(final String name, final Event e)
 	{
 		e.use(name);
 	}
-	
-	public boolean isOnCooldown(String name, Event e)
+
+	public boolean isOnCooldown(final String name, final Event e)
 	{
 		return e.canUse(name);
 	}
-	
-	public void removeCooldown(String name, Trigger t)
+
+	public void removeCooldown(final String name, final Trigger t)
 	{
 		t.removeCooldown(name);
 	}
-	
-	public void removeCooldown(String name, Event e)
+
+	public void removeCooldown(final String name, final Event e)
 	{
 		e.removeCooldown(name);
 	}
@@ -496,55 +451,51 @@ public class DungeonManager
 	{
 		return this.spawnedEntities;
 	}
-	
-	public Event getEventFromMob(LivingEntity entity)
+
+	public Event getEventFromMob(final LivingEntity entity)
 	{
-		EventMonster mob = this.getEventMonsterByEntity(entity);
+		final EventMonster mob = this.getEventMonsterByEntity(entity);
 		return (mob == null ? null : mob.getEvent());
 	}
-	
-	public EventMonster getEventMonsterByEntity(LivingEntity entity)
+
+	public EventMonster getEventMonsterByEntity(final LivingEntity entity)
 	{
-		for(EventMonster mob : this.spawnedEntities)
-		{
+		for(final EventMonster mob : this.spawnedEntities)
 			if(mob.equals(entity))
 				return mob;
-		}
 		return null;
 	}
-	
-	public void clearMobs(int id)
+
+	public void clearMobs(final int id)
 	{
-		Iterator<EventMonster> mobs = this.spawnedEntities.iterator();
+		final Iterator<EventMonster> mobs = this.spawnedEntities.iterator();
 		while(mobs.hasNext())
 		{
-			EventMonster mob = mobs.next();
+			final EventMonster mob = mobs.next();
 			if(mob.getDungeon().getInfo().getID() != id)
 				continue;
-			
 			mob.getMonster().remove();
 			mobs.remove();
 		}
 	}
-	
-	public Map<Integer, Map<EntityType, Integer>> getKills(ActiveDungeon ad)
+
+	public Map<Integer, Map<EntityType, Integer>> getKills(final ActiveDungeon ad)
 	{
 		return this.killedMobs.get(ad.getInfo().getName());
 	}
-	
-	public int addMobKill(ActiveDungeon ad, LivingEntity entity, Event e)
+
+	public int addMobKill(final ActiveDungeon ad, final LivingEntity entity, final Event e)
 	{
-		Iterator<EventMonster> spawned = this.spawnedEntities.iterator();
+		final Iterator<EventMonster> spawned = this.spawnedEntities.iterator();
 		while(spawned.hasNext())
 		{
-			EventMonster mob = spawned.next();
+			final EventMonster mob = spawned.next();
 			if(mob.equals(entity))
 			{
 				spawned.remove();
 				break;
 			}
 		}
-		
 		Map<Integer, Map<EntityType, Integer>> mobKills = this.getKills(ad);
 		if(mobKills != null)
 		{
@@ -552,7 +503,7 @@ public class DungeonManager
 			if(killed != null)
 			{
 				Integer amount = killed.get(entity.getType());
-				amount = (amount == null) ? 1 : amount + 1; 
+				amount = (amount == null) ? 1 : amount + 1;
 				killed.put(entity.getType(), amount);
 				return amount;
 			}
@@ -567,176 +518,148 @@ public class DungeonManager
 		else
 		{
 			mobKills = new HashMap<Integer, Map<EntityType, Integer>>();
-			Map<EntityType, Integer> killed = new HashMap<EntityType, Integer>();
+			final Map<EntityType, Integer> killed = new HashMap<EntityType, Integer>();
 			killed.put(entity.getType(), 1);
 			mobKills.put(e.getID(), killed);
 			return 1;
 		}
 	}
-	
+
 	public void saveCooldowns()
 	{
-		for(Event e : this.getSettings().getEvents().values())
-		{
+		for(final Event e : this.getSettings().getEvents().values())
 			e.save();
-		}
-		
-		for(Trigger t : this.getSettings().getTriggers().values())
-		{
+		for(final Trigger t : this.getSettings().getTriggers().values())
 			t.save();
-		}
 	}
-	
-	public void registerEventType(String type, String[] requiredOptions, String[] optionalOptions, boolean addToDb)
+
+	public void registerEventType(final String type, final String[] requiredOptions, final String[] optionalOptions, final boolean addToDb)
 	{
 		EnumChange.addEnum(EventActionType.class, type, new Class<?>[0], new Object[0]);
 		EnumChange.addEnum(EventActionOptions.class, type, new Class<?>[] { String[].class, String[].class }, new Object[] { requiredOptions, optionalOptions });
 		if(addToDb)
-		{
 			try
 			{
 				if(DragonsLairMain.getInstance().getConfig().getString("db.type").equals("sqlite"))
 					return;
-				
-				PreparedStatement st = DragonsLairMain.createStatement("ALTER TABLE `events` CHANGE COLUMN `event_action_type` `event_action_type` enum(?)");
-				StringBuilder sb = new StringBuilder();
-				for(EventActionType ctype : EventActionType.values())
-				{
+				final PreparedStatement st = DragonsLairMain.createStatement("ALTER TABLE `events` CHANGE COLUMN `event_action_type` `event_action_type` enum(?)");
+				final StringBuilder sb = new StringBuilder();
+				for(final EventActionType ctype : EventActionType.values())
 					sb.append("'" + ctype.toString().toLowerCase() + "',");
-				}
 				if(sb.length() > 1)
 					sb.substring(0, sb.length() - 1);
 				st.setString(1, sb.toString());
 			}
-			catch(Exception e)
+			catch(final Exception e)
 			{
 				DragonsLairMain.Log.warning("Unable to register type at database:");
 				DragonsLairMain.Log.warning(e.getMessage());
 			}
-		}
 	}
-	
-	public void removeEventType(String type, boolean removeFromDb)
+
+	public void removeEventType(final String type, final boolean removeFromDb)
 	{
 		EnumChange.removeEnum(EventActionType.class, type);
 		if(removeFromDb)
-		{
 			try
 			{
 				if(DragonsLairMain.getInstance().getConfig().getString("db.type").equals("sqlite"))
 					return;
-				
-				PreparedStatement st = DragonsLairMain.createStatement("ALTER TABLE `events` CHANGE COLUMN `event_action_type` `event_action_type` enum(?)");
-				StringBuilder sb = new StringBuilder();
-				for(EventActionType ctype : EventActionType.values())
-				{
+				final PreparedStatement st = DragonsLairMain.createStatement("ALTER TABLE `events` CHANGE COLUMN `event_action_type` `event_action_type` enum(?)");
+				final StringBuilder sb = new StringBuilder();
+				for(final EventActionType ctype : EventActionType.values())
 					if(!ctype.toString().equalsIgnoreCase(type))
 						sb.append("'" + ctype.toString().toLowerCase() + "',");
-				}
 				if(sb.length() > 1)
 					sb.substring(0, sb.length() - 1);
 				st.setString(1, sb.toString());
 			}
-			catch(Exception e)
+			catch(final Exception e)
 			{
 				DragonsLairMain.Log.warning("Unable to remove type at database:");
 				DragonsLairMain.Log.warning(e.getMessage());
 			}
-		}
 	}
-	
-	public void registerTriggerType(String type, String[] requiredOptions, String[] optionalOptions, boolean addToDb)
+
+	public void registerTriggerType(final String type, final String[] requiredOptions, final String[] optionalOptions, final boolean addToDb)
 	{
 		EnumChange.addEnum(TriggerType.class, type, new Class<?>[0], new Object[0]);
 		EnumChange.addEnum(TriggerTypeOptions.class, type, new Class<?>[] { String[].class, String[].class }, new Object[] { requiredOptions, optionalOptions });
 		if(addToDb)
-		{
 			try
 			{
 				if(DragonsLairMain.getInstance().getConfig().getString("db.type").equals("sqlite"))
 					return;
-				
-				PreparedStatement st = DragonsLairMain.createStatement("ALTER TABLE `triggers` CHANGE COLUMN `trigger_type` `trigger_type` enum(?)");
-				StringBuilder sb = new StringBuilder();
-				for(TriggerType ctype : TriggerType.values())
-				{
+				final PreparedStatement st = DragonsLairMain.createStatement("ALTER TABLE `triggers` CHANGE COLUMN `trigger_type` `trigger_type` enum(?)");
+				final StringBuilder sb = new StringBuilder();
+				for(final TriggerType ctype : TriggerType.values())
 					sb.append("'" + ctype.toString().toLowerCase() + "',");
-				}
 				if(sb.length() > 1)
 					sb.substring(0, sb.length() - 1);
 				st.setString(1, sb.toString());
 			}
-			catch(Exception e)
+			catch(final Exception e)
 			{
 				DragonsLairMain.Log.warning("Unable to register type at database:");
 				DragonsLairMain.Log.warning(e.getMessage());
 			}
-		}
 	}
-	
-	public void removeTriggerType(String type, boolean removeFromDb)
+
+	public void removeTriggerType(final String type, final boolean removeFromDb)
 	{
 		EnumChange.removeEnum(TriggerType.class, type);
 		if(removeFromDb)
-		{
 			try
 			{
 				if(DragonsLairMain.getInstance().getConfig().getString("db.type").equals("sqlite"))
 					return;
-				
-				PreparedStatement st = DragonsLairMain.createStatement("ALTER TABLE `triggers` CHANGE COLUMN `trigger_type` `trigger_type` enum(?)");
-				StringBuilder sb = new StringBuilder();
-				for(TriggerType ctype : TriggerType.values())
-				{
+				final PreparedStatement st = DragonsLairMain.createStatement("ALTER TABLE `triggers` CHANGE COLUMN `trigger_type` `trigger_type` enum(?)");
+				final StringBuilder sb = new StringBuilder();
+				for(final TriggerType ctype : TriggerType.values())
 					if(!ctype.toString().equalsIgnoreCase(type))
 						sb.append("'" + ctype.toString().toLowerCase() + "',");
-				}
 				if(sb.length() > 1)
 					sb.substring(0, sb.length() - 1);
 				st.setString(1, sb.toString());
 			}
-			catch(Exception e)
+			catch(final Exception e)
 			{
 				DragonsLairMain.Log.warning("Unable to remove type at database:");
 				DragonsLairMain.Log.warning(e.getMessage());
 			}
-		}
 	}
-	
-	public ActiveDungeon getActiveDungeonByName(String name)
+
+	public ActiveDungeon getActiveDungeonByName(final String name)
 	{
-		for(ActiveDungeon ad : this.activeDungeons)
-		{
+		for(final ActiveDungeon ad : this.activeDungeons)
 			if(ad.getInfo().getName().equals(name))
 				return ad;
-		}
 		return null;
 	}
-	
-	public ActiveDungeon getActiveDungeonByID(Integer id)
+
+	public ActiveDungeon getActiveDungeonByID(final Integer id)
 	{
-		Dungeon d = DragonsLairMain.getSettings().getDungeons().get(id);
+		final Dungeon d = DragonsLairMain.getSettings().getDungeons().get(id);
 		if(d == null)
 			return null;
-		
 		return this.getActiveDungeonByName(d.getName());
 	}
 
-	public HumanNPC getNPCByID(Integer npcID)
+	public HumanNPC getNPCByID(final Integer npcID)
 	{
 		return this.npcManager.getNPC(npcID);
 	}
 
-	public boolean despawnNPC(NPC n)
+	public boolean despawnNPC(final NPC n)
 	{
 		return this.despawnNPC(n.getID());
 	}
 
-	public void removeMapHolder(Player dead)
+	public void removeMapHolder(final Player dead)
 	{
 		this.maps.removeMap(dead);
 	}
-	
+
 	public ItemTracker getItemTracker()
 	{
 		return this.itemTracker;

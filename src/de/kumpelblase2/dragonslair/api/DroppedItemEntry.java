@@ -6,18 +6,18 @@ public class DroppedItemEntry
 {
 	private final int entityID;
 	private final String dungeon;
-	
-	public DroppedItemEntry(Item item, String dungeon)
+
+	public DroppedItemEntry(final Item item, final String dungeon)
 	{
 		this.entityID = item.getEntityId();
 		this.dungeon = dungeon;
 	}
-	
+
 	public int getEntityID()
 	{
 		return this.entityID;
 	}
-	
+
 	public String getDungeon()
 	{
 		return this.dungeon;

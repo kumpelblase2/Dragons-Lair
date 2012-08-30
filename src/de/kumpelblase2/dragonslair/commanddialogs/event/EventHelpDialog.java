@@ -7,17 +7,15 @@ import org.bukkit.conversations.Prompt;
 
 public class EventHelpDialog extends MessagePrompt
 {
-
 	@Override
-	public String getPromptText(ConversationContext arg0)
+	public String getPromptText(final ConversationContext arg0)
 	{
 		return ChatColor.GREEN + "Since the chat has limited space, there's a help page on bukkitdev.";
 	}
 
 	@Override
-	protected Prompt getNextPrompt(ConversationContext arg0)
+	protected Prompt getNextPrompt(final ConversationContext arg0)
 	{
 		return new EventManageDialog();
 	}
-
 }

@@ -11,25 +11,25 @@ import de.kumpelblase2.dragonslair.api.Dialog;
 public class DialogListDialog extends MessagePrompt
 {
 	private int page;
-	
+
 	public DialogListDialog()
 	{
 		this(0);
 	}
-	
-	public DialogListDialog(int page)
+
+	public DialogListDialog(final int page)
 	{
 		this.page = page;
 	}
-	
+
 	@Override
-	public String getPromptText(ConversationContext arg0)
+	public String getPromptText(final ConversationContext arg0)
 	{
-		Dialog[] dialogs = DragonsLairMain.getSettings().getDialogs().values().toArray(new Dialog[0]);
+		final Dialog[] dialogs = DragonsLairMain.getSettings().getDialogs().values().toArray(new Dialog[0]);
 		Arrays.sort(dialogs, new Comparator<Dialog>()
 		{
 			@Override
-			public int compare(Dialog o1, Dialog o2)
+			public int compare(final Dialog o1, final Dialog o2)
 			{
 				if(o1.getID() > o2.getID())
 					return 1;
@@ -41,21 +41,18 @@ public class DialogListDialog extends MessagePrompt
 		});
 		arg0.getForWhom().sendRawMessage("There is/are " + dialogs.length + " dialogs(s) avaiblable.");
 		if(10 * this.page >= dialogs.length)
-		{
-			this.page = (int)(dialogs.length / 12);
-		}
-		
+			this.page = dialogs.length / 12;
 		for(int i = 12 * this.page; i < dialogs.length && i < 10 * this.page + 12; i++)
 		{
 			String info = dialogs[i].getID() + " - " + dialogs[i].getText();
 			info = (info.length() > 60) ? info.substring(0, 60) : info;
 			arg0.getForWhom().sendRawMessage(info);
 		}
-		return "---------------- Page " + (this.page + 1) + "/" + ((int)(dialogs.length / 12) + 1);
+		return "---------------- Page " + (this.page + 1) + "/" + (dialogs.length / 12 + 1);
 	}
 
 	@Override
-	protected Prompt getNextPrompt(ConversationContext arg0)
+	protected Prompt getNextPrompt(final ConversationContext arg0)
 	{
 		return new DialogManageDialog();
 	}

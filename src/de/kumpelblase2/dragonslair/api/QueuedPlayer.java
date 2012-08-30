@@ -7,33 +7,28 @@ public class QueuedPlayer
 {
 	private final String dungeon;
 	private final String player;
-	
-	public QueuedPlayer(String dungeon, Player p)
+
+	public QueuedPlayer(final String dungeon, final Player p)
 	{
 		this.dungeon = dungeon;
 		this.player = p.getName();
 	}
-	
+
 	@Override
-	public boolean equals(Object object)
+	public boolean equals(final Object object)
 	{
 		if(object instanceof String)
-		{
 			return this.player.equals(object);
-		}
 		else if(object instanceof Player)
-		{
 			return this.player.equals(((Player)object).getName());
-		}
-		
 		return false;
 	}
-	
+
 	public Player getPlayer()
 	{
 		return Bukkit.getPlayer(this.player);
 	}
-	
+
 	public String getDungeon()
 	{
 		return this.dungeon;

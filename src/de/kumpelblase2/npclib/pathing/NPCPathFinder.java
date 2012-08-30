@@ -1,18 +1,17 @@
 package de.kumpelblase2.npclib.pathing;
-//original provided by Topcat, modified by kumpelblase2
 
+// original provided by Topcat, modified by kumpelblase2
 import java.util.*;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
 /**
- *
+ * 
  * @author Top_Cat
  */
 public class NPCPathFinder extends Thread
 {
-
 	HashMap<Block, Node> nodes = new HashMap<Block, Node>();
 	ArrayList<Node> path = new ArrayList<Node>();
 	ArrayList<Node> open = new ArrayList<Node>();
@@ -20,11 +19,11 @@ public class NPCPathFinder extends Thread
 	Comparator<Node> nodeComp = new NodeComparator();
 	Node startNode, endNode;
 	public boolean cancel = false;
-	private Location start, end;
-	private int maxIterations;
-	private PathReturn callback;
+	private final Location start, end;
+	private final int maxIterations;
+	private final PathReturn callback;
 
-	public NPCPathFinder(Location start, Location end, int maxIterations, PathReturn callback)
+	public NPCPathFinder(final Location start, final Location end, final int maxIterations, final PathReturn callback)
 	{
 		this.start = start;
 		this.end = end;
@@ -35,152 +34,128 @@ public class NPCPathFinder extends Thread
 	@Override
 	public void run()
 	{
-		startNode = getNode(start.getBlock());
-		endNode = getNode(end.getBlock());
-		look(startNode, maxIterations);
-		if (cancel) {
-			path.clear();
-		}
-		callback.run(new NPCPath(this, path, end));
+		this.startNode = this.getNode(this.start.getBlock());
+		this.endNode = this.getNode(this.end.getBlock());
+		this.look(this.startNode, this.maxIterations);
+		if(this.cancel)
+			this.path.clear();
+		this.callback.run(new NPCPath(this, this.path, this.end));
 	}
 
-	private Node getNode(Block b)
+	private Node getNode(final Block b)
 	{
-		if (!nodes.containsKey(b))
-			nodes.put(b, new Node(b));
-
-		return nodes.get(b);
+		if(!this.nodes.containsKey(b))
+			this.nodes.put(b, new Node(b));
+		return this.nodes.get(b);
 	}
 
-	private void look(Node c, int max)
+	private void look(Node c, final int max)
 	{
 		Node adjacentBlock;
 		int rep = 0;
-		while (c != endNode && rep < max)
+		while(c != this.endNode && rep < max)
 		{ // Repetition variable prevents infinite loop when destination is unreachable
-			if (cancel)
+			if(this.cancel)
 				return;
-
 			rep++;
-			closed.add(c);
-			open.remove(c);
-
-			for (int i = -1; i <= 1; i++)
-			{
-				for (int j = -1; j <= 1; j++)
-				{
-					for (int k = -1; k <= 1; k++)
+			this.closed.add(c);
+			this.open.remove(c);
+			for(int i = -1; i <= 1; i++)
+				for(int j = -1; j <= 1; j++)
+					for(int k = -1; k <= 1; k++)
 					{
-						adjacentBlock = getNode(c.b.getRelative(i, j, k));
-						if (adjacentBlock != c && !(j == 1 && adjacentBlock.b.getRelative(0, -1, 0).getType() == Material.FENCE))
-							scoreBlock(adjacentBlock, c);
+						adjacentBlock = this.getNode(c.b.getRelative(i, j, k));
+						if(adjacentBlock != c && !(j == 1 && adjacentBlock.b.getRelative(0, -1, 0).getType() == Material.FENCE))
+							this.scoreBlock(adjacentBlock, c);
 					}
-				}
-			}
-			Node[] n = open.toArray(new Node[open.size()]);
-			Arrays.sort(n, nodeComp);
-			if (n.length == 0)
+			final Node[] n = this.open.toArray(new Node[this.open.size()]);
+			Arrays.sort(n, this.nodeComp);
+			if(n.length == 0)
 				break;
-
 			c = n[0];
-			if (c == endNode)
+			if(c == this.endNode)
 			{
 				adjacentBlock = c;
-				while (adjacentBlock != null && adjacentBlock != startNode)
+				while(adjacentBlock != null && adjacentBlock != this.startNode)
 				{
-					path.add(adjacentBlock);
+					this.path.add(adjacentBlock);
 					adjacentBlock = adjacentBlock.parent;
 				}
-				Collections.reverse(path);
+				Collections.reverse(this.path);
 			}
 		}
-		
-		if (path.size() == 0)
-			path.add(endNode);
+		if(this.path.size() == 0)
+			this.path.add(this.endNode);
 	}
 
 	public class NodeComparator implements Comparator<Node>
 	{
 		@Override
-		public int compare(Node o1, Node o2)
+		public int compare(final Node o1, final Node o2)
 		{
-			if (o1.f > o2.f)
-			{
+			if(o1.f > o2.f)
 				return 1;
-			}
-			else if (o1.f < o2.f)
-			{
+			else if(o1.f < o2.f)
 				return -1;
-			}
 			return 0;
 		}
 	}
 
-	public boolean checkPath(Node node, Node parent)
+	public boolean checkPath(final Node node, final Node parent)
 	{
-		return checkPath(node, parent, false);
+		return this.checkPath(node, parent, false);
 	}
 
-	public boolean checkPath(Node node, Node parent, boolean update)
+	public boolean checkPath(final Node node, final Node parent, final boolean update)
 	{
 		boolean corner = false;
-		if (node.xPos != parent.xPos && node.zPos != parent.zPos)
+		if(node.xPos != parent.xPos && node.zPos != parent.zPos)
 		{
-			int xDir = node.xPos - parent.xPos;
-			int zDir = node.zPos - parent.zPos;
-
-			boolean xZCor1 = !getNode(parent.b.getRelative(0, 0, zDir)).notsolid;
-			boolean xZCor2 = !getNode(parent.b.getRelative(xDir, 0, 0)).notsolid;
-
+			final int xDir = node.xPos - parent.xPos;
+			final int zDir = node.zPos - parent.zPos;
+			final boolean xZCor1 = !this.getNode(parent.b.getRelative(0, 0, zDir)).notsolid;
+			final boolean xZCor2 = !this.getNode(parent.b.getRelative(xDir, 0, 0)).notsolid;
 			corner = xZCor1 || xZCor2;
 		}
-		else if (node.xPos != parent.xPos && node.yPos != parent.yPos || node.yPos != parent.yPos && node.zPos != parent.zPos)
+		else if(node.xPos != parent.xPos && node.yPos != parent.yPos || node.yPos != parent.yPos && node.zPos != parent.zPos)
 		{
-			corner = node.yPos > parent.yPos ? !getNode(parent.b.getRelative(0, 2, 0)).notsolid : !getNode(node.b.getRelative(0, 2, 0)).notsolid;;
+			corner = node.yPos > parent.yPos ? !this.getNode(parent.b.getRelative(0, 2, 0)).notsolid : !this.getNode(node.b.getRelative(0, 2, 0)).notsolid;
+			;
 		}
-
-		Node nodeBelow = getNode(node.b.getRelative(0, -1, 0));
-		Node nodeAbove = getNode(node.b.getRelative(0, 1, 0));
-
-		if (update)
+		final Node nodeBelow = this.getNode(node.b.getRelative(0, -1, 0));
+		final Node nodeAbove = this.getNode(node.b.getRelative(0, 1, 0));
+		if(update)
 		{
 			nodeBelow.update();
 			nodeAbove.update();
 			node.update();
 		}
-
-		return !corner && (node.notsolid && (!nodeBelow.notsolid || nodeBelow.liquid && node.liquid) && nodeAbove.notsolid || node == endNode);
+		return !corner && (node.notsolid && (!nodeBelow.notsolid || nodeBelow.liquid && node.liquid) && nodeAbove.notsolid || node == this.endNode);
 	}
 
-	private void scoreBlock(Node node, Node parent)
+	private void scoreBlock(final Node node, final Node parent)
 	{
-		int diagonal = node.xPos != parent.xPos && node.zPos != parent.zPos || node.xPos != parent.xPos && node.yPos != parent.yPos || node.yPos != parent.yPos && node.zPos != parent.zPos ? 14 : 10;
-
-		if (checkPath(node, parent))
-		{
-			if (!open.contains(node) && !closed.contains(node))
+		final int diagonal = node.xPos != parent.xPos && node.zPos != parent.zPos || node.xPos != parent.xPos && node.yPos != parent.yPos || node.yPos != parent.yPos && node.zPos != parent.zPos ? 14 : 10;
+		if(this.checkPath(node, parent))
+			if(!this.open.contains(node) && !this.closed.contains(node))
 			{
 				node.parent = parent;
 				node.g = parent.g + diagonal;
-
-				int difX = Math.abs(endNode.xPos - node.xPos);
-				int difY = Math.abs(endNode.yPos - node.yPos);
-				int difZ = Math.abs(endNode.zPos - node.zPos);
-
+				final int difX = Math.abs(this.endNode.xPos - node.xPos);
+				final int difY = Math.abs(this.endNode.yPos - node.yPos);
+				final int difZ = Math.abs(this.endNode.zPos - node.zPos);
 				node.h = (difX + difY + difZ) * 10;
 				node.f = node.g + node.h;
-
-				open.add(node);
+				this.open.add(node);
 			}
-			else if (!closed.contains(node))
+			else if(!this.closed.contains(node))
 			{
-				int g = parent.g + diagonal;
-				if (g < node.g) {
+				final int g = parent.g + diagonal;
+				if(g < node.g)
+				{
 					node.g = g;
 					node.parent = parent;
 				}
 			}
-		}
 	}
-
 }

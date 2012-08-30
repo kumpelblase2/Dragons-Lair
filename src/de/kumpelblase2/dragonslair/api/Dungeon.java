@@ -20,13 +20,13 @@ public class Dungeon
 	private String endMessage;
 	private String readyMessage;
 	private boolean breakableBlocks;
-	
+
 	public Dungeon()
 	{
 		this.id = -1;
 	}
-	
-	public Dungeon(ResultSet result)
+
+	public Dungeon(final ResultSet result)
 	{
 		try
 		{
@@ -41,33 +41,30 @@ public class Dungeon
 			this.startMessage = result.getString(TableColumns.Dungeons.START_MESSAGE);
 			if(result.wasNull())
 				this.startMessage = "";
-			
 			this.endMessage = result.getString(TableColumns.Dungeons.END_MESSAGE);
 			if(result.wasNull())
 				this.endMessage = "";
-			
 			this.readyMessage = result.getString(TableColumns.Dungeons.PARTY_READY_MESSAGE);
 			if(result.wasNull())
 				this.readyMessage = "";
-			
 			this.breakableBlocks = result.getBoolean(TableColumns.Dungeons.BREAKABLE_BLOCKS);
 		}
-		catch (SQLException e)
+		catch(final SQLException e)
 		{
 			e.printStackTrace();
 		}
 	}
-	
+
 	public int getID()
 	{
 		return this.id;
 	}
-	
-	public void setName(String newname)
+
+	public void setName(final String newname)
 	{
 		this.name = newname;
 	}
-	
+
 	public String getName()
 	{
 		return this.name;
@@ -77,28 +74,28 @@ public class Dungeon
 	{
 		return this.startingObjective;
 	}
-	
-	public void setStartingObjective(int id)
+
+	public void setStartingObjective(final int id)
 	{
 		this.startingObjective = DragonsLairMain.getSettings().getObjectives().get(id);
 	}
-	
+
 	public Chapter getStartingChapter()
 	{
 		return this.startingChapter;
 	}
-	
-	public void setStartingChapter(int id)
+
+	public void setStartingChapter(final int id)
 	{
 		this.startingChapter = DragonsLairMain.getSettings().getChapters().get(id);
 	}
-	
+
 	public Location getStartingPosition()
 	{
 		return this.startinPosition;
 	}
-	
-	public void setStartingLocation(Location loc)
+
+	public void setStartingLocation(final Location loc)
 	{
 		this.startinPosition = loc;
 	}
@@ -107,92 +104,79 @@ public class Dungeon
 	{
 		return this.safeWord;
 	}
-	
-	public void setSafeWord(String word)
+
+	public void setSafeWord(final String word)
 	{
 		this.safeWord = word;
 	}
-	
+
 	public int getMinPlayers()
 	{
 		return this.minPlayers;
 	}
-	
-	public void setMinPlayers(int min)
+
+	public void setMinPlayers(final int min)
 	{
 		this.minPlayers = min;
 	}
-	
+
 	public int getMaxPlayers()
 	{
 		return this.maxPlayers;
 	}
-	
-	public void setMaxPlayers(int max)
+
+	public void setMaxPlayers(final int max)
 	{
 		this.maxPlayers = max;
 	}
-	
+
 	public String getStartingMessage()
 	{
 		return GeneralUtilities.replaceColors(this.startMessage);
 	}
-	
-	public void setStartingMessage(String message)
+
+	public void setStartingMessage(final String message)
 	{
 		this.startMessage = message;
 	}
-	
+
 	public String getEndMessage()
 	{
 		return GeneralUtilities.replaceColors(this.endMessage);
 	}
-	
-	public void setEndMessage(String message)
+
+	public void setEndMessage(final String message)
 	{
 		this.endMessage = message;
 	}
-	
+
 	public String getPartyReadyMessage()
 	{
 		return GeneralUtilities.replaceColors(this.readyMessage);
 	}
-	
-	public void setPartyReadyMessage(String message)
+
+	public void setPartyReadyMessage(final String message)
 	{
 		this.readyMessage = message;
 	}
-	
+
 	public boolean areBlocksBreakable()
 	{
 		return this.breakableBlocks;
 	}
-	
-	public void setBlocksBreakable(boolean breakable)
+
+	public void setBlocksBreakable(final boolean breakable)
 	{
 		this.breakableBlocks = breakable;
 	}
-	
+
 	public void save()
 	{
 		try
-		{			
+		{
 			if(this.id != -1)
 			{
-				PreparedStatement st = DragonsLairMain.createStatement("REPLACE INTO " + Tables.DUNGEONS + "(" +
-						"dungeon_id," +
-						"dungeon_name," +
-						"dungeon_starting_objective," +
-						"dungeon_starting_chapter," +
-						"dungeon_starting_pos," +
-						"dungeon_safe_word," +
-						"dungeon_min_players," +
-						"dungeon_max_players," +
-						"dungeon_start_message," +
-						"dungeon_end_message," +
-						"dungeon_party_ready_message," +
-						"dungeon_blocks_breakable" +
-						") VALUES(?,?,?,?,?,?,?,?,?,?,?,?)");
+				final PreparedStatement st = DragonsLairMain.createStatement("REPLACE INTO " + Tables.DUNGEONS + "(" + "dungeon_id," + "dungeon_name," + "dungeon_starting_objective," + "dungeon_starting_chapter," + "dungeon_starting_pos," + "dungeon_safe_word," + "dungeon_min_players," + "dungeon_max_players," + "dungeon_start_message," + "dungeon_end_message," + "dungeon_party_ready_message," + "dungeon_blocks_breakable" + ") VALUES(?,?,?,?,?,?,?,?,?,?,?,?)");
 				st.setInt(1, this.id);
 				st.setString(2, this.name);
 				st.setInt(3, this.startingObjective.getID());
@@ -209,19 +193,7 @@ public class Dungeon
 			}
 			else
 			{
-				PreparedStatement st = DragonsLairMain.createStatement("INSERT INTO " + Tables.DUNGEONS + "(" +
-						"dungeon_name," +
-						"dungeon_starting_objective," +
-						"dungeon_starting_chapter," +
-						"dungeon_starting_pos," +
-						"dungeon_safe_word," +
-						"dungeon_min_players," +
-						"dungeon_max_players," +
-						"dungeon_start_message," +
-						"dungeon_end_message," +
-						"dungeon_party_ready_message," +
-						"dungeon_blocks_breakable" +
-						") VALUES(?,?,?,?,?,?,?,?,?,?,?)");
+				final PreparedStatement st = DragonsLairMain.createStatement("INSERT INTO " + Tables.DUNGEONS + "(" + "dungeon_name," + "dungeon_starting_objective," + "dungeon_starting_chapter," + "dungeon_starting_pos," + "dungeon_safe_word," + "dungeon_min_players," + "dungeon_max_players," + "dungeon_start_message," + "dungeon_end_message," + "dungeon_party_ready_message," + "dungeon_blocks_breakable" + ") VALUES(?,?,?,?,?,?,?,?,?,?,?)");
 				st.setString(1, this.name);
 				st.setInt(2, this.startingObjective.getID());
 				st.setInt(3, this.startingChapter.getID());
@@ -234,12 +206,12 @@ public class Dungeon
 				st.setString(10, this.readyMessage);
 				st.setBoolean(11, this.breakableBlocks);
 				st.execute();
-				ResultSet keys = st.getGeneratedKeys();
+				final ResultSet keys = st.getGeneratedKeys();
 				if(keys.next())
 					this.id = keys.getInt(1);
 			}
 		}
-		catch(Exception e)
+		catch(final Exception e)
 		{
 			DragonsLairMain.Log.warning("Unable to save dungeon " + this.id);
 			DragonsLairMain.Log.warning(e.getMessage());
@@ -248,16 +220,15 @@ public class Dungeon
 
 	public void remove()
 	{
-		if(this.id == - 1)
+		if(this.id == -1)
 			return;
-		
 		try
 		{
-			PreparedStatement st = DragonsLairMain.createStatement("DELETE FROM " + Tables.DUNGEONS + " WHERE `dungeon_id` = ?");
+			final PreparedStatement st = DragonsLairMain.createStatement("DELETE FROM " + Tables.DUNGEONS + " WHERE `dungeon_id` = ?");
 			st.setInt(1, this.id);
 			st.executeUpdate();
 		}
-		catch(Exception e)
+		catch(final Exception e)
 		{
 			DragonsLairMain.Log.warning("Unable to delete dungeon " + this.id);
 			DragonsLairMain.Log.warning(e.getMessage());

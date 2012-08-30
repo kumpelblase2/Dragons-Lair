@@ -8,18 +8,17 @@ import de.kumpelblase2.dragonslair.api.Objective;
 public class ObjectiveCreateDialog extends ValidatingPrompt
 {
 	@Override
-	public String getPromptText(ConversationContext context)
+	public String getPromptText(final ConversationContext context)
 	{
 		return ChatColor.AQUA + "Please enter a description of the objective:";
 	}
 
 	@Override
-	protected Prompt acceptValidatedInput(ConversationContext context, String input)
+	protected Prompt acceptValidatedInput(final ConversationContext context, final String input)
 	{
 		if(input.equals("back") || input.equals("cancel"))
 			return new ObjectiveManageDialog();
-		
-		Objective o = new Objective();
+		final Objective o = new Objective();
 		o.setDescription(input);
 		o.save();
 		DragonsLairMain.debugLog("Created objective '" + o.getDescription() + "'");
@@ -28,7 +27,7 @@ public class ObjectiveCreateDialog extends ValidatingPrompt
 	}
 
 	@Override
-	protected boolean isInputValid(ConversationContext context, String input)
+	protected boolean isInputValid(final ConversationContext context, final String input)
 	{
 		return true;
 	}

@@ -8,26 +8,24 @@ import de.kumpelblase2.dragonslair.events.dungeon.ObjectiveChangeEvent;
 
 public class ObjectiveCompleteEventExecutor implements EventExecutor
 {
-
 	@Override
-	public boolean executeEvent(Event e, Player p)
+	public boolean executeEvent(final Event e, final Player p)
 	{
 		try
 		{
-			int nextID = Integer.parseInt(e.getOption("objective_id"));
-			ActiveDungeon d = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
+			final int nextID = Integer.parseInt(e.getOption("objective_id"));
+			final ActiveDungeon d = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
 			if(d == null)
 				return false;
-			
-			Objective o = DragonsLairMain.getSettings().getObjectives().get(nextID);
+			final Objective o = DragonsLairMain.getSettings().getObjectives().get(nextID);
 			if(o == null)
 				return false;
-			ObjectiveChangeEvent event = new ObjectiveChangeEvent(d, o);
+			final ObjectiveChangeEvent event = new ObjectiveChangeEvent(d, o);
 			Bukkit.getPluginManager().callEvent(event);
 			if(!event.isCancelled())
 				d.setNextObjective(event.getNextObjective());
 		}
-		catch(Exception ex)
+		catch(final Exception ex)
 		{
 			DragonsLairMain.Log.warning("Couldn't execute event with id: " + e.getID());
 			DragonsLairMain.Log.warning(ex.getMessage());
@@ -35,5 +33,4 @@ public class ObjectiveCompleteEventExecutor implements EventExecutor
 		}
 		return true;
 	}
-
 }

@@ -9,115 +9,102 @@ public class Event
 	private int id;
 	private EventActionType actionType;
 	private Option[] actionOptions;
-	private Set<Cooldown> cooldowns = Collections.synchronizedSet(new HashSet<Cooldown>());
-	
+	private final Set<Cooldown> cooldowns = Collections.synchronizedSet(new HashSet<Cooldown>());
+
 	public Event()
 	{
 		this.id = -1;
 		this.actionOptions = new Option[0];
 	}
-	
-	public Event(ResultSet result)
+
+	public Event(final ResultSet result)
 	{
 		try
 		{
 			this.id = result.getInt(TableColumns.Events.ID);
 			this.actionType = EventActionType.valueOf(result.getString(TableColumns.Events.ACTION_TYPE).toUpperCase());
-			String options = result.getString(TableColumns.Events.ACTION_OPTIONS);
+			final String options = result.getString(TableColumns.Events.ACTION_OPTIONS);
 			if(options != null && options.length() > 0 && options.contains(":"))
 			{
-				String[] optionSplitt = options.split(";");
-				this.actionOptions = new Option[ optionSplitt.length ];
+				final String[] optionSplitt = options.split(";");
+				this.actionOptions = new Option[optionSplitt.length];
 				for(int i = 0; i < optionSplitt.length; i++)
-				{
 					try
 					{
-						String[] splitt = optionSplitt[i].split(":");
+						final String[] splitt = optionSplitt[i].split(":");
 						this.actionOptions[i] = new Option(splitt[0], splitt[1]);
 					}
-					catch(Exception e)
+					catch(final Exception e)
 					{
 						DragonsLairMain.Log.warning("Unable to parse event option: " + optionSplitt[i]);
 					}
-				}
 			}
 			else
-			{
 				this.actionOptions = new Option[0];
-			}
-			
-			String cooldownString = result.getString(TableColumns.Events.COOLDOWNS);
+			final String cooldownString = result.getString(TableColumns.Events.COOLDOWNS);
 			if(cooldownString != null && cooldownString.length() > 0)
 			{
-				String[] splitted = cooldownString.split(";");
-				for(String cd : splitted)
+				final String[] splitted = cooldownString.split(";");
+				for(final String cd : splitted)
 				{
-					String[] cdSplit = cd.split(":");
+					final String[] cdSplit = cd.split(":");
 					this.cooldowns.add(new Cooldown(cdSplit[0], Integer.parseInt(cdSplit[1])));
 				}
 			}
 		}
-		catch (SQLException e)
+		catch(final SQLException e)
 		{
 			e.printStackTrace();
 		}
 	}
-	
+
 	public int getID()
 	{
 		return this.id;
 	}
-	
-	public void setActionType(EventActionType type)
+
+	public void setActionType(final EventActionType type)
 	{
 		this.actionType = type;
 	}
-	
+
 	public EventActionType getActionType()
 	{
 		return this.actionType;
 	}
-	
-	public void setOptions(Option... options)
+
+	public void setOptions(final Option... options)
 	{
 		this.actionOptions = options;
 	}
-	
+
 	public Option[] getOptions()
 	{
 		return this.actionOptions;
 	}
-	
-	public String getOption(String key)
+
+	public String getOption(final String key)
 	{
 		for(int i = 0; i < this.actionOptions.length; i++)
-		{
 			if(this.actionOptions[i].getType().equals(key))
 				return this.actionOptions[i].getValue();
-		}
 		return null;
 	}
-	
+
 	public void save()
 	{
 		try
 		{
-			StringBuilder optionString = new StringBuilder();
+			final StringBuilder optionString = new StringBuilder();
 			for(int i = 0; i < this.actionOptions.length; i++)
 			{
 				optionString.append(this.actionOptions[i].getType() + ":" + this.actionOptions[i].getValue());
 				if(i != this.actionOptions.length - 1)
 					optionString.append(";");
 			}
-			
 			if(this.id != -1)
 			{
-				PreparedStatement st = DragonsLairMain.createStatement("REPLACE INTO " + Tables.EVENTS + "(" +
-						"event_id," +
-						"event_action_type," +
-						"event_action_options," +
-						"event_cooldowns" +
-						") VALUES(?,?,?,?)");
+				final PreparedStatement st = DragonsLairMain.createStatement("REPLACE INTO " + Tables.EVENTS + "(" + "event_id," + "event_action_type," + "event_action_options," + "event_cooldowns" + ") VALUES(?,?,?,?)");
 				st.setInt(1, this.id);
 				st.setString(2, this.actionType.toString().toLowerCase());
 				st.setString(3, optionString.toString());
@@ -126,35 +113,30 @@ public class Event
 			}
 			else
 			{
-				PreparedStatement st = DragonsLairMain.createStatement("INSERT INTO " + Tables.EVENTS + "(" +
-						"event_action_type," +
-						"event_action_options," +
-						"event_cooldowns" +
-						") VALUES(?,?,?)");
+				final PreparedStatement st = DragonsLairMain.createStatement("INSERT INTO " + Tables.EVENTS + "(" + "event_action_type," + "event_action_options," + "event_cooldowns" + ") VALUES(?,?,?)");
 				st.setString(1, this.actionType.toString().toLowerCase());
 				st.setString(2, optionString.toString());
 				st.setString(3, this.getCooldowns());
 				st.execute();
-				ResultSet keys = st.getGeneratedKeys();
+				final ResultSet keys = st.getGeneratedKeys();
 				if(keys.next())
 					this.id = keys.getInt(1);
 			}
 		}
-		catch(Exception e)
+		catch(final Exception e)
 		{
 			DragonsLairMain.Log.warning("Unable to save event " + this.id);
 			DragonsLairMain.Log.warning(e.getMessage());
 		}
 	}
-	
+
 	public String getOptionString()
 	{
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 		for(int i = 0; i < this.actionOptions.length; i++)
 		{
 			if(this.actionOptions[i] == null)
 				continue;
-			
 			sb.append(this.actionOptions[i].getType() + ":" + this.actionOptions[i].getValue());
 			if(i != this.actionOptions.length - 1)
 				sb.append(";");
@@ -162,35 +144,29 @@ public class Event
 		return sb.toString();
 	}
 
-	public void removeOption(String option)
+	public void removeOption(final String option)
 	{
 		if(this.getOption(option) == null)
 			return;
-		
-		ArrayList<Option> options = new ArrayList<Option>(Arrays.asList(this.actionOptions));
+		final ArrayList<Option> options = new ArrayList<Option>(Arrays.asList(this.actionOptions));
 		for(int i = 0; i < options.size(); i++)
-		{
 			if(options.get(i).getType().equals(option))
 			{
 				options.remove(i);
 				break;
 			}
-		}
 		this.actionOptions = options.toArray(new Option[0]);
 	}
-	
-	public void setOption(String key, String value)
+
+	public void setOption(final String key, final String value)
 	{
 		for(int i = 0; i < this.actionOptions.length; i++)
-		{
 			if(this.actionOptions[i].getType().equals(key))
 			{
 				this.actionOptions[i].setValue(value);
 				return;
 			}
-		}
-		
-		ArrayList<Option> options = new ArrayList<Option>(Arrays.asList(this.actionOptions));
+		final ArrayList<Option> options = new ArrayList<Option>(Arrays.asList(this.actionOptions));
 		options.add(new Option(key, value));
 		this.actionOptions = options.toArray(new Option[0]);
 	}
@@ -199,37 +175,36 @@ public class Event
 	{
 		try
 		{
-			PreparedStatement st = DragonsLairMain.createStatement("DELETE FROM " + Tables.EVENTS + " WHERE `event_id` = ?");
+			final PreparedStatement st = DragonsLairMain.createStatement("DELETE FROM " + Tables.EVENTS + " WHERE `event_id` = ?");
 			st.setInt(1, this.getID());
 			st.execute();
 		}
-		catch(Exception e)
+		catch(final Exception e)
 		{
 			DragonsLairMain.Log.warning("Unable to remove event with id " + this.getID());
 			DragonsLairMain.Log.warning(e.getMessage());
 		}
 	}
-	
+
 	private String getCooldowns()
 	{
-		StringBuilder sb = new StringBuilder();
-		for(Cooldown cd : this.cooldowns)
+		final StringBuilder sb = new StringBuilder();
+		for(final Cooldown cd : this.cooldowns)
 		{
 			sb.append(cd.getDungeonName() + ":" + cd.getRemainingTime());
 			sb.append(";");
 		}
 		if(sb.length() > 1)
 			sb.substring(0, sb.length() - 1);
-		
 		return sb.toString();
 	}
-	
-	public boolean canUse(String name)
+
+	public boolean canUse(final String name)
 	{
-		Iterator<Cooldown> cooldown = this.cooldowns.iterator();
+		final Iterator<Cooldown> cooldown = this.cooldowns.iterator();
 		while(cooldown.hasNext())
 		{
-			Cooldown cd = cooldown.next();
+			final Cooldown cd = cooldown.next();
 			if(cd.equals(name))
 			{
 				if(!cd.isOnCooldown())
@@ -242,30 +217,26 @@ public class Event
 		}
 		return false;
 	}
-	
+
 	public int getCooldown()
 	{
 		if(this.getOption("cooldown") == null)
-		{
 			return 0;
-		}
 		else
-		{
 			return Integer.parseInt(this.getOption("cooldown"));
-		}
 	}
-	
-	public void use(String name)
+
+	public void use(final String name)
 	{
 		this.cooldowns.add(new Cooldown(name, this.getCooldown()));
 	}
-	
-	public void removeCooldown(String name)
+
+	public void removeCooldown(final String name)
 	{
-		Iterator<Cooldown> cooldown = this.cooldowns.iterator();
+		final Iterator<Cooldown> cooldown = this.cooldowns.iterator();
 		while(cooldown.hasNext())
 		{
-			Cooldown cd = cooldown.next();
+			final Cooldown cd = cooldown.next();
 			if(cd.equals(name))
 			{
 				this.cooldowns.remove(cd);
@@ -273,13 +244,13 @@ public class Event
 			}
 		}
 	}
-	
+
 	public void clearCooldowns()
 	{
-		Iterator<Cooldown> cooldown = this.cooldowns.iterator();
+		final Iterator<Cooldown> cooldown = this.cooldowns.iterator();
 		while(cooldown.hasNext())
 		{
-			Cooldown cd = cooldown.next();
+			final Cooldown cd = cooldown.next();
 			if(!cd.isOnCooldown())
 				this.cooldowns.remove(cd);
 		}
