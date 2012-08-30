@@ -73,7 +73,7 @@ public final class EnumChange
     * @param enumName the name of the new enum instance to be added to the class.
     */
    @SuppressWarnings("unchecked")
-   public static <T extends Enum<?>> void addEnum(Class<T> enumType, String enumName) {
+   public static <T extends Enum<?>> void addEnum(Class<T> enumType, String enumName, Class<?>[] constructorTypes, Object[] constructorValues) {
 
        // 0. Sanity checks
        if (!Enum.class.isAssignableFrom(enumType)) {
@@ -101,8 +101,8 @@ public final class EnumChange
            T newValue = (T) makeEnum(enumType, // The target enum class
                    enumName, // THE NEW ENUM INSTANCE TO BE DYNAMICALLY ADDED
                    values.size(),
-                   new Class<?>[] {}, // could be used to pass values to the enum constuctor if needed
-                   new Object[] {}); // could be used to pass values to the enum constuctor if needed
+                   constructorTypes, // could be used to pass values to the enum constuctor if needed
+                   constructorValues); // could be used to pass values to the enum constuctor if needed
 
            // 4. add new value
            values.add(newValue);

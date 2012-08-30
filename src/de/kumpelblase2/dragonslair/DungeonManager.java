@@ -576,13 +576,17 @@ public class DungeonManager
 		}
 	}
 	
-	public void registerEventType(String type, boolean addToDb)
+	public void registerEventType(String type, String[] requiredOptions, String[] optionalOptions, boolean addToDb)
 	{
-		EnumChange.addEnum(EventActionType.class, type);
+		EnumChange.addEnum(EventActionType.class, type, new Class<?>[0], new Object[0]);
+		EnumChange.addEnum(EventActionOptions.class, type, new Class<?>[] { String[].class, String[].class }, new Object[] { requiredOptions, optionalOptions });
 		if(addToDb)
 		{
 			try
 			{
+				if(DragonsLairMain.getInstance().getConfig().getString("db.type").equals("sqlite"))
+					return;
+				
 				PreparedStatement st = DragonsLairMain.createStatement("ALTER TABLE `events` CHANGE COLUMN `event_action_type` `event_action_type` enum(?)");
 				StringBuilder sb = new StringBuilder();
 				for(EventActionType ctype : EventActionType.values())
@@ -608,6 +612,9 @@ public class DungeonManager
 		{
 			try
 			{
+				if(DragonsLairMain.getInstance().getConfig().getString("db.type").equals("sqlite"))
+					return;
+				
 				PreparedStatement st = DragonsLairMain.createStatement("ALTER TABLE `events` CHANGE COLUMN `event_action_type` `event_action_type` enum(?)");
 				StringBuilder sb = new StringBuilder();
 				for(EventActionType ctype : EventActionType.values())
@@ -627,13 +634,17 @@ public class DungeonManager
 		}
 	}
 	
-	public void registerTriggerType(String type, boolean addToDb)
+	public void registerTriggerType(String type, String[] requiredOptions, String[] optionalOptions, boolean addToDb)
 	{
-		EnumChange.addEnum(TriggerType.class, type);
+		EnumChange.addEnum(TriggerType.class, type, new Class<?>[0], new Object[0]);
+		EnumChange.addEnum(TriggerTypeOptions.class, type, new Class<?>[] { String[].class, String[].class }, new Object[] { requiredOptions, optionalOptions });
 		if(addToDb)
 		{
 			try
 			{
+				if(DragonsLairMain.getInstance().getConfig().getString("db.type").equals("sqlite"))
+					return;
+				
 				PreparedStatement st = DragonsLairMain.createStatement("ALTER TABLE `triggers` CHANGE COLUMN `trigger_type` `trigger_type` enum(?)");
 				StringBuilder sb = new StringBuilder();
 				for(TriggerType ctype : TriggerType.values())
@@ -659,6 +670,9 @@ public class DungeonManager
 		{
 			try
 			{
+				if(DragonsLairMain.getInstance().getConfig().getString("db.type").equals("sqlite"))
+					return;
+				
 				PreparedStatement st = DragonsLairMain.createStatement("ALTER TABLE `triggers` CHANGE COLUMN `trigger_type` `trigger_type` enum(?)");
 				StringBuilder sb = new StringBuilder();
 				for(TriggerType ctype : TriggerType.values())
