@@ -26,6 +26,7 @@ public class EventScheduler
 				this.events.put(event.getID(), event);
 				if(event.shouldStartAutomatically())
 				{
+					DragonsLairMain.debugLog("Starting scheduled event with id '" + event.getID() + "'");
 					if(event.shouldRepeat())
 					{
 						this.scheduledIDs.put(event.getID(), Bukkit.getScheduler().scheduleSyncRepeatingTask(DragonsLairMain.getInstance(), new EventSchedulingTask(event), event.getInitDelay() * 20, event.getRepeatDelay() * 20));
@@ -46,6 +47,10 @@ public class EventScheduler
 	
 	public void startEvent(ScheduledEvent event)
 	{
+		if(event == null)
+			return;
+		
+		DragonsLairMain.debugLog("Starting scheduled event with id '" + event.getID() + "'");
 		if(event.shouldRepeat())
 		{
 			this.scheduledIDs.put(event.getID(), Bukkit.getScheduler().scheduleSyncRepeatingTask(DragonsLairMain.getInstance(), new EventSchedulingTask(event), event.getInitDelay() * 20, event.getRepeatDelay() * 20));
@@ -58,6 +63,9 @@ public class EventScheduler
 	
 	public void startEvent(Integer id)
 	{
+		if(id == null)
+			return;
+		
 		this.startEvent(this.events.get(id));
 	}
 
@@ -68,6 +76,9 @@ public class EventScheduler
 	
 	public void cancelEvent(Integer id)
 	{
+		if(!this.scheduledIDs.containsKey(id))
+			return;
+		
 		Bukkit.getScheduler().cancelTask(this.scheduledIDs.get(id));
 	}
 	

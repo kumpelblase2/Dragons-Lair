@@ -42,7 +42,8 @@ public class DungeonDeleteDialog extends ValidatingPrompt
 		}
 		else if(arg1.equals("delete"))
 		{
-			Dungeon d = DragonsLairMain.getSettings().getDungeonByName(arg1);		
+			Dungeon d = DragonsLairMain.getSettings().getDungeonByName(arg1);
+			DragonsLairMain.debugLog("Deleted dungeon '" + d.getName() + "'");
 			d.remove();
 			DragonsLairMain.getSettings().getDungeons().remove(d.getID());
 		}

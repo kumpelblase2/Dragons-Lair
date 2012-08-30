@@ -37,6 +37,7 @@ public class ChapterDeleteDialog extends ValidatingPrompt
 		}
 		else if(input.equals("delete"))
 		{
+			DragonsLairMain.debugLog("Chapter with id '" + (Integer)context.getSessionData("id") + "' created");
 			DragonsLairMain.getSettings().getChapters().get((Integer)context.getSessionData("id")).remove();
 			DragonsLairMain.getSettings().getChapters().remove((Integer)context.getSessionData("id"));
 			context.setSessionData("id", null);

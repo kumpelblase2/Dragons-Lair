@@ -37,6 +37,7 @@ public class ObjectiveDeleteDialog extends ValidatingPrompt
 		}
 		else if(input.equals("delete"))
 		{
+			DragonsLairMain.debugLog("Deleted objective with id '" + (Integer)context.getSessionData("id") + "'");
 			DragonsLairMain.getSettings().getObjectives().get((Integer)context.getSessionData("id")).remove();
 			DragonsLairMain.getSettings().getObjectives().remove((Integer)context.getSessionData("id"));
 			context.setSessionData("id", null);

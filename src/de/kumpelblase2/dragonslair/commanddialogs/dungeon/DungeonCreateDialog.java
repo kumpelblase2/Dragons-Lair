@@ -211,6 +211,7 @@ public class DungeonCreateDialog extends ValidatingPrompt
 			d.setPartyReadyMessage(readyMessage);
 			d.setBlocksBreakable(blocksBreakable);
 			d.save();
+			DragonsLairMain.debugLog("Created dungeon '" + d.getName() + "'");
 			DragonsLairMain.getSettings().getDungeons().put(d.getID(), d);
 			context.getForWhom().sendRawMessage(ChatColor.GREEN + "The dungeon is '" + context.getSessionData("dungeon_name") + "' created!");
 			

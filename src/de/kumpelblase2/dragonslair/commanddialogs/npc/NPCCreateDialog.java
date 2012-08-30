@@ -166,6 +166,7 @@ public class NPCCreateDialog extends ValidatingPrompt
 				n.shouldSpawnAtBeginning(false);
 			
 			n.save();
+			DragonsLairMain.debugLog("Created NPC '" + n.getName() + "'");
 			DragonsLairMain.getSettings().getNPCs().put(n.getID(), n);
 			if(n.shouldSpawnAtBeginning())
 				DragonsLairMain.getDungeonManager().spawnNPC(n.getID());

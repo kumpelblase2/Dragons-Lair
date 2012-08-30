@@ -41,6 +41,7 @@ public class DialogDeleteDialog extends ValidatingPrompt
 			}
 			
 			Dialog d = DragonsLairMain.getSettings().getDialogs().get((Integer)context.getSessionData("id"));
+			DragonsLairMain.debugLog("Delete dialog with id '" + d.getID() + "'");
 			d.remove();
 			DragonsLairMain.getSettings().getDialogs().remove((Integer)d.getID());
 		}

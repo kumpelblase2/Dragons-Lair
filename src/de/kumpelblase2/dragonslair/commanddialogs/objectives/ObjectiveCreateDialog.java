@@ -22,6 +22,7 @@ public class ObjectiveCreateDialog extends ValidatingPrompt
 		Objective o = new Objective();
 		o.setDescription(input);
 		o.save();
+		DragonsLairMain.debugLog("Created objective '" + o.getDescription() + "'");
 		DragonsLairMain.getSettings().getObjectives().put(o.getID(), o);
 		return new ObjectiveManageDialog();
 	}

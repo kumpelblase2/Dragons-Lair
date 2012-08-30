@@ -107,6 +107,7 @@ public class DialogCreateDialog extends ValidatingPrompt
 			d.setText((String)arg0.getSessionData("message"));
 			d.setNextIDs(answers);
 			d.save();
+			DragonsLairMain.debugLog("Created dialog with id '" + d.getID() + "'");
 			DragonsLairMain.getSettings().getDialogs().put(d.getID(), d);
 			arg0.setSessionData("message", null);
 			arg0.setSessionData("agree", null);

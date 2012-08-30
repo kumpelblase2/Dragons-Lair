@@ -48,6 +48,7 @@ public class TriggerDeleteDialog extends ValidatingPrompt
 			if(arg1.equals("delete"))
 			{
 				int id = (Integer)arg0.getSessionData("trigger_id");
+				DragonsLairMain.debugLog("Deleted trigger with id '" + id + "'");
 				DragonsLairMain.getSettings().getTriggers().remove(id);
 				DragonsLairMain.getInstance().getEventHandler().reloadTriggers();
 			}

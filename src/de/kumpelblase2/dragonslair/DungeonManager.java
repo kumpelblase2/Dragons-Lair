@@ -108,6 +108,7 @@ public class DungeonManager
 			return true;
 		}
 		
+		DragonsLairMain.debugLog("Executing event with id '" + e.getID() + "' for player '" + (p != null ? p.getName() : "") + "'");
 		if(this.executors.containsKey(e.getActionType()) && !this.isOnCooldown(name, e))
 		{
 			boolean result = this.executors.get(e.getActionType()).executeEvent(e, p);
@@ -122,6 +123,9 @@ public class DungeonManager
 	
 	public void callTrigger(final Trigger t, final Player p)
 	{
+		if(t == null)
+			return;
+		
 		ActiveDungeon ad = this.getDungeonOfPlayer(p.getName());
 		final String name = (ad == null) ? "_GENERAL_" : ad.getInfo().getName();
 		boolean onCD = this.isOnCooldown(name, t);
@@ -154,7 +158,7 @@ public class DungeonManager
 				DragonsLairMain.Log.info("Unable to parse delay for trigger: " + t.getOption("delay"));
 			}
 		}
-		
+		DragonsLairMain.debugLog("Executing trigger with id '" + t.getID() + "' by player '" + (p != null ? p.getName() : "") + "'");
 		if(delay > 0)
 			Bukkit.getScheduler().scheduleSyncDelayedTask(DragonsLairMain.getInstance(), new Runnable()
 			{
@@ -251,6 +255,7 @@ public class DungeonManager
 		HumanNPC hnpc = (HumanNPC)this.getNPCManager().spawnHumanNPC(npc);
 		if(hnpc != null)
 		{
+			DragonsLairMain.debugLog("Spawning NPC with id '" + npc.getID() + "'");
 			if(npc.getSkin() != null && !npc.getSkin().equals(""))
 				hnpc.setSkin(npc.getSkin());
 			
@@ -270,6 +275,7 @@ public class DungeonManager
 	
 	public boolean despawnNPC(Integer id)
 	{
+		DragonsLairMain.debugLog("Despawning NPC with id '" + id + "'");
 		return this.npcManager.despawnById(id);
 	}
 	
@@ -304,6 +310,7 @@ public class DungeonManager
 		ad.giveMaps();
 		ad.sendMessage(ad.getInfo().getStartingMessage());
 		ad.reloadProgress();
+		DragonsLairMain.debugLog("Started dungeon '" + d.getName() + "'");
 		return ad;
 	}
 	
@@ -344,6 +351,7 @@ public class DungeonManager
 			{
 				DungeonEndEvent event = new DungeonEndEvent(ad);
 				Bukkit.getPluginManager().callEvent(event);
+				DragonsLairMain.debugLog("Stopped dungeon '" + ad.getInfo().getName() + "'");
 				for(String p : ad.getCurrentParty().getMembers())
 				{
 					this.maps.removeMap(Bukkit.getPlayer(p));
@@ -418,7 +426,7 @@ public class DungeonManager
 		Dungeon d = this.settings.getDungeonByName(dungeon);
 		if(this.queue.hasEnoughPeople(d))
 		{
-			Set<QueuedPlayer> players = this.queue.getQueueForDungeon(d);
+			List<QueuedPlayer> players = this.queue.getQueueForDungeon(d);
 			String readyMessage = d.getPartyReadyMessage();
 			for(QueuedPlayer player : players)
 			{
@@ -434,6 +442,9 @@ public class DungeonManager
 	
 	public void addMapHolder(Player player)
 	{
+		if(player == null)
+			return;
+		DragonsLairMain.debugLog("Giving dungeon map to '" + player.getName() + "'");
 		this.maps.addMap(player, new DLMap(player));
 	}
 	

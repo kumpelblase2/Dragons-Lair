@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.URL;
 import java.sql.*;
 import java.util.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilderFactory;
 import net.milkbowl.vault.economy.Economy;
@@ -40,7 +41,7 @@ public class DragonsLairMain extends JavaPlugin
 	private Economy econ;
 	
 	public void onEnable()
-	{		
+	{
 		Log = this.getLogger();
 		instance = this;
 		if(!this.setupDatabase())
@@ -111,16 +112,16 @@ public class DragonsLairMain extends JavaPlugin
 				if(checkCitizen())
 					Bukkit.getPluginManager().registerEvents(new DLCitizenHandler(), DragonsLairMain.getInstance());
 				
-				if(getConfig().getBoolean("verbose-start"))
+				if(isInDebugMode())
 				{
-					Log.info("Loaded " + manager.getSettings().getNPCs().size() + " NPCs");
-					Log.info("Loaded " + manager.getSettings().getDungeons().size() + " dungeons");
-					Log.info("Loaded " + manager.getSettings().getTriggers().size() + " triggers");
-					Log.info("Loaded " + manager.getSettings().getEvents().size() + " events");
-					Log.info("Loaded " + manager.getSettings().getDialogs().size() + " dialogs");
-					Log.info("Loaded " + manager.getSettings().getObjectives().size() + " objectivess");
-					Log.info("Loaded " + manager.getSettings().getChapters().size() + " chapters");
-					Log.info("Loaded " + eventScheduler.getEvents().size() + " scheduled events.");
+					debugLog("Loaded " + manager.getSettings().getNPCs().size() + " NPCs");
+					debugLog("Loaded " + manager.getSettings().getDungeons().size() + " dungeons");
+					debugLog("Loaded " + manager.getSettings().getTriggers().size() + " triggers");
+					debugLog("Loaded " + manager.getSettings().getEvents().size() + " events");
+					debugLog("Loaded " + manager.getSettings().getDialogs().size() + " dialogs");
+					debugLog("Loaded " + manager.getSettings().getObjectives().size() + " objectivess");
+					debugLog("Loaded " + manager.getSettings().getChapters().size() + " chapters");
+					debugLog("Loaded " + eventScheduler.getEvents().size() + " scheduled events.");
 				}
 				Log.info("Done.");
 				Bukkit.getScheduler().scheduleSyncRepeatingTask(DragonsLairMain.getInstance(), new CooldownCleanup(), 200L, 200L);
@@ -140,22 +141,19 @@ public class DragonsLairMain extends JavaPlugin
         RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
         if (rsp == null)
         {
-        	if(this.getConfig().getBoolean("verbose-start"))
-        		Log.info("No economy found.");
+        	debugLog("No economy found.");
             return false;
         }
         econ = rsp.getProvider();
         
         if(econ != null)
         {
-        	if(this.getConfig().getBoolean("verbose-start"))
-        		Log.info("Economy system found: " + econ.getName() +  ".");
+        	debugLog("Economy system found: " + econ.getName() +  ".");
         	return true;
         }
         else
         {
-        	if(this.getConfig().getBoolean("verbose-start"))
-        		Log.info("No economy found.");
+        	debugLog("No economy found.");
         	return false;
         }
 	}
@@ -192,26 +190,25 @@ public class DragonsLairMain extends JavaPlugin
 			this.manager.stopDungeons();
 			this.manager.saveCooldowns();
 		}
-		instance = null;
 		try
 		{
 			if(conn != null)
 				conn.close();
-			if(this.getConfig().getBoolean("verbose-start"))
-				Log.info("Disconnected database.");
+			debugLog("Disconnected database.");
 		}
 		catch (SQLException e)
 		{
 			Log.warning("Error closing MySQL connection.");
 			e.printStackTrace();
 		}
+		instance = null;
 	}
 	
 	public static DragonsLairMain getInstance()
 	{
 		return instance;
 	}
-	
+
 	public static DungeonManager getDungeonManager()
 	{
 		return getInstance().getDungeonManagerInstance();
@@ -231,16 +228,14 @@ public class DragonsLairMain extends JavaPlugin
 				Class.forName("com.mysql.jdbc.Driver");
 				conn = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + db, user, pass);
 				conn.setAutoCommit(true);
-				if(this.getConfig().getBoolean("verbose-start"))
-					Log.info("Connected to database.");
+				debugLog("Connected to database.");
 				return true;
 			}
 			else if(type.equals("sqlite"))
 			{
 				Class.forName("org.sqlite.JDBC");
 				conn = DriverManager.getConnection("jdbc:sqlite:"+ this.getDataFolder().getAbsolutePath() + "/" + host);
-				if(this.getConfig().getBoolean("verbose-start"))
-					Log.info("Connected to database.");
+				debugLog("Connected to database.");
 				return true;
 			}
 			else
@@ -269,8 +264,7 @@ public class DragonsLairMain extends JavaPlugin
 	{
 		if(this.getConfig().getInt("db.rev") == 0)
 		{
-			if(this.getConfig().getBoolean("verbose-start"))
-				Log.info("Creating table structure because it doesn't exist.");
+			debugLog("Creating table structure because it doesn't exist.");
 			for(Tables t : Tables.values())
 			{
 				try
@@ -293,16 +287,14 @@ public class DragonsLairMain extends JavaPlugin
 		
 		if(DATABASE_REV > this.getConfig().getInt("db.rev"))
 		{
-			if(this.getConfig().getBoolean("verbose-start"))
-				Log.info("Database is outdated. Updating...");
+			debugLog("Database is outdated. Updating...");
 			int currentRev = this.getConfig().getInt("db.rev");
 			while(currentRev < DATABASE_REV)
 			{
 				currentRev++;
 				this.updateDatabase(currentRev);
 			}
-			if(this.getConfig().getBoolean("verbose-start"))
-				Log.info("Database update finished.");
+			debugLog("Database update finished.");
 			this.getConfig().set("db.rev", currentRev);
 			this.saveConfig();
 		}
@@ -359,8 +351,7 @@ public class DragonsLairMain extends JavaPlugin
 	private boolean setupDatabase()
 	{
 		this.setupConfig();
-		if(this.getConfig().getBoolean("verbose-start"))
-			Log.info("Connecting to database...");
+		debugLog("Connecting to database...");
 		return this.connectToDB(getConfig().getString("db.type"), getConfig().getString("db.host"), getConfig().getInt("db.port"), getConfig().getString("db.database"), getConfig().getString("db.user"), getConfig().getString("db.pass"));
 	}
 	
@@ -460,7 +451,17 @@ public class DragonsLairMain extends JavaPlugin
 		this.getConfig().set("db.rev", this.getConfig().getInt("db.rev", 0));
 		this.getConfig().set("update-notice", this.getConfig().getBoolean("update-notice", false));
 		this.getConfig().set("update-notice-interval", this.getConfig().getInt("update-notice-interval", 10));
-		this.getConfig().set("verbose-start", this.getConfig().getBoolean("verbose-start", false));
+		if(this.getConfig().contains("verbose-start"))
+		{
+			this.getConfig().set("debug-mode", this.getConfig().getBoolean("verbose-start"));
+			this.getConfig().set("verbose-start", null);
+		}
+		else
+		{
+			this.getConfig().set("debug-mode", this.getConfig().getBoolean("debug-mode", false));
+		}
+		if(this.getConfig().getBoolean("debug-mode"))
+			Bukkit.getServer().getLogger().setLevel(Level.FINER);
 		this.getConfig().set("resurrect_money", this.getConfig().getInt("resurrect", 500));
 		this.getConfig().set("interacting_between_players", this.getConfig().getBoolean("interacting_between_players", false));
 		if(!this.getConfig().getKeys(false).contains("enabled-worlds"))
@@ -566,5 +567,16 @@ public class DragonsLairMain extends JavaPlugin
 	public static boolean canPlayersInteract()
 	{
 		return getInstance().getConfig().getBoolean("interacting_between_players");
+	}
+	
+	public static boolean isInDebugMode()
+	{
+		return getInstance().getConfig().getBoolean("debug-mode");
+	}
+	
+	public static void debugLog(String input)
+	{
+		if(isInDebugMode())
+			Log.info("[DEBUG] " + input);
 	}
 }

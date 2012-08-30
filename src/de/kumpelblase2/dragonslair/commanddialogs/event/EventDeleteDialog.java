@@ -46,6 +46,7 @@ public class EventDeleteDialog extends ValidatingPrompt
 			if(arg1.equals("delete"))
 			{
 				Integer id = (Integer)arg0.getSessionData("event_id");
+				DragonsLairMain.debugLog("Deleted event with id '" + id + "'");
 				DragonsLairMain.getSettings().getEvents().get(id).remove();
 				DragonsLairMain.getSettings().getEvents().remove(id);
 				boolean changed = false;

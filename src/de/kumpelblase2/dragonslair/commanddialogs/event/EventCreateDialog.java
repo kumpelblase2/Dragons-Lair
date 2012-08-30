@@ -85,8 +85,10 @@ public class EventCreateDialog extends ValidatingPrompt
 				arg0.setSessionData("add_option", true);
 			else
 			{
-				if(this.createEvent(arg0))
+				Event e = this.createEvent(arg0);
+				if(e != null)
 				{
+					DragonsLairMain.debugLog("Created event with id '" + e.getID() + "'");
 					arg0.setSessionData("event_type", null);
 					arg0.setSessionData("add_option", null);
 					arg0.setSessionData("event_options", null);
@@ -141,7 +143,7 @@ public class EventCreateDialog extends ValidatingPrompt
 		return this;
 	}
 
-	private boolean createEvent(ConversationContext context)
+	private Event createEvent(ConversationContext context)
 	{
 		List<Option> options = (ArrayList<Option>)context.getSessionData("event_options");
 		for(String required : EventActionOptions.valueOf(((String)context.getSessionData("event_type"))).getRequiredTypes())
@@ -157,7 +159,7 @@ public class EventCreateDialog extends ValidatingPrompt
 			}
 			
 			if(!found)
-			return false;
+			return null;
 		}
 		
 		Event e = new Event();
@@ -165,7 +167,7 @@ public class EventCreateDialog extends ValidatingPrompt
 		e.setOptions((options).toArray(new Option[0]));
 		e.save();
 		DragonsLairMain.getSettings().getEvents().put(e.getID(), e);
-		return true;
+		return e;
 	}
 
 	@Override

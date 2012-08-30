@@ -23,6 +23,7 @@ public class ChapterCreateDialog extends ValidatingPrompt
 		c.setName(input);
 		c.save();
 		DragonsLairMain.getSettings().getChapters().put(c.getID(), c);
+		DragonsLairMain.debugLog("Chapter '" + c.getName() + "' created");
 		return new ChapterManageDialog();
 	}
 

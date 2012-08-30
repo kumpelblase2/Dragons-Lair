@@ -118,6 +118,7 @@ public class ScheduledEventCreateDialog extends ValidatingPrompt
 			sevent.setRepeat(repeat);
 			sevent.setRepeatDelay(repeat_delay);
 			sevent.save();
+			DragonsLairMain.debugLog("Created scheduled event with id '" + sevent.getID() + "'");
 			DragonsLairMain.getEventScheduler().addEvent(sevent);
 			arg0.setSessionData("event_ids", null);
 			arg0.setSessionData("init_delay", null);

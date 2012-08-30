@@ -132,6 +132,7 @@ public class TriggerCreateDialog extends ValidatingPrompt
 				t.setOptions((options).toArray(new Option[0]));
 				GeneralUtilities.recalculateOptions(t);
 				t.save();
+				DragonsLairMain.debugLog("Created trigger with id '" + t.getID() + "'");
 				DragonsLairMain.getSettings().getTriggers().put(t.getID(), t);
 				DragonsLairMain.getInstance().getEventHandler().reloadTriggers();
 				arg0.setSessionData("trigger_type", null);

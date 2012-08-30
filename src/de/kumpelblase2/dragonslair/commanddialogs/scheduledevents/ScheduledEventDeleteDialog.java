@@ -48,6 +48,7 @@ public class ScheduledEventDeleteDialog extends ValidatingPrompt
 			else
 			{
 				Integer id = (Integer)arg0.getSessionData("event_id");
+				DragonsLairMain.debugLog("Deleted scheduled event with id '" + id + "'");
 				arg0.setSessionData("event_id", null);
 				DragonsLairMain.getEventScheduler().removeEvent(id);
 			}

@@ -36,9 +36,9 @@ public class PlayerQueue
 		return this.getQueueForDungeon(dungeon).size() >= dungeon.getMinPlayers();
 	}
 	
-	public Set<QueuedPlayer> getQueueForDungeon(Dungeon dungeon)
+	public List<QueuedPlayer> getQueueForDungeon(Dungeon dungeon)
 	{
-		Set<QueuedPlayer> tempList = new HashSet<QueuedPlayer>();
+		List<QueuedPlayer> tempList = new ArrayList<QueuedPlayer>();
 		for(QueuedPlayer player : this.players)
 		{
 			if(player.getDungeon().equals(dungeon.getName()))
@@ -49,14 +49,21 @@ public class PlayerQueue
 	
 	public void queuePlayer(String dungeon, Player p)
 	{
+		if(p == null)
+			return;
+		
 		if(this.isInQueue(p))
 			return;
 		
+		DragonsLairMain.debugLog("Queueing player '" + p.getName() + "' for dungeon '" + dungeon + "'");
 		this.players.add(new QueuedPlayer(dungeon, p));
 	}
 	
 	public boolean isInQueue(Player p)
 	{
+		if(p == null)
+			return false;
+		
 		for(QueuedPlayer qp : this.players)
 		{
 			if(qp.equals(p))
