@@ -510,7 +510,7 @@ public class DragonsLairMain extends JavaPlugin
 	{
 		try
 		{
-			if(!getInstance().getMysqlConnection().isValid(3))
+			if(getInstance().getConfig().getString("db.type").equals("mysql") && !getInstance().getMysqlConnection().isValid(3))
 				return false;
 		}
 		catch(final SQLException e)
