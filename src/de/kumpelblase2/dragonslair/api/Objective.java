@@ -7,68 +7,63 @@ public class Objective
 {
 	private int id;
 	private String description;
-	
+
 	public Objective()
 	{
 		this.id = -1;
 		this.description = "";
 	}
-	
-	public Objective(ResultSet result)
+
+	public Objective(final ResultSet result)
 	{
 		try
 		{
 			this.id = result.getInt(TableColumns.Objectives.ID);
 			this.description = result.getString(TableColumns.Objectives.DESCRIPTION);
 		}
-		catch (SQLException e)
+		catch(final SQLException e)
 		{
 			e.printStackTrace();
 		}
 	}
-	
+
 	public int getID()
 	{
 		return this.id;
 	}
-	
-	public void setDescription(String inDesc)
+
+	public void setDescription(final String inDesc)
 	{
 		this.description = inDesc;
 	}
-	
+
 	public String getDescription()
 	{
 		return this.description;
 	}
-	
+
 	public void save()
 	{
 		try
-		{			
+		{
 			if(this.id != -1)
 			{
-				PreparedStatement st = DragonsLairMain.createStatement("REPLACE INTO " + Tables.OBJECTIVES + "(" +
-						"objective_id," +
-						"objective_description" +
-						") VALUES(?,?)");
+				final PreparedStatement st = DragonsLairMain.createStatement("REPLACE INTO " + Tables.OBJECTIVES + "(" + "objective_id," + "objective_description" + ") VALUES(?,?)");
 				st.setInt(1, this.id);
 				st.setString(2, this.description);
 				st.execute();
 			}
 			else
 			{
-				PreparedStatement st = DragonsLairMain.createStatement("INSERT INTO " + Tables.OBJECTIVES + "(" +
-						"objective_description" +
-						") VALUES(?)");
+				final PreparedStatement st = DragonsLairMain.createStatement("INSERT INTO " + Tables.OBJECTIVES + "(" + "objective_description" + ") VALUES(?)");
 				st.setString(1, this.description);
 				st.execute();
-				ResultSet keys = st.getGeneratedKeys();
+				final ResultSet keys = st.getGeneratedKeys();
 				if(keys.next())
 					this.id = keys.getInt(1);
 			}
 		}
-		catch(Exception e)
+		catch(final Exception e)
 		{
 			DragonsLairMain.Log.warning("Unable to save objective " + this.id);
 			DragonsLairMain.Log.warning(e.getMessage());
@@ -79,11 +74,11 @@ public class Objective
 	{
 		try
 		{
-			PreparedStatement st = DragonsLairMain.createStatement("REMOVE FROM " + Tables.OBJECTIVES + " WHERE `objective_id` = ?");
+			final PreparedStatement st = DragonsLairMain.createStatement("REMOVE FROM " + Tables.OBJECTIVES + " WHERE `objective_id` = ?");
 			st.setInt(1, this.id);
 			st.execute();
 		}
-		catch(Exception e)
+		catch(final Exception e)
 		{
 			DragonsLairMain.Log.warning("Unable to remove objective " + this.id);
 			DragonsLairMain.Log.warning(e.getMessage());

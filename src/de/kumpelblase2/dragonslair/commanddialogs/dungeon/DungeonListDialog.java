@@ -9,25 +9,25 @@ import de.kumpelblase2.dragonslair.api.Dungeon;
 public class DungeonListDialog extends MessagePrompt
 {
 	private int page;
-	
+
 	public DungeonListDialog()
 	{
 		this(0);
 	}
-	
-	public DungeonListDialog(int page)
+
+	public DungeonListDialog(final int page)
 	{
 		this.page = page;
 	}
-	
+
 	@Override
-	public String getPromptText(ConversationContext arg0)
+	public String getPromptText(final ConversationContext arg0)
 	{
-		Dungeon[] dungeons = DragonsLairMain.getSettings().getDungeons().values().toArray(new Dungeon[0]);
+		final Dungeon[] dungeons = DragonsLairMain.getSettings().getDungeons().values().toArray(new Dungeon[0]);
 		Arrays.sort(dungeons, new Comparator<Dungeon>()
 		{
 			@Override
-			public int compare(Dungeon o1, Dungeon o2)
+			public int compare(final Dungeon o1, final Dungeon o2)
 			{
 				if(o1.getID() > o2.getID())
 					return 1;
@@ -39,21 +39,15 @@ public class DungeonListDialog extends MessagePrompt
 		});
 		arg0.getForWhom().sendRawMessage("There is/are " + dungeons.length + " dungeon(s) avaiblable.");
 		if(10 * this.page >= dungeons.length)
-		{
-			this.page = (int)(dungeons.length / 12);
-		}
-		
+			this.page = dungeons.length / 12;
 		for(int i = 12 * this.page; i < dungeons.length && i < 10 * this.page + 12; i++)
-		{
 			arg0.getForWhom().sendRawMessage("   " + dungeons[i].getID() + " - " + dungeons[i].getName());
-		}
-		return "---------------- Page " + (this.page + 1) + "/" + ((int)(dungeons.length / 12) + 1);
+		return "---------------- Page " + (this.page + 1) + "/" + (dungeons.length / 12 + 1);
 	}
 
 	@Override
-	protected Prompt getNextPrompt(ConversationContext arg0)
+	protected Prompt getNextPrompt(final ConversationContext arg0)
 	{
 		return new DungeonManageDialog();
 	}
-
 }

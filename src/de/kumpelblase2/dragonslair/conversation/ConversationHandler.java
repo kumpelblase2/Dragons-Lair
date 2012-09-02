@@ -10,89 +10,84 @@ import de.kumpelblase2.dragonslair.events.conversation.ConversationStartEvent;
 
 public class ConversationHandler implements ConversationAbandonedListener
 {
-	private Map<String, NPCConversation> conversations = new HashMap<String, NPCConversation>();
-	private Set<String> safeWordConversations = new HashSet<String>();
-	private Set<String> respawnConversations = new HashSet<String>();
-	
-    public static Prompt getPromptByID(int id, String npc)
-    {
-        Dialog d = DragonsLairMain.getSettings().getDialogs().get(id);
-        if(d.getType() == DialogType.MESSAGE)
-                return new StorylineMessagePrompt(d, npc);
-        else
-                return new StorylineQuestionPromt(d, npc);
-    }
-    
-    public Map<String, NPCConversation> getConversations()
-    {
-    	return this.conversations;
-    }
-    
-    public void startConversation(Player p, NPC n, int dialogID)
-    {
-    	if(this.isInConversation(p))
-    		p.abandonConversation(this.conversations.get(p.getName()).getConversation());
-    	
-    	ConversationFactory f = DragonsLairMain.getDungeonManager().getConversationFactory();
-    	Conversation c = f.withFirstPrompt(ConversationHandler.getPromptByID(dialogID, n.getName())).buildConversation(p);
-    	ConversationStartEvent event = new ConversationStartEvent(n.getName(), c, dialogID);
-    	Bukkit.getPluginManager().callEvent(event);
-    	if(event.isCancelled())
-    	{
-    		c.abandon();
-    		return;
-    	}
-    	
-    	c.addConversationAbandonedListener(this);
-    	c.begin();
-    	
-		if(DragonsLairMain.getSettings().getDialogs().get((Integer)dialogID).getType() != DialogType.MESSAGE)
+	private final Map<String, NPCConversation> conversations = new HashMap<String, NPCConversation>();
+	private final Set<String> safeWordConversations = new HashSet<String>();
+	private final Set<String> respawnConversations = new HashSet<String>();
+
+	public static Prompt getPromptByID(final int id, final String npc)
+	{
+		final Dialog d = DragonsLairMain.getSettings().getDialogs().get(id);
+		if(d.getType() == DialogType.MESSAGE)
+			return new StorylineMessagePrompt(d, npc);
+		else
+			return new StorylineQuestionPromt(d, npc);
+	}
+
+	public Map<String, NPCConversation> getConversations()
+	{
+		return this.conversations;
+	}
+
+	public void startConversation(final Player p, final NPC n, final int dialogID)
+	{
+		if(this.isInConversation(p))
+			p.abandonConversation(this.conversations.get(p.getName()).getConversation());
+		final ConversationFactory f = DragonsLairMain.getDungeonManager().getConversationFactory();
+		final Conversation c = f.withFirstPrompt(ConversationHandler.getPromptByID(dialogID, n.getName())).buildConversation(p);
+		final ConversationStartEvent event = new ConversationStartEvent(n.getName(), c, dialogID);
+		Bukkit.getPluginManager().callEvent(event);
+		if(event.isCancelled())
 		{
-			NPCConversation npcconv = new NPCConversation(p, n, c);
+			c.abandon();
+			return;
+		}
+		c.addConversationAbandonedListener(this);
+		c.begin();
+		if(DragonsLairMain.getSettings().getDialogs().get(dialogID).getType() != DialogType.MESSAGE)
+		{
+			final NPCConversation npcconv = new NPCConversation(p, n, c);
 			this.conversations.put(p.getName(), npcconv);
 		}
 		else
-		{
 			p.abandonConversation(c);
-		}
-    }
+	}
 
 	@Override
-	public void conversationAbandoned(ConversationAbandonedEvent arg0)
+	public void conversationAbandoned(final ConversationAbandonedEvent arg0)
 	{
 		this.conversations.remove(((Player)arg0.getContext().getForWhom()).getName());
 	}
-	
-	public boolean isInConversation(Player p)
+
+	public boolean isInConversation(final Player p)
 	{
 		return this.conversations.containsKey(p.getName());
 	}
-	
-	public void startSafeWordConversation(Player p)
+
+	public void startSafeWordConversation(final Player p)
 	{
-		ConversationFactory f = DragonsLairMain.getDungeonManager().getConversationFactory();
-    	f.withFirstPrompt(new SafeWordPrompt()).buildConversation(p).begin();
-    	this.safeWordConversations.add(p.getName());
+		final ConversationFactory f = DragonsLairMain.getDungeonManager().getConversationFactory();
+		f.withFirstPrompt(new SafeWordPrompt()).buildConversation(p).begin();
+		this.safeWordConversations.add(p.getName());
 	}
-	
-	public void removeSafeWordConversation(Player p)
+
+	public void removeSafeWordConversation(final Player p)
 	{
 		this.safeWordConversations.remove(p.getName());
 	}
-	
-	public void startRespawnConversation(Player p)
+
+	public void startRespawnConversation(final Player p)
 	{
-		ConversationFactory f = DragonsLairMain.getDungeonManager().getConversationFactory();
+		final ConversationFactory f = DragonsLairMain.getDungeonManager().getConversationFactory();
 		f.withFirstPrompt(new RespawnPrompt()).buildConversation(p).begin();
 		this.respawnConversations.add(p.getName());
 	}
-	
-	public void removeRespawnConversation(Player p)
+
+	public void removeRespawnConversation(final Player p)
 	{
 		this.respawnConversations.remove(p.getName());
 	}
-	
-	public boolean isInRespawnConversation(Player p)
+
+	public boolean isInRespawnConversation(final Player p)
 	{
 		return this.respawnConversations.contains(p.getName());
 	}

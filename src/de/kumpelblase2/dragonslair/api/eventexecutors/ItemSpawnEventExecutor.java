@@ -7,11 +7,9 @@ import de.kumpelblase2.dragonslair.api.Event;
 
 public class ItemSpawnEventExecutor implements EventExecutor
 {
-
 	@Override
-	public boolean executeEvent(Event e, Player p)
+	public boolean executeEvent(final Event e, final Player p)
 	{
-		
 		String world, itemid;
 		int x, y, z, amount;
 		itemid = e.getOption("item_id");
@@ -26,34 +24,29 @@ public class ItemSpawnEventExecutor implements EventExecutor
 			else
 				amount = Integer.parseInt(e.getOption("amount"));
 		}
-		catch(Exception ex)
+		catch(final Exception ex)
 		{
 			return false;
-		}		
-		
+		}
 		Material m;
 		try
 		{
 			m = Material.getMaterial(Integer.parseInt(itemid));
 		}
-		catch(Exception ex)
+		catch(final Exception ex)
 		{
 			m = Material.getMaterial(itemid.replace(" ", "_").toUpperCase());
 			if(m == null)
 				return false;
 		}
-		
 		if(world == null || itemid == null)
-			return false;		
-		
-		World w = Bukkit.getWorld(world);
+			return false;
+		final World w = Bukkit.getWorld(world);
 		if(w != null)
 		{
 			w.dropItemNaturally(new Location(w, x, y, z), new ItemStack(m, amount));
 			return true;
 		}
-		
 		return false;
 	}
-
 }

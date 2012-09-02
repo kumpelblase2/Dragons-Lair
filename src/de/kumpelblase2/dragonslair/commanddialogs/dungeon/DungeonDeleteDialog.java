@@ -8,9 +8,8 @@ import de.kumpelblase2.dragonslair.api.Dungeon;
 
 public class DungeonDeleteDialog extends ValidatingPrompt
 {
-
 	@Override
-	public String getPromptText(ConversationContext arg0)
+	public String getPromptText(final ConversationContext arg0)
 	{
 		if(arg0.getSessionData("dungeon_name") == null)
 			return ChatColor.GREEN + "Please enter the name of the dungeon to remove:";
@@ -19,19 +18,17 @@ public class DungeonDeleteDialog extends ValidatingPrompt
 	}
 
 	@Override
-	protected Prompt acceptValidatedInput(ConversationContext arg0, String arg1)
+	protected Prompt acceptValidatedInput(final ConversationContext arg0, final String arg1)
 	{
 		if(arg1.equals("cancel"))
 		{
 			arg0.setSessionData("dungeon_name", null);
 			return new DungeonManageDialog();
 		}
-		
 		if(arg0.getSessionData("dungeon_name") == null)
 		{
 			if(arg1.equals("back"))
 				return new DungeonManageDialog();
-			
 			arg0.setSessionData("dungeon_name", arg1);
 			return this;
 		}
@@ -42,7 +39,8 @@ public class DungeonDeleteDialog extends ValidatingPrompt
 		}
 		else if(arg1.equals("delete"))
 		{
-			Dungeon d = DragonsLairMain.getSettings().getDungeonByName(arg1);		
+			final Dungeon d = DragonsLairMain.getSettings().getDungeonByName(arg1);
+			DragonsLairMain.debugLog("Deleted dungeon '" + d.getName() + "'");
 			d.remove();
 			DragonsLairMain.getSettings().getDungeons().remove(d.getID());
 		}
@@ -51,31 +49,26 @@ public class DungeonDeleteDialog extends ValidatingPrompt
 	}
 
 	@Override
-	protected boolean isInputValid(ConversationContext arg0, String arg1)
+	protected boolean isInputValid(final ConversationContext arg0, final String arg1)
 	{
 		if(arg0.getSessionData("dungeon_name") == null)
 		{
 			if(arg1.equals("back"))
 				return true;
-			
-			Dungeon d = DragonsLairMain.getSettings().getDungeonByName(arg1);
+			final Dungeon d = DragonsLairMain.getSettings().getDungeonByName(arg1);
 			if(d == null)
 			{
 				arg0.getForWhom().sendRawMessage(ChatColor.RED + "The dungeon does not exist.");
 				return false;
 			}
-			
-			for(ActiveDungeon ad : DragonsLairMain.getDungeonManager().getActiveDungeons())
-			{
+			for(final ActiveDungeon ad : DragonsLairMain.getDungeonManager().getActiveDungeons())
 				if(ad.getInfo().getID() == d.getID())
 				{
 					arg0.getForWhom().sendRawMessage(ChatColor.RED + "The dungeon is currently in use.");
 					return false;
 				}
-			}
 			return true;
 		}
 		return true;
 	}
-
 }

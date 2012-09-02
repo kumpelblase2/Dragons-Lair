@@ -6,14 +6,14 @@ import org.bukkit.inventory.ItemStack;
 
 public class SavedPlayer
 {
-	private Player player;
-	private int food;
-	private int health;
-	private ItemStack[] items;
-	private ItemStack[] armor;
-	private Location loc;
-	
-	public SavedPlayer(Player p)
+	private final Player player;
+	private final int food;
+	private final int health;
+	private final ItemStack[] items;
+	private final ItemStack[] armor;
+	private final Location loc;
+
+	public SavedPlayer(final Player p)
 	{
 		this.player = p;
 		this.food = p.getFoodLevel();
@@ -22,7 +22,7 @@ public class SavedPlayer
 		this.armor = p.getInventory().getArmorContents();
 		this.loc = p.getLocation();
 	}
-	
+
 	public void restore()
 	{
 		this.player.setHealth(this.health);

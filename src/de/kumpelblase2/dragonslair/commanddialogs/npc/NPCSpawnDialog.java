@@ -7,25 +7,23 @@ import de.kumpelblase2.dragonslair.api.NPC;
 
 public class NPCSpawnDialog extends ValidatingPrompt
 {
-
 	@Override
-	public String getPromptText(ConversationContext context)
+	public String getPromptText(final ConversationContext context)
 	{
 		return ChatColor.GREEN + "Please enter the name of the npc you want to spawn:";
 	}
 
 	@Override
-	protected Prompt acceptValidatedInput(ConversationContext arg0, String arg1)
+	protected Prompt acceptValidatedInput(final ConversationContext arg0, final String arg1)
 	{
 		if(arg1.equals("back") || arg1.equals("cancel"))
 			return new NPCManageDialog();
-		
 		try
 		{
-			Integer id = Integer.parseInt(arg1);
+			final Integer id = Integer.parseInt(arg1);
 			DragonsLairMain.getDungeonManager().spawnNPC(id);
 		}
-		catch(Exception e)
+		catch(final Exception e)
 		{
 			DragonsLairMain.getDungeonManager().spawnNPC(arg1);
 		}
@@ -34,14 +32,13 @@ public class NPCSpawnDialog extends ValidatingPrompt
 	}
 
 	@Override
-	protected boolean isInputValid(ConversationContext arg0, String arg1)
+	protected boolean isInputValid(final ConversationContext arg0, final String arg1)
 	{
 		if(arg1.equals("back") || arg1.equals("cancel"))
 			return true;
-		
 		try
 		{
-			Integer id = Integer.parseInt(arg1);
+			final Integer id = Integer.parseInt(arg1);
 			if(DragonsLairMain.getSettings().getNPCs().containsKey(id))
 			{
 				if(DragonsLairMain.getDungeonManager().getSpawnedNPCIDs().containsKey(id))
@@ -50,9 +47,7 @@ public class NPCSpawnDialog extends ValidatingPrompt
 					return false;
 				}
 				else
-				{
 					return true;
-				}
 			}
 			else
 			{
@@ -60,9 +55,9 @@ public class NPCSpawnDialog extends ValidatingPrompt
 				return false;
 			}
 		}
-		catch(Exception e)
+		catch(final Exception e)
 		{
-			NPC n = DragonsLairMain.getSettings().getNPCByName(arg1);
+			final NPC n = DragonsLairMain.getSettings().getNPCByName(arg1);
 			if(n != null)
 			{
 				if(DragonsLairMain.getDungeonManager().getSpawnedNPCIDs().containsKey(n.getID()))
@@ -71,9 +66,7 @@ public class NPCSpawnDialog extends ValidatingPrompt
 					return false;
 				}
 				else
-				{
 					return true;
-				}
 			}
 			else
 			{
@@ -82,5 +75,4 @@ public class NPCSpawnDialog extends ValidatingPrompt
 			}
 		}
 	}
-
 }

@@ -11,43 +11,41 @@ import de.kumpelblase2.dragonslair.utilities.WorldUtility;
 
 public class LoggingManager
 {
-	private Map<String, Map<Integer, Map<Location, Recoverable>>> m_logEntries = new HashMap<String, Map<Integer, Map<Location, Recoverable>>>();
+	private final Map<String, Map<Integer, Map<Location, Recoverable>>> m_logEntries = new HashMap<String, Map<Integer, Map<Location, Recoverable>>>();
 	public static final String logQuery = "REPLACE INTO " + Tables.LOG + "(dungeon_name, party_id, log_type, location, before_data, after_data) VALUES(?,?,?,?,?,?)";
-	
+
 	public Map<String, Map<Integer, Map<Location, Recoverable>>> getEntries()
 	{
 		return this.m_logEntries;
 	}
-	
+
 	public void loadEntries()
 	{
 		try
 		{
-			PreparedStatement st = DragonsLairMain.createStatement("SELECT * FROM " + Tables.LOG);
-			ResultSet result = st.executeQuery();
+			final PreparedStatement st = DragonsLairMain.createStatement("SELECT * FROM " + Tables.LOG);
+			final ResultSet result = st.executeQuery();
 			while(result.next())
 			{
-				LogType type = LogType.valueOf(result.getString(TableColumns.Log.LOG_TYPE).toUpperCase());
+				final LogType type = LogType.valueOf(result.getString(TableColumns.Log.LOG_TYPE).toUpperCase());
 				Recoverable entry = null;
-				Map<String, String> before = new HashMap<String, String>();
-				Map<String, String> after = new HashMap<String, String>();
+				final Map<String, String> before = new HashMap<String, String>();
+				final Map<String, String> after = new HashMap<String, String>();
 				String[] split = result.getString(TableColumns.Log.BEFORE_DATA).split(";");
-				for(String s : split)
+				for(final String s : split)
 				{
-					String[] value = s.split("" + ((byte)0x1D));
+					final String[] value = s.split("" + ((byte)0x1D));
 					before.put(value[0], value[1]);
 				}
-				
 				split = result.getString(TableColumns.Log.AFTER_DATA).split(";");
-				for(String s : split)
+				for(final String s : split)
 				{
-					String[] value = s.split("" + ((byte)0x1D));
+					final String[] value = s.split("" + ((byte)0x1D));
 					after.put(value[0], value[1]);
 				}
-				String dungeon = result.getString(TableColumns.Log.DUNGEON_NAME);
-				int party = result.getInt(TableColumns.Log.PARTY_ID);
-				Location loc = WorldUtility.stringToLocation(result.getString(TableColumns.Log.LOCATION));
-				
+				final String dungeon = result.getString(TableColumns.Log.DUNGEON_NAME);
+				final int party = result.getInt(TableColumns.Log.PARTY_ID);
+				final Location loc = WorldUtility.stringToLocation(result.getString(TableColumns.Log.LOCATION));
 				switch(type)
 				{
 					case BLOCK_CHANGE:
@@ -61,52 +59,51 @@ public class LoggingManager
 						break;
 					default:
 						break;
-					
 				}
 				this.addEntry(dungeon, party, entry);
 			}
 		}
-		catch (Exception e)
+		catch(final Exception e)
 		{
 			e.printStackTrace();
 		}
 	}
-	
-	public Map<Integer, Map<Location, Recoverable>> getEntriesForDungeon(String inDungeons)
+
+	public Map<Integer, Map<Location, Recoverable>> getEntriesForDungeon(final String inDungeons)
 	{
 		if(!this.m_logEntries.containsKey(inDungeons))
 			return new HashMap<Integer, Map<Location, Recoverable>>();
 		else
 			return this.m_logEntries.get(inDungeons);
 	}
-	
-	public void logBlockBreak(ActiveDungeon ad, BlockState inBroken)
+
+	public void logBlockBreak(final ActiveDungeon ad, final BlockState inBroken)
 	{
-		BlockBreakEntry entry = new BlockBreakEntry(inBroken, ad);
+		final BlockBreakEntry entry = new BlockBreakEntry(inBroken, ad);
 		this.logEntry(ad, inBroken, entry);
 	}
-	
-	public void logBlockPlace(ActiveDungeon ad, BlockState inPlaced)
+
+	public void logBlockPlace(final ActiveDungeon ad, final BlockState inPlaced)
 	{
-		BlockPlaceEntry entry = new BlockPlaceEntry(inPlaced, ad);
+		final BlockPlaceEntry entry = new BlockPlaceEntry(inPlaced, ad);
 		this.logEntry(ad, inPlaced, entry);
 	}
-	
-	public void logBlockContentChange(ActiveDungeon ad, BlockState inCurrent, Map<String, String> inNew, Map<String, String> inOldItem)
+
+	public void logBlockContentChange(final ActiveDungeon ad, final BlockState inCurrent, final Map<String, String> inNew, final Map<String, String> inOldItem)
 	{
-		BlockContentChangeEntry entry = new BlockContentChangeEntry(inCurrent, ad);
+		final BlockContentChangeEntry entry = new BlockContentChangeEntry(inCurrent, ad);
 		entry.m_before.putAll(inOldItem);
 		entry.m_new.putAll(inNew);
 		this.logEntry(ad, inCurrent, entry);
 	}
-	
-	public void logBlockDataChange(ActiveDungeon ad, BlockState inCurrent)
+
+	public void logBlockDataChange(final ActiveDungeon ad, final BlockState inCurrent)
 	{
-		BlockDataChangeEntry entry = new BlockDataChangeEntry(inCurrent, ad);
+		final BlockDataChangeEntry entry = new BlockDataChangeEntry(inCurrent, ad);
 		this.logEntry(ad, inCurrent, entry);
 	}
-	
-	public void logEntry(ActiveDungeon ad, BlockState inNew, Recoverable entry)
+
+	public void logEntry(final ActiveDungeon ad, final BlockState inNew, final Recoverable entry)
 	{
 		Map<Integer, Map<Location, Recoverable>> partyEntries = new HashMap<Integer, Map<Location, Recoverable>>();
 		if(this.m_logEntries.containsKey(ad.getInfo().getName()))
@@ -114,13 +111,10 @@ public class LoggingManager
 			partyEntries = this.m_logEntries.get(ad.getInfo().getName());
 			Map<Location, Recoverable> entries = new HashMap<Location, Recoverable>();
 			if(partyEntries.containsKey(ad.getCurrentParty().getID()))
-			{
 				entries = partyEntries.get(ad.getCurrentParty().getID());
-			}
-			
 			if(entries.containsKey(inNew.getLocation()))
 			{
-				Recoverable old = entries.get(inNew.getLocation());
+				final Recoverable old = entries.get(inNew.getLocation());
 				if(old.isNegotiation(entry))
 				{
 					old.remove();
@@ -140,7 +134,7 @@ public class LoggingManager
 		}
 		else
 		{
-			HashMap<Location, Recoverable> entries = new HashMap<Location, Recoverable>();
+			final HashMap<Location, Recoverable> entries = new HashMap<Location, Recoverable>();
 			entries.put(inNew.getLocation(), entry);
 			partyEntries = new HashMap<Integer, Map<Location, Recoverable>>();
 			partyEntries.put(ad.getCurrentParty().getID(), entries);
@@ -148,12 +142,11 @@ public class LoggingManager
 		}
 		entry.save();
 	}
-	
-	public void addEntry(String inDungeon, int inParty, Recoverable inEntry)
+
+	public void addEntry(final String inDungeon, final int inParty, final Recoverable inEntry)
 	{
 		if(inEntry == null)
 			return;
-		
 		Map<Integer, Map<Location, Recoverable>> partyEntries = new HashMap<Integer, Map<Location, Recoverable>>();
 		if(this.m_logEntries.containsKey(inDungeon))
 		{
@@ -168,7 +161,7 @@ public class LoggingManager
 		}
 		else
 		{
-			HashMap<Location, Recoverable> entries = new HashMap<Location, Recoverable>();
+			final HashMap<Location, Recoverable> entries = new HashMap<Location, Recoverable>();
 			entries.put(inEntry.getLocation(), inEntry);
 			partyEntries = new HashMap<Integer, Map<Location, Recoverable>>();
 			partyEntries.put(inParty, entries);

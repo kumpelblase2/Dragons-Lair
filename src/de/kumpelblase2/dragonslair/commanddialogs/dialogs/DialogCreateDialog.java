@@ -11,9 +11,8 @@ import de.kumpelblase2.dragonslair.conversation.AnswerType;
 
 public class DialogCreateDialog extends ValidatingPrompt
 {
-
 	@Override
-	public String getPromptText(ConversationContext arg0)
+	public String getPromptText(final ConversationContext arg0)
 	{
 		if(arg0.getSessionData("message") == null)
 			return ChatColor.GREEN + "Please enter the message of the dialog:";
@@ -30,7 +29,7 @@ public class DialogCreateDialog extends ValidatingPrompt
 	}
 
 	@Override
-	protected Prompt acceptValidatedInput(ConversationContext arg0, String arg1)
+	protected Prompt acceptValidatedInput(final ConversationContext arg0, final String arg1)
 	{
 		if(arg1.equals("cancel"))
 		{
@@ -41,12 +40,10 @@ public class DialogCreateDialog extends ValidatingPrompt
 			arg0.setSessionData("consider_agree", null);
 			return new DialogManageDialog();
 		}
-		
 		if(arg0.getSessionData("message") == null)
 		{
 			if(arg1.equals("back"))
 				return new DialogManageDialog();
-			
 			arg0.setSessionData("message", arg1);
 		}
 		else if(arg0.getSessionData("agree") == null)
@@ -56,7 +53,6 @@ public class DialogCreateDialog extends ValidatingPrompt
 				arg0.setSessionData("message", null);
 				return this;
 			}
-			
 			arg0.setSessionData("agree", Integer.parseInt(arg1));
 		}
 		else if(arg0.getSessionData("disagree") == null)
@@ -66,7 +62,6 @@ public class DialogCreateDialog extends ValidatingPrompt
 				arg0.setSessionData("agree", null);
 				return this;
 			}
-			
 			arg0.setSessionData("disagree", Integer.parseInt(arg1));
 		}
 		else if(arg0.getSessionData("consider") == null)
@@ -76,7 +71,6 @@ public class DialogCreateDialog extends ValidatingPrompt
 				arg0.setSessionData("disagree", null);
 				return this;
 			}
-			
 			arg0.setSessionData("consider", Integer.parseInt(arg1));
 		}
 		else if(arg0.getSessionData("consider_agree") == null)
@@ -86,7 +80,6 @@ public class DialogCreateDialog extends ValidatingPrompt
 				arg0.setSessionData("consider", null);
 				return this;
 			}
-			
 			arg0.setSessionData("consider_agree", Integer.parseInt(arg1));
 		}
 		else
@@ -96,17 +89,17 @@ public class DialogCreateDialog extends ValidatingPrompt
 				arg0.setSessionData("consider_agree", null);
 				return this;
 			}
-			
-			Map<AnswerType, Integer> answers = new HashMap<AnswerType, Integer>();
+			final Map<AnswerType, Integer> answers = new HashMap<AnswerType, Integer>();
 			answers.put(AnswerType.AGREEMENT, (Integer)arg0.getSessionData("agree"));
 			answers.put(AnswerType.DISAGREEMENT, (Integer)arg0.getSessionData("disagree"));
 			answers.put(AnswerType.CONSIDERING, (Integer)arg0.getSessionData("consider"));
 			answers.put(AnswerType.CONSIDERING_AGREEMENT, (Integer)arg0.getSessionData("consider_agree"));
 			answers.put(AnswerType.CONSIDERING_DISAGREEMENT, Integer.parseInt(arg1));
-			Dialog d = new Dialog();
+			final Dialog d = new Dialog();
 			d.setText((String)arg0.getSessionData("message"));
 			d.setNextIDs(answers);
 			d.save();
+			DragonsLairMain.debugLog("Created dialog with id '" + d.getID() + "'");
 			DragonsLairMain.getSettings().getDialogs().put(d.getID(), d);
 			arg0.setSessionData("message", null);
 			arg0.setSessionData("agree", null);
@@ -119,25 +112,24 @@ public class DialogCreateDialog extends ValidatingPrompt
 	}
 
 	@Override
-	protected boolean isInputValid(ConversationContext arg0, String arg1)
+	protected boolean isInputValid(final ConversationContext arg0, final String arg1)
 	{
 		if(arg1.equals("back") || arg1.equals("cancel"))
 			return true;
-		
 		if(arg0.getSessionData("message") == null)
 			return true;
 		else
 		{
 			try
 			{
-				Integer id = Integer.parseInt(arg1);
+				final Integer id = Integer.parseInt(arg1);
 				if(DragonsLairMain.getSettings().getDialogs().get(id) == null && id != 0)
 				{
 					arg0.getForWhom().sendRawMessage(ChatColor.RED + "A dialog with that id doesn't exist.");
 					return false;
 				}
 			}
-			catch(Exception e)
+			catch(final Exception e)
 			{
 				arg0.getForWhom().sendRawMessage(ChatColor.RED + "Not a valid number.");
 				return false;
@@ -145,5 +137,4 @@ public class DialogCreateDialog extends ValidatingPrompt
 			return true;
 		}
 	}
-
 }

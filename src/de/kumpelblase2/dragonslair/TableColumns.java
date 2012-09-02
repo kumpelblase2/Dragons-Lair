@@ -7,7 +7,6 @@ public final class TableColumns
 		public static final String ID = "chapter_id";
 		public static final String NAME = "chapter_name";
 	}
-	
 	public final class Dialogs
 	{
 		public static final String ID = "dialog_id";
@@ -18,7 +17,6 @@ public final class TableColumns
 		public static final String CONSIDER_DISAGREEMENT_ID = "next_consider_disagreement_id";
 		public static final String CONSIDER_ID = "next_consider_id";
 	}
-	
 	public final class Dungeons
 	{
 		public static final String ID = "dungeon_id";
@@ -34,7 +32,6 @@ public final class TableColumns
 		public static final String PARTY_READY_MESSAGE = "dungeon_party_ready_message";
 		public static final String BREAKABLE_BLOCKS = "dungeon_blocks_breakable";
 	}
-	
 	public final class Events
 	{
 		public static final String ID = "event_id";
@@ -42,7 +39,6 @@ public final class TableColumns
 		public static final String ACTION_OPTIONS = "event_action_options";
 		public static final String COOLDOWNS = "event_cooldowns";
 	}
-	
 	public final class NPCs
 	{
 		public static final String ID = "npc_id";
@@ -54,13 +50,11 @@ public final class TableColumns
 		public static final String SHOULD_SPAWN_AT_BEGINNING = "npc_spawned_from_beginning";
 		public static final String INVINCIBLE = "npc_invincible";
 	}
-	
 	public final class Objectives
 	{
 		public static final String ID = "objective_id";
 		public static final String DESCRIPTION = "objective_description";
 	}
-	
 	public final class Triggers
 	{
 		public static final String ID = "trigger_id";
@@ -69,7 +63,6 @@ public final class TableColumns
 		public static final String ACTION_EVENT_ID = "trigger_action_event";
 		public static final String COOLDOWNS = "trigger_cooldowns";
 	}
-	
 	public final class Parties
 	{
 		public static final String ID = "party_id";
@@ -78,7 +71,6 @@ public final class TableColumns
 		public static final String CHAPTER_ID = "party_chapter_id";
 		public static final String DUNGEON_ID = "party_dungeon_id";
 	}
-	
 	public final class Player_Saves
 	{
 		public static final String NAME = "player_name";
@@ -89,7 +81,6 @@ public final class TableColumns
 		public static final String LOCATION = "player_location";
 		public static final String PARTY_ID = "player_party_id";
 	}
-	
 	public final class Log
 	{
 		public static final String DUNGEON_NAME = "dungeon_name";
@@ -99,7 +90,6 @@ public final class TableColumns
 		public static final String BEFORE_DATA = "before_data";
 		public static final String AFTER_DATA = "after_data";
 	}
-	
 	public final class Scheduled_Events
 	{
 		public static final String SEVENT_ID = "schedule_id";
@@ -109,7 +99,6 @@ public final class TableColumns
 		public static final String REPEATING_DELAY = "repeating_delay";
 		public static final String AUTO_START = "auto_start";
 	}
-	
 	public final class Death_Locations
 	{
 		public static final String PLAYER_NAME = "player_name";

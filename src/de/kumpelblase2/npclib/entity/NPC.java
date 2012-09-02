@@ -1,6 +1,6 @@
 package de.kumpelblase2.npclib.entity;
-//original provided by Topcat, modified by kumpelblase2
 
+// original provided by Topcat, modified by kumpelblase2
 import java.util.ArrayList;
 import java.util.Iterator;
 import net.minecraft.server.*;
@@ -13,8 +13,7 @@ import de.kumpelblase2.npclib.pathing.*;
 
 public class NPC
 {
-
-	private Entity entity;
+	private final Entity entity;
 	private NPCPathFinder path;
 	private Iterator<Node> pathIterator;
 	private Node last;
@@ -22,23 +21,23 @@ public class NPC
 	private int taskid;
 	private Runnable onFail;
 
-	public NPC(Entity entity)
+	public NPC(final Entity entity)
 	{
 		this.entity = entity;
 	}
 
 	public Entity getEntity()
 	{
-		return entity;
+		return this.entity;
 	}
 
 	public void removeFromWorld()
 	{
 		try
 		{
-			entity.world.removeEntity(entity);
+			this.entity.world.removeEntity(this.entity);
 		}
-		catch (Exception e)
+		catch(final Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -46,134 +45,127 @@ public class NPC
 
 	public org.bukkit.entity.Entity getBukkitEntity()
 	{
-		return entity.getBukkitEntity();
+		return this.entity.getBukkitEntity();
 	}
 
-	public void moveTo(Location l)
+	public void moveTo(final Location l)
 	{
-		getBukkitEntity().teleport(l);
+		this.getBukkitEntity().teleport(l);
 	}
 
-	public void pathFindTo(Location l, PathReturn callback)
+	public void pathFindTo(final Location l, final PathReturn callback)
 	{
-		pathFindTo(l, 3000, callback);
+		this.pathFindTo(l, 3000, callback);
 	}
 
-	public void pathFindTo(Location l, int maxIterations, PathReturn callback)
+	public void pathFindTo(final Location l, final int maxIterations, final PathReturn callback)
 	{
-		if (path != null)
-			path.cancel = true;
-		
-		if (l.getWorld() != getBukkitEntity().getWorld())
+		if(this.path != null)
+			this.path.cancel = true;
+		if(l.getWorld() != this.getBukkitEntity().getWorld())
 		{
-			ArrayList<Node> pathList = new ArrayList<Node>();
+			final ArrayList<Node> pathList = new ArrayList<Node>();
 			pathList.add(new Node(l.getBlock()));
 			callback.run(new NPCPath(null, pathList, l));
 		}
 		else
 		{
-			path = new NPCPathFinder(getBukkitEntity().getLocation(), l, maxIterations, callback);
-			path.start();
+			this.path = new NPCPathFinder(this.getBukkitEntity().getLocation(), l, maxIterations, callback);
+			this.path.start();
 		}
 	}
 
-	public void walkTo(Location l)
+	public void walkTo(final Location l)
 	{
-		walkTo(l, 3000);
+		this.walkTo(l, 3000);
 	}
 
 	public void walkTo(final Location l, final int maxIterations)
 	{
-		pathFindTo(l, maxIterations, new PathReturn()
+		this.pathFindTo(l, maxIterations, new PathReturn()
 		{
 			@Override
-			public void run(NPCPath path)
+			public void run(final NPCPath path)
 			{
-				usePath(path, new Runnable()
+				NPC.this.usePath(path, new Runnable()
 				{
 					@Override
 					public void run()
 					{
-						walkTo(l, maxIterations);
+						NPC.this.walkTo(l, maxIterations);
 					}
 				});
 			}
 		});
 	}
 
-	public void usePath(NPCPath path)
+	public void usePath(final NPCPath path)
 	{
-		usePath(path, new Runnable()
+		this.usePath(path, new Runnable()
 		{
 			@Override
 			public void run()
 			{
-				walkTo(runningPath.getEnd(), 3000);
+				NPC.this.walkTo(NPC.this.runningPath.getEnd(), 3000);
 			}
 		});
 	}
 
-	public void usePath(NPCPath path, Runnable onFail)
+	public void usePath(final NPCPath path, final Runnable onFail)
 	{
-		if (taskid == 0)
-		{
-			taskid = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(NPCManager.plugin, new Runnable()
+		if(this.taskid == 0)
+			this.taskid = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(NPCManager.plugin, new Runnable()
 			{
 				@Override
 				public void run()
 				{
-					pathStep();
+					NPC.this.pathStep();
 				}
 			}, 6L, 6L);
-		}
-		pathIterator = path.getPath().iterator();
-		runningPath = path;
+		this.pathIterator = path.getPath().iterator();
+		this.runningPath = path;
 		this.onFail = onFail;
 	}
 
 	private void pathStep()
 	{
-		if (pathIterator.hasNext())
+		if(this.pathIterator.hasNext())
 		{
-			Node n = pathIterator.next();
-			if (n.b.getWorld() != getBukkitEntity().getWorld())
-			{
-				getBukkitEntity().teleport(n.b.getLocation());
-			}
+			final Node n = this.pathIterator.next();
+			if(n.b.getWorld() != this.getBukkitEntity().getWorld())
+				this.getBukkitEntity().teleport(n.b.getLocation());
 			else
 			{
-				float angle = getEntity().yaw;
-				float look = getEntity().pitch;
-				if (last == null || runningPath.checkPath(n, last, true))
+				float angle = this.getEntity().yaw;
+				float look = this.getEntity().pitch;
+				if(this.last == null || this.runningPath.checkPath(n, this.last, true))
 				{
-					if (last != null)
+					if(this.last != null)
 					{
-						angle = (float) Math.toDegrees(Math.atan2(last.b.getX() - n.b.getX(), n.b.getZ() - last.b.getZ()));
-						look = (float) (Math.toDegrees(Math.asin(last.b.getY() - n.b.getY())) / 2);
+						angle = (float)Math.toDegrees(Math.atan2(this.last.b.getX() - n.b.getX(), n.b.getZ() - this.last.b.getZ()));
+						look = (float)(Math.toDegrees(Math.asin(this.last.b.getY() - n.b.getY())) / 2);
 					}
-					PlayerMoveEvent event = new PlayerMoveEvent(((NPCEntity)getEntity()).getBukkitEntity(), getEntity().getBukkitEntity().getLocation(), n.b.getLocation());
+					final PlayerMoveEvent event = new PlayerMoveEvent(((NPCEntity)this.getEntity()).getBukkitEntity(), this.getEntity().getBukkitEntity().getLocation(), n.b.getLocation());
 					Bukkit.getPluginManager().callEvent(event);
 					if(event.isCancelled())
 					{
 						this.path.cancel = true;
 						return;
 					}
-					getEntity().setPositionRotation(n.b.getX() + 0.5, n.b.getY(), n.b.getZ() + 0.5, angle, look);
-					((EntityPlayer)getEntity()).as = angle;
+					this.getEntity().setPositionRotation(n.b.getX() + 0.5, n.b.getY(), n.b.getZ() + 0.5, angle, look);
+					((EntityPlayer)this.getEntity()).as = angle;
 				}
 				else
-				{
-					onFail.run();
-				}
+					this.onFail.run();
 			}
-			last = n;
+			this.last = n;
 		}
 		else
 		{
-			getEntity().setPositionRotation(runningPath.getEnd().getX(), runningPath.getEnd().getY(), runningPath.getEnd().getZ(), runningPath.getEnd().getYaw(), runningPath.getEnd().getPitch());
-			((EntityPlayer)getEntity()).as = runningPath.getEnd().getYaw();
-			Bukkit.getServer().getScheduler().cancelTask(taskid);
-			taskid = 0;
+			this.getEntity().setPositionRotation(this.runningPath.getEnd().getX(), this.runningPath.getEnd().getY(), this.runningPath.getEnd().getZ(), this.runningPath.getEnd().getYaw(), this.runningPath.getEnd().getPitch());
+			((EntityPlayer)this.getEntity()).as = this.runningPath.getEnd().getYaw();
+			Bukkit.getServer().getScheduler().cancelTask(this.taskid);
+			this.taskid = 0;
 		}
 	}
 
@@ -182,8 +174,8 @@ public class NPC
 		if(this.path != null)
 		{
 			this.path.cancel = true;
-			Bukkit.getServer().getScheduler().cancelTask(taskid);
-			taskid = 0;
+			Bukkit.getServer().getScheduler().cancelTask(this.taskid);
+			this.taskid = 0;
 		}
 	}
 
@@ -191,5 +183,4 @@ public class NPC
 	{
 		return (this.pathIterator != null && this.pathIterator.hasNext()) && this.path != null && !this.path.cancel;
 	}
-
 }

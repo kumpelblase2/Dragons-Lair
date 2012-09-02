@@ -9,15 +9,15 @@ import de.kumpelblase2.dragonslair.api.Event;
 public class ChangeLevelEventExecutor implements EventExecutor
 {
 	@Override
-	public boolean executeEvent(Event e, Player p)
+	public boolean executeEvent(final Event e, final Player p)
 	{
 		try
 		{
-			int level = Integer.parseInt(e.getOption("amount"));
-			String scope = e.getOption("scope");
+			final int level = Integer.parseInt(e.getOption("amount"));
+			final String scope = e.getOption("scope");
 			if(scope == null || scope.equalsIgnoreCase("single") || scope.equalsIgnoreCase("interactor"))
 			{
-				String type = e.getOption("change_type");
+				final String type = e.getOption("change_type");
 				if(type.equals("set"))
 					p.setLevel(level);
 				else if(type.equals("add"))
@@ -27,13 +27,12 @@ public class ChangeLevelEventExecutor implements EventExecutor
 			}
 			else
 			{
-				ActiveDungeon ad = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
+				final ActiveDungeon ad = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
 				if(ad != null)
-				{
-					for(String member : ad.getCurrentParty().getMembers())
+					for(final String member : ad.getCurrentParty().getMembers())
 					{
-						Player pl = Bukkit.getPlayer(member);
-						String type = e.getOption("change_type");
+						final Player pl = Bukkit.getPlayer(member);
+						final String type = e.getOption("change_type");
 						if(type.equals("set"))
 							pl.setLevel(level);
 						else if(type.equals("add"))
@@ -41,10 +40,9 @@ public class ChangeLevelEventExecutor implements EventExecutor
 						else if(type.equals("remove"))
 							pl.setLevel(pl.getLevel() - level);
 					}
-				}
 			}
 		}
-		catch(Exception ex)
+		catch(final Exception ex)
 		{
 			DragonsLairMain.Log.warning("Unable to parse event " + e.getID());
 			DragonsLairMain.Log.warning(ex.getMessage());

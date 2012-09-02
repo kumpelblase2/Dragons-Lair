@@ -6,31 +6,38 @@ import de.kumpelblase2.dragonslair.events.BaseEvent;
 
 public class ChapterChangeEvent extends BaseEvent
 {
-	private ActiveDungeon dungeon;
-	private Chapter nextChapter;
-	
-	public ChapterChangeEvent(ActiveDungeon dungeon, Chapter chapter)
+	private final ActiveDungeon dungeon;
+	private final Chapter nextChapter;
+	private static HandlerList handlers = new HandlerList();
+
+	public ChapterChangeEvent(final ActiveDungeon dungeon, final Chapter chapter)
 	{
 		this.dungeon = dungeon;
 		this.nextChapter = chapter;
 	}
-	
+
 	public Dungeon getDungeon()
 	{
 		return this.dungeon.getInfo();
 	}
-	
+
 	public ActiveDungeon getActiveDungeon()
 	{
 		return this.dungeon;
 	}
-	
+
 	public Chapter getNextChapter()
 	{
 		return this.nextChapter;
 	}
-	
+
 	public static HandlerList getHandlerList()
+	{
+		return handlers;
+	}
+
+	@Override
+	public HandlerList getHandlers()
 	{
 		return handlers;
 	}

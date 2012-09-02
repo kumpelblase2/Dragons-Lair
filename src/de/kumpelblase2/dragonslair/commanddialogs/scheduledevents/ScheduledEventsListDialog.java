@@ -12,25 +12,25 @@ import de.kumpelblase2.dragonslair.api.ScheduledEvent;
 public class ScheduledEventsListDialog extends MessagePrompt
 {
 	private int page;
-	
-	public ScheduledEventsListDialog(int page)
+
+	public ScheduledEventsListDialog(final int page)
 	{
 		this.page = page;
 	}
-	
+
 	public ScheduledEventsListDialog()
 	{
 		this.page = 0;
 	}
 
 	@Override
-	public String getPromptText(ConversationContext arg0)
+	public String getPromptText(final ConversationContext arg0)
 	{
-		ScheduledEvent[] events = DragonsLairMain.getEventScheduler().getEvents().values().toArray(new ScheduledEvent[0]);
+		final ScheduledEvent[] events = DragonsLairMain.getEventScheduler().getEvents().values().toArray(new ScheduledEvent[0]);
 		Arrays.sort(events, new Comparator<ScheduledEvent>()
 		{
 			@Override
-			public int compare(ScheduledEvent arg0, ScheduledEvent arg1)
+			public int compare(final ScheduledEvent arg0, final ScheduledEvent arg1)
 			{
 				if(arg0.getID() > arg1.getID())
 					return 1;
@@ -42,21 +42,15 @@ public class ScheduledEventsListDialog extends MessagePrompt
 		});
 		arg0.getForWhom().sendRawMessage(ChatColor.GREEN + "There is/are " + events.length + " scheduled event(s) available:");
 		if(12 * this.page > events.length)
-		{
-			this.page = (int)(events.length / 12);
-		}
-		
+			this.page = events.length / 12;
 		for(int i = 12 * this.page; i < events.length && i < 12 * this.page + 12; i++)
-		{
 			arg0.getForWhom().sendRawMessage("   " + events[i].getID() + " - event ids:" + events[i].getEventIDString());
-		}
-		return "---------------- Page " + (this.page + 1) + "/" + ((int)(events.length / 12) + 1);
+		return "---------------- Page " + (this.page + 1) + "/" + (events.length / 12 + 1);
 	}
 
 	@Override
-	protected Prompt getNextPrompt(ConversationContext arg0)
+	protected Prompt getNextPrompt(final ConversationContext arg0)
 	{
 		return new ScheduledEventsManageDialog();
 	}
-
 }

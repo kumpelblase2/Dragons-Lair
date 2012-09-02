@@ -7,25 +7,24 @@ import de.kumpelblase2.dragonslair.utilities.GeneralUtilities;
 
 public class StorylineMessagePrompt extends MessagePrompt
 {
-	private Dialog dialog;
-	private String npcname;
-	
-	public StorylineMessagePrompt(Dialog d, String name)
+	private final Dialog dialog;
+	private final String npcname;
+
+	public StorylineMessagePrompt(final Dialog d, final String name)
 	{
 		this.dialog = d;
 		this.npcname = name;
 	}
-	
+
 	@Override
-	public String getPromptText(ConversationContext arg0)
+	public String getPromptText(final ConversationContext arg0)
 	{
 		return GeneralUtilities.replaceColors("<" + this.npcname + ">" + this.dialog.getText().replace("#player#", ((Player)arg0.getForWhom()).getName()));
 	}
 
 	@Override
-	protected Prompt getNextPrompt(ConversationContext arg0)
+	protected Prompt getNextPrompt(final ConversationContext arg0)
 	{
 		return END_OF_CONVERSATION;
 	}
-
 }

@@ -8,27 +8,24 @@ import de.kumpelblase2.dragonslair.conversation.ConversationHandler;
 
 public class NPCDialogEventExecutor implements EventExecutor
 {
-
 	@Override
-	public boolean executeEvent(Event e, Player p)
+	public boolean executeEvent(final Event e, final Player p)
 	{
-		ConversationHandler ch = DragonsLairMain.getInstance().getConversationHandler();
-		String npcid = e.getOption("npc_id");
-		String dialogid = e.getOption("dialog_id");
+		final ConversationHandler ch = DragonsLairMain.getInstance().getConversationHandler();
+		final String npcid = e.getOption("npc_id");
+		final String dialogid = e.getOption("dialog_id");
 		if(npcid == null)
 			return false;
-		
 		NPC npc = null;
 		int dialog = -1;
 		try
 		{
 			npc = DragonsLairMain.getSettings().getNPCByName(npcid);
 			if(npc == null)
-			{			
-				Integer id = Integer.parseInt(npcid);
+			{
+				final Integer id = Integer.parseInt(npcid);
 				if(!DragonsLairMain.getSettings().getNPCs().containsKey(id))
 					return false;
-				
 				npc = DragonsLairMain.getSettings().getNPCs().get(id);
 			}
 			if(dialogid == null)
@@ -36,31 +33,27 @@ public class NPCDialogEventExecutor implements EventExecutor
 			else
 				dialog = Integer.parseInt(dialogid);
 		}
-		catch(Exception ex)
+		catch(final Exception ex)
 		{
 			DragonsLairMain.Log.warning("Unable to parse event.");
 			ex.printStackTrace();
 		}
-		
 		if(npc == null)
 			return false;
-
 		if(dialog == -1)
 			dialog = 0;
-		
-		String sendTo = e.getOption("send_to");
+		final String sendTo = e.getOption("send_to");
 		if(sendTo != null && (sendTo.equalsIgnoreCase("all") || sendTo.equalsIgnoreCase("party")))
 		{
-			ActiveDungeon d = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
-			for(String playername : d.getCurrentParty().getMembers())
+			final ActiveDungeon d = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
+			for(final String playername : d.getCurrentParty().getMembers())
 			{
-				Player player = Bukkit.getPlayer(playername);
+				final Player player = Bukkit.getPlayer(playername);
 				if(ch.getConversations().containsKey(p.getName()))
 				{
 					ch.getConversations().get(playername).adandon();
 					ch.getConversations().get(playername).getConversation().abandon();
 				}
-
 				ch.startConversation(player, npc, dialog);
 			}
 		}
@@ -72,11 +65,8 @@ public class NPCDialogEventExecutor implements EventExecutor
 				if(ch.getConversations().get(p.getName()) != null && ch.getConversations().get(p.getName()).getConversation() != null)
 					ch.getConversations().get(p.getName()).getConversation().abandon();
 			}
-			
 			ch.startConversation(p, npc, dialog);
 		}
-		
 		return true;
 	}
-
 }

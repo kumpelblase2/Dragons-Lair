@@ -5,32 +5,29 @@ import org.bukkit.entity.Player;
 
 public class MapList
 {
-	private Set<MapEntry> maps = new HashSet<MapEntry>();
-	
-	public DLMap getMapOfPlayer(Player p)
+	private final Set<MapEntry> maps = new HashSet<MapEntry>();
+
+	public DLMap getMapOfPlayer(final Player p)
 	{
-		if(maps.size() == 0)
+		if(this.maps.size() == 0)
 			return null;
-		
-		for(MapEntry map : maps)
-		{
+		for(final MapEntry map : this.maps)
 			if(map.equals(p))
 				return map.getMap();
-		}
 		return null;
 	}
-	
-	public void addMap(Player p, DLMap map)
+
+	public void addMap(final Player p, final DLMap map)
 	{
 		this.maps.add(new MapEntry(map));
 	}
-	
-	public void removeMap(Player p)
+
+	public void removeMap(final Player p)
 	{
-		Iterator<MapEntry> maplist = this.maps.iterator();
+		final Iterator<MapEntry> maplist = this.maps.iterator();
 		while(maplist.hasNext())
 		{
-			MapEntry map = maplist.next();
+			final MapEntry map = maplist.next();
 			if(map.equals(p.getName()))
 			{
 				map.clear();

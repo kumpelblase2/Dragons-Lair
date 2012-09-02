@@ -11,35 +11,29 @@ import org.bukkit.map.MapView;
 public class MapEntry
 {
 	private DLMap map;
-	
-	public MapEntry(DLMap map)
+
+	public MapEntry(final DLMap map)
 	{
 		this.map = map;
 	}
-	
+
 	@Override
-	public boolean equals(Object object)
+	public boolean equals(final Object object)
 	{
 		if(object instanceof Player)
-		{
 			return this.map.getPlayer().getName().equals(((Player)object).getName());
-		}
 		else if(object instanceof DLMap)
-		{
-			return this.map.equals((DLMap)object);
-		}
+			return this.map.equals(object);
 		else if(object instanceof String)
-		{
-			return this.map.getPlayer().getName().equals((String)object);
-		}
+			return this.map.getPlayer().getName().equals(object);
 		return false;
 	}
-	
+
 	public Player getPlayer()
 	{
 		return this.map.getPlayer();
 	}
-	
+
 	public DLMap getMap()
 	{
 		return this.map;
@@ -47,15 +41,15 @@ public class MapEntry
 
 	public void clear()
 	{
-		for(ItemStack item : this.map.getPlayer().getInventory().all(Material.MAP).values())
+		for(final ItemStack item : this.map.getPlayer().getInventory().all(Material.MAP).values())
 		{
-			MapView view = Bukkit.getMap(item.getDurability());
+			final MapView view = Bukkit.getMap(item.getDurability());
 			if(view != null)
 			{
-				Iterator<MapRenderer> renderers = view.getRenderers().iterator();
+				final Iterator<MapRenderer> renderers = view.getRenderers().iterator();
 				while(renderers.hasNext())
 				{
-					MapRenderer rend = renderers.next();
+					final MapRenderer rend = renderers.next();
 					if(rend instanceof DLMapRenderer)
 						renderers.remove();
 				}

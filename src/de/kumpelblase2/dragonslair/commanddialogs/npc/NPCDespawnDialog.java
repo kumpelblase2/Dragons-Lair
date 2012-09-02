@@ -6,42 +6,38 @@ import de.kumpelblase2.dragonslair.DragonsLairMain;
 
 public class NPCDespawnDialog extends ValidatingPrompt
 {
-
 	@Override
-	public String getPromptText(ConversationContext context)
+	public String getPromptText(final ConversationContext context)
 	{
 		return ChatColor.GREEN + "Please enter the name of the npc you want to despawn:";
 	}
 
 	@Override
-	protected Prompt acceptValidatedInput(ConversationContext context, String input)
+	protected Prompt acceptValidatedInput(final ConversationContext context, final String input)
 	{
 		if(input.equals("back") || input.equals("cancel"))
 			return new NPCDespawnDialog();
-		
 		try
 		{
-			Integer id = Integer.parseInt(input);
+			final Integer id = Integer.parseInt(input);
 			DragonsLairMain.getDungeonManager().despawnNPC(id);
 		}
-		catch(Exception e)
+		catch(final Exception e)
 		{
 			DragonsLairMain.getDungeonManager().despawnNPC(input);
 		}
-		
 		context.getForWhom().sendRawMessage(ChatColor.GREEN + "NPC despawned!");
 		return new NPCManageDialog();
 	}
 
 	@Override
-	protected boolean isInputValid(ConversationContext context, String input)
+	protected boolean isInputValid(final ConversationContext context, final String input)
 	{
 		if(input.equals("back") || input.equals("cancel"))
 			return true;
-		
 		try
 		{
-			Integer id = Integer.parseInt(input);
+			final Integer id = Integer.parseInt(input);
 			if(DragonsLairMain.getSettings().getNPCs().containsKey(id))
 			{
 				if(!DragonsLairMain.getDungeonManager().getSpawnedNPCIDs().containsKey(id))
@@ -57,20 +53,15 @@ public class NPCDespawnDialog extends ValidatingPrompt
 				return false;
 			}
 		}
-		catch(Exception e)
+		catch(final Exception e)
 		{
 			if(DragonsLairMain.getSettings().getNPCByName(input) != null)
-			{
 				if(DragonsLairMain.getDungeonManager().getNPCByName(input) != null)
 					return true;
 				else
-				{
 					context.getForWhom().sendRawMessage(ChatColor.RED + "The npc isn't spawned.");
-				}
-			}
 			context.getForWhom().sendRawMessage(ChatColor.RED + "The npc doesn't exist.");
 			return false;
-		}		
+		}
 	}
-
 }

@@ -11,16 +11,14 @@ import de.kumpelblase2.npclib.nms.NpcEntityTargetEvent;
 public class DLCitizenHandler implements Listener
 {
 	@EventHandler(ignoreCancelled = true)
-	public void onNPCTalk(NPCRightClickEvent event)
+	public void onNPCTalk(final NPCRightClickEvent event)
 	{
-		NPC npc = DragonsLairMain.getSettings().getNPCByName(event.getNPC().getName());
+		final NPC npc = DragonsLairMain.getSettings().getNPCByName(event.getNPC().getName());
 		if(npc == null)
 			return;
-		
 		if(!DragonsLairMain.isWorldEnabled(event.getPlayer().getWorld().getName()))
 			return;
-		
-		EntityTargetEvent event2 = new NpcEntityTargetEvent(event.getNPC().getPlayer(), event.getPlayer(), NpcEntityTargetEvent.NpcTargetReason.NPC_RIGHTCLICKED);
+		final EntityTargetEvent event2 = new NpcEntityTargetEvent(event.getNPC().getPlayer(), event.getPlayer(), NpcEntityTargetEvent.NpcTargetReason.NPC_RIGHTCLICKED);
 		Bukkit.getPluginManager().callEvent(event2);
 		event.setCancelled(!event2.isCancelled());
 	}

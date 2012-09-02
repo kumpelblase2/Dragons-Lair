@@ -10,54 +10,42 @@ import de.kumpelblase2.dragonslair.api.Event;
 
 public class RemovePotionEffectEventExecutor implements EventExecutor
 {
-
 	@Override
-	public boolean executeEvent(Event e, Player p)
+	public boolean executeEvent(final Event e, final Player p)
 	{
 		try
 		{
-			PotionEffectType t = PotionEffectType.getByName(e.getOption("potiontype").toUpperCase().replace(" ", "_"));
-			String scope = e.getOption("scope");
-			String time = e.getOption("time");
+			final PotionEffectType t = PotionEffectType.getByName(e.getOption("potiontype").toUpperCase().replace(" ", "_"));
+			final String scope = e.getOption("scope");
+			final String time = e.getOption("time");
 			if(scope == null || scope.equalsIgnoreCase("single") || scope.equalsIgnoreCase("player"))
 			{
 				PotionEffect eff = null;
-				for(PotionEffect effect : p.getActivePotionEffects())
-				{
+				for(final PotionEffect effect : p.getActivePotionEffects())
 					if(effect.getType() == t)
-					{
 						eff = new PotionEffect(t, (time != null) ? Integer.parseInt(time) - effect.getDuration() * 20 : 0, effect.getAmplifier());
-					}
-				}
 				p.addPotionEffect(eff, true);
 			}
 			else
 			{
-				ActiveDungeon ad = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
+				final ActiveDungeon ad = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
 				if(ad != null)
-				{
-					for(String member : ad.getCurrentParty().getMembers())
+					for(final String member : ad.getCurrentParty().getMembers())
 					{
-						Player pl = Bukkit.getPlayer(member);
+						final Player pl = Bukkit.getPlayer(member);
 						PotionEffect eff = null;
-						for(PotionEffect effect : pl.getActivePotionEffects())
-						{
+						for(final PotionEffect effect : pl.getActivePotionEffects())
 							if(effect.getType() == t)
-							{
 								eff = new PotionEffect(t, (time != null) ? Integer.parseInt(time) - effect.getDuration() * 20 : 0, effect.getAmplifier());
-							}
-						}
 						pl.addPotionEffect(eff, true);
 					}
-				}
 			}
 		}
-		catch(Exception ex)
+		catch(final Exception ex)
 		{
 			DragonsLairMain.Log.warning("Unable to execute event with id: " + e.getID());
 			DragonsLairMain.Log.warning(ex.getMessage());
 		}
 		return false;
 	}
-
 }
