@@ -43,7 +43,7 @@ public class NPCEntity extends EntityPlayer
 		server.getPluginManager().callEvent(event);
 		return super.c(entity);
 	}
-
+	
 	@Override
 	public void b_(final EntityHuman entity)
 	{

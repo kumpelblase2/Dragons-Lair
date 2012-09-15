@@ -766,7 +766,7 @@ public class DLEventHandler implements Listener
 			{
 				if(pl.getName().equals(member) || playerSet.contains(pl.getName()) || (DragonsLairMain.getDungeonManager().getDungeonOfPlayer(pl.getName()) != null && !DragonsLairMain.canPlayersInteract()))
 					continue;
-				player.hidePlayer(pl);
+				player.showPlayer(pl);
 			}
 		}
 	}
