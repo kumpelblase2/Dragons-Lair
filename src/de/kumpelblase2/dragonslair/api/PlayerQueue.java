@@ -57,7 +57,7 @@ public class PlayerQueue
 		if(p == null)
 			return false;
 		for(final QueuedPlayer qp : this.players)
-			if(qp.equals(p))
+			if(qp.isPlayer(p))
 				return true;
 		return false;
 	}

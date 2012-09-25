@@ -4,7 +4,6 @@ import java.io.*;
 import java.net.URL;
 import java.sql.*;
 import java.util.*;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilderFactory;
 import net.milkbowl.vault.economy.Economy;
@@ -14,9 +13,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.w3c.dom.*;
 import de.kumpelblase2.dragonslair.Metrics.Graph;
-import de.kumpelblase2.dragonslair.api.EventActionType;
-import de.kumpelblase2.dragonslair.api.EventScheduler;
-import de.kumpelblase2.dragonslair.api.ItemTracker;
+import de.kumpelblase2.dragonslair.api.*;
 import de.kumpelblase2.dragonslair.api.eventexecutors.*;
 import de.kumpelblase2.dragonslair.conversation.ConversationHandler;
 import de.kumpelblase2.dragonslair.events.DragonsLairInitializeEvent;
@@ -433,8 +430,7 @@ public class DragonsLairMain extends JavaPlugin
 		}
 		else
 			this.getConfig().set("debug-mode", this.getConfig().getBoolean("debug-mode", false));
-		if(this.getConfig().getBoolean("debug-mode"))
-			Bukkit.getServer().getLogger().setLevel(Level.FINER);
+
 		this.getConfig().set("resurrect_money", this.getConfig().getInt("resurrect", 500));
 		this.getConfig().set("interacting_between_players", this.getConfig().getBoolean("interacting_between_players", false));
 		if(!this.getConfig().getKeys(false).contains("enabled-worlds"))

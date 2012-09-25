@@ -41,4 +41,9 @@ public class Cooldown
 		else
 			return false;
 	}
+	
+	public int hashCode()
+	{
+		return this.dungeon.length() + (int)this.endTime;
+	}
 }

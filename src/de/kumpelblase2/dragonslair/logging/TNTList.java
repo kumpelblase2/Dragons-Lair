@@ -45,6 +45,11 @@ public class TNTList
 				return l.getWorld().getName().equals(this.loc.getWorld().getName()) && l.getBlockX() == this.loc.getBlockX() && l.getBlockY() == this.loc.getBlockY() && l.getBlockZ() == this.loc.getBlockZ();
 			}
 		}
+		
+		public int hashCode()
+		{
+			return this.loc.hashCode();
+		}
 	}
 
 	public void addEntry(final String dungeon, final Location l)

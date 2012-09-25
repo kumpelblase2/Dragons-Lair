@@ -47,4 +47,9 @@ public class TriggerLocationEntry
 		final Location loc = (Location)o;
 		return this.location.getWorld().getName().equals(loc.getWorld().getName()) && this.location.getBlockX() == loc.getBlockX() && this.location.getBlockY() == loc.getBlockY() && this.location.getBlockZ() == loc.getBlockZ();
 	}
+	
+	public int hashCode()
+	{
+		return this.location.hashCode();
+	}
 }

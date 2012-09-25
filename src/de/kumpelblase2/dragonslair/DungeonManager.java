@@ -461,7 +461,7 @@ public class DungeonManager
 	public EventMonster getEventMonsterByEntity(final LivingEntity entity)
 	{
 		for(final EventMonster mob : this.spawnedEntities)
-			if(mob.equals(entity))
+			if(mob.isMob(entity))
 				return mob;
 		return null;
 	}
@@ -490,7 +490,7 @@ public class DungeonManager
 		while(spawned.hasNext())
 		{
 			final EventMonster mob = spawned.next();
-			if(mob.equals(entity))
+			if(mob.isMob(entity))
 			{
 				spawned.remove();
 				break;
