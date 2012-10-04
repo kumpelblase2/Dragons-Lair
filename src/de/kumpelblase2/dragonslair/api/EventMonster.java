@@ -38,9 +38,4 @@ public class EventMonster
 	{
 		return this.mob;
 	}
-	
-	public int hashCode()
-	{
-		return this.mob.getEntityId();
-	}
 }

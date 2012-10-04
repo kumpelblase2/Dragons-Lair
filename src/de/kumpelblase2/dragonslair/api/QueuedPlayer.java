@@ -32,9 +32,4 @@ public class QueuedPlayer
 	{
 		return this.dungeon;
 	}
-	
-	public int hashCode()
-	{
-		return this.dungeon.length() + this.player.length();
-	}
 }

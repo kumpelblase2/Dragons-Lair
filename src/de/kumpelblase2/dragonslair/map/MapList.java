@@ -28,7 +28,7 @@ public class MapList
 		while(maplist.hasNext())
 		{
 			final MapEntry map = maplist.next();
-			if(map.equals(p.getName()))
+			if(map.is(p.getName()))
 			{
 				map.clear();
 				maplist.remove();

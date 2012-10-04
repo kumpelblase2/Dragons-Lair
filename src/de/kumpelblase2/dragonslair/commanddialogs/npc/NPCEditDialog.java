@@ -46,7 +46,7 @@ public class NPCEditDialog extends ValidatingPrompt
 				return ChatColor.GREEN + "Please enter the new item for the npc's hand:";
 			else if(option.equals("armor"))
 				return ChatColor.GREEN + "Please enter the new armor (Format: headid;chestid;pantsid;shoesid)";
-			else if(this.options.equals("invincibility"))
+			else if(option.equals("invincibility"))
 				return ChatColor.GREEN + "Should the NPC be invincible?";
 			else
 				return ChatColor.GREEN + "Should the npc spawn from beginning?";

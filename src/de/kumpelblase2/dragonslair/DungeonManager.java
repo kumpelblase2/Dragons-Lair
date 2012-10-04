@@ -118,7 +118,7 @@ public class DungeonManager
 	{
 		if(t == null)
 			return;
-		final ActiveDungeon ad = this.getDungeonOfPlayer(p.getName());
+		final ActiveDungeon ad = (p == null) ? null : this.getDungeonOfPlayer(p.getName());
 		final String name = (ad == null) ? "_GENERAL_" : ad.getInfo().getName();
 		final boolean onCD = this.isOnCooldown(name, t);
 		final TriggerCallEvent event = new TriggerCallEvent(t, p, onCD);

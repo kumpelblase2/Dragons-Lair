@@ -68,9 +68,9 @@ public class ActiveDungeon
 			save.remove();
 			for(final Player pla : Bukkit.getOnlinePlayers())
 			{
-				if(pla.getName().equals(player) || playersSet.contains(pla) || (DragonsLairMain.getDungeonManager().getDungeonOfPlayer(pla.getName()) != null && !DragonsLairMain.canPlayersInteract()))
+				if(pla.getName().equals(player) || playersSet.contains(pla.getName()) || (DragonsLairMain.getDungeonManager().getDungeonOfPlayer(pla.getName()) != null && !DragonsLairMain.canPlayersInteract()))
 					continue;
-				pl.hidePlayer(pl);
+				pl.hidePlayer(pla);
 			}
 		}
 		this.currentChapter = p.getCurrentChapter();
@@ -174,7 +174,7 @@ public class ActiveDungeon
 				{
 					DragonsLairMain.getInstance().getLoggingManager().getEntriesForDungeon(this.getInfo().getName()).remove(this.getCurrentParty().getID());
 					if(DragonsLairMain.getInstance().getLoggingManager().getEntriesForDungeon(this.getInfo().getName()).size() == 0)
-						DragonsLairMain.getInstance().getLoggingManager().getEntriesForDungeon(this.getInfo().getName()).remove(this.getInfo().getName());
+						DragonsLairMain.getInstance().getLoggingManager().getEntriesForDungeon(this.getInfo().getName()).remove(this.getInfo().getID());
 				}
 				toRemove.clear();
 			}

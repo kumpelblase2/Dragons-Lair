@@ -915,7 +915,7 @@ public class DLEventHandler implements Listener
 			if(damagerDungeon != null && DragonsLairMain.canPlayersInteract())
 				event.setCancelled(true);
 		}
-		else if(pDungeon != null)
+		else
 		{
 			if(damagerDungeon == null && DragonsLairMain.canPlayersInteract())
 				event.setCancelled(true);

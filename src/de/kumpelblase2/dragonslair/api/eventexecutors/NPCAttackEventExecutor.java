@@ -26,6 +26,8 @@ public class NPCAttackEventExecutor implements EventExecutor
 			}
 			final String target = e.getOption("target");
 			final HumanNPC npc = DragonsLairMain.getDungeonManager().getNPCByID(n.getID());
+			if(npc == null)
+				return false;
 			List<EntityType> types = new ArrayList<EntityType>();
 			if(target == null || target.equals("enemy"))
 				types = Arrays.asList(new EntityType[] { EntityType.PLAYER });
