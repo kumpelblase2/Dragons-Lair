@@ -31,6 +31,7 @@ public class Trigger
 				final String[] optionSplitt = options.split(";");
 				this.type_options = new Option[optionSplitt.length];
 				for(int i = 0; i < optionSplitt.length; i++)
+				{
 					try
 					{
 						final String[] splitt = optionSplitt[i].split(":");
@@ -40,15 +41,18 @@ public class Trigger
 					{
 						DragonsLairMain.Log.warning("Unable to parse trigger option: " + optionSplitt[i]);
 					}
+				}
 			}
 			else
 				this.type_options = new Option[0];
+			
 			final String eventsString = result.getString(TableColumns.Triggers.ACTION_EVENT_ID);
-			if(eventsString.contains(";"))
+			if(eventsString != null && eventsString.contains(";"))
 			{
 				final String[] eventsSplitt = eventsString.split(";");
 				final Integer[] eventIDs = new Integer[eventsSplitt.length];
 				for(int i = 0; i < eventsSplitt.length; i++)
+				{
 					try
 					{
 						eventIDs[i] = Integer.parseInt(eventsSplitt[i]);
@@ -58,9 +62,12 @@ public class Trigger
 						DragonsLairMain.Log.warning("Unable to parse event id " + eventsSplitt[i]);
 						continue;
 					}
+				}
+				
 				this.events = new ArrayList<Integer>(Arrays.asList(eventIDs));
 			}
 			else
+			{
 				try
 				{
 					if(eventsString != null && !eventsString.equals(""))
@@ -73,6 +80,8 @@ public class Trigger
 				{
 					DragonsLairMain.Log.warning("Unable to parse event id " + eventsString);
 				}
+			}
+			
 			final String cooldownString = result.getString(TableColumns.Triggers.COOLDOWNS);
 			if(cooldownString != null && cooldownString.length() > 0)
 			{

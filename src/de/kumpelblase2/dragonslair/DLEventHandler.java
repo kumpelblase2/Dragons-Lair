@@ -894,8 +894,10 @@ public class DLEventHandler implements Listener
 	public void onPlayerJoin(final PlayerJoinEvent event)
 	{
 		for(final Player p : Bukkit.getOnlinePlayers())
+		{
 			if(DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName()) != null && !DragonsLairMain.canPlayersInteract())
 				event.getPlayer().hidePlayer(p);
+		}
 	}
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
@@ -903,6 +905,7 @@ public class DLEventHandler implements Listener
 	{
 		if(!(event.getEntity() instanceof Player) || !(event.getDamager() instanceof Player))
 			return;
+		
 		final Player p = (Player)event.getEntity();
 		final Player damager = (Player)event.getDamager();
 		final ActiveDungeon pDungeon = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
@@ -913,9 +916,11 @@ public class DLEventHandler implements Listener
 				event.setCancelled(true);
 		}
 		else if(pDungeon != null)
+		{
 			if(damagerDungeon == null && DragonsLairMain.canPlayersInteract())
 				event.setCancelled(true);
 			else if(!pDungeon.getInfo().getName().equals(damagerDungeon.getInfo().getName()) && DragonsLairMain.canPlayersInteract())
 				event.setCancelled(true);
+		}
 	}
 }

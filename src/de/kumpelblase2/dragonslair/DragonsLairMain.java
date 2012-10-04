@@ -287,8 +287,10 @@ public class DragonsLairMain extends JavaPlugin
 		{
 			final InputStream stream = this.getConfig().getString("db.type").equals("mysql") ? DragonsLairMain.class.getResourceAsStream("/resources/rev" + nextRev + ".txt") : DragonsLairMain.class.getResourceAsStream("/resources/rev" + nextRev + "_sqlite.txt");
 			if(stream == null && !this.getConfig().getString("db.type").equals("mysql"))
+			{
 				if(DragonsLairMain.class.getResourceAsStream("/resources/rev" + nextRev + ".txt") != null)
 					return;
+			}
 			final BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
 			String s = "";
 			while((s = reader.readLine()) != null)
@@ -302,7 +304,7 @@ public class DragonsLairMain extends JavaPlugin
 	}
 
 	public static PreparedStatement createStatement(final String query)
-	{
+	{	
 		final Connection conn = getInstance().getMysqlConnection();
 		try
 		{

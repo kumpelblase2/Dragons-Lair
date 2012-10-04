@@ -87,11 +87,16 @@ public final class EnumChange
 		Field valuesField = null;
 		final Field[] fields = enumType.getDeclaredFields();
 		for(final Field field : fields)
+		{
 			if(field.getName().contains("$VALUES"))
 			{
 				valuesField = field;
 				break;
 			}
+		}
+		if(valuesField == null)
+			return;
+		
 		AccessibleObject.setAccessible(new Field[] { valuesField }, true);
 		try
 		{
@@ -125,11 +130,15 @@ public final class EnumChange
 		Field valuesField = null;
 		final Field[] fields = enumType.getDeclaredFields();
 		for(final Field field : fields)
+		{
 			if(field.getName().contains("$VALUES"))
 			{
 				valuesField = field;
 				break;
 			}
+		}
+		if(valuesField == null)
+			return;
 		AccessibleObject.setAccessible(new Field[] { valuesField }, true);
 		try
 		{
