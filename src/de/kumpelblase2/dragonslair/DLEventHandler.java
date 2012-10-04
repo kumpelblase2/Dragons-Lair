@@ -115,12 +115,19 @@ public class DLEventHandler implements Listener
 			{
 				if(!this.triggers.containsKey(TriggerType.NPC_INTERACT))
 					return;
+				
+				final ActiveDungeon dungeon = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(((Player)event.getTarget()).getName());
 				final NPC npc = DragonsLairMain.getDungeonManager().getNPCByNPCEntity(event.getEntity());
 				for(final Trigger t : this.triggers.get(TriggerType.NPC_INTERACT))
 				{
 					final String npcid = t.getOption("npc_id");
 					if(npcid == null)
 						continue;
+					
+					final String dungeonID = t.getOption("dungeon_id");		
+					if(dungeon != null && dungeonID != null && (!dungeonID.equals("" + dungeon.getInfo().getID()) || !dungeonID.equals("" + dungeon.getInfo().getName())))
+						continue;
+					
 					if(npcid.equals(npc.getID() + ""))
 						DragonsLairMain.getDungeonManager().callTrigger(t, (Player)event.getTarget());
 				}
@@ -130,11 +137,17 @@ public class DLEventHandler implements Listener
 				if(!this.triggers.containsKey(TriggerType.NPC_TOUCH))
 					return;
 				final NPC npc = DragonsLairMain.getDungeonManager().getNPCByNPCEntity(event.getEntity());
+				final ActiveDungeon dungeon = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(((Player)event.getTarget()).getName());
 				for(final Trigger t : this.triggers.get(TriggerType.NPC_TOUCH))
 				{
 					final String npcid = t.getOption("npc_id");
 					if(npcid == null)
 						continue;
+					
+					final String dungeonID = t.getOption("dungeon_id");		
+					if(dungeon != null && dungeonID != null && (!dungeonID.equals("" + dungeon.getInfo().getID()) || !dungeonID.equals("" + dungeon.getInfo().getName())))
+						continue;
+					
 					if(npcid.equals(npc.getID() + ""))
 						DragonsLairMain.getDungeonManager().callTrigger(t, (Player)event.getTarget());
 				}
@@ -151,6 +164,7 @@ public class DLEventHandler implements Listener
 		if(!DragonsLairMain.isWorldEnabled(event.getDamager().getWorld().getName()))
 			return;
 		final NPC npc = DragonsLairMain.getDungeonManager().getNPCByNPCEntity(event.getEntity());
+		final ActiveDungeon dungeon = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(((Player)event.getDamager()).getName());
 		for(final Trigger t : this.triggers.get(TriggerType.NPC_DAMAGE))
 		{
 			final String npcid = t.getOption("npc_id");
@@ -159,8 +173,14 @@ public class DLEventHandler implements Listener
 			try
 			{
 				final Integer id = Integer.parseInt(npcid);
-				if(id == npc.getID())
-					DragonsLairMain.getDungeonManager().callTrigger(t, (Player)event.getDamager());
+				if(id != npc.getID())
+					continue;
+				
+				final String dungeonID = t.getOption("dungeon_id");		
+				if(dungeon != null && dungeonID != null && (!dungeonID.equals("" + dungeon.getInfo().getID()) || !dungeonID.equals("" + dungeon.getInfo().getName())))
+					continue;
+				
+				DragonsLairMain.getDungeonManager().callTrigger(t, (Player)event.getDamager());
 			}
 			catch(final Exception e)
 			{
@@ -185,10 +205,21 @@ public class DLEventHandler implements Listener
 		if(this.locations.size() > 0)
 		{
 			final Location newLoc = new Location(p.getWorld(), to.getBlockX(), to.getY(), to.getBlockZ());
+			final ActiveDungeon dungeon = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(event.getPlayer().getName());
 			for(final TriggerLocationEntry entry : this.locations)
+			{
 				if(entry.equals(newLoc))
+				{
 					for(final Trigger t : entry.getTriggersForType(TriggerType.MOVEMENT))
+					{
+						final String dungeonID = t.getOption("dungeon_id");		
+						if(dungeon != null && dungeonID != null && (!dungeonID.equals("" + dungeon.getInfo().getID()) || !dungeonID.equals("" + dungeon.getInfo().getName())))
+							continue;
+						
 						DragonsLairMain.getDungeonManager().callTrigger(t, p);
+					}
+				}
+			}
 		}
 	}
 
@@ -198,10 +229,17 @@ public class DLEventHandler implements Listener
 		if(!DragonsLairMain.isWorldEnabled(((Player)event.getConversation().getForWhom()).getWorld().getName()))
 			return;
 		if(this.triggers.containsKey(TriggerType.DIALOG_OCCUR))
+		{
+			final ActiveDungeon dungeon = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(event.getPlayer().getName());
 			for(final Trigger t : this.triggers.get(TriggerType.DIALOG_OCCUR))
 			{
 				if(!t.getOption("npc_id").equals(event.getNPC().getID() + ""))
 					continue;
+				
+				final String dungeonID = t.getOption("dungeon_id");		
+				if(dungeon != null && dungeonID != null && (!dungeonID.equals("" + dungeon.getInfo().getID()) || !dungeonID.equals("" + dungeon.getInfo().getName())))
+					continue;
+				
 				if(t.getOption("dialog_id") != null)
 				{
 					final String id = t.getOption("dialog_id");
@@ -209,6 +247,7 @@ public class DLEventHandler implements Listener
 						DragonsLairMain.getDungeonManager().callTrigger(t, (Player)event.getConversation().getForWhom());
 				}
 			}
+		}
 	}
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -236,10 +275,18 @@ public class DLEventHandler implements Listener
 			DragonsLairMain.getInstance().getLoggingManager().logBlockPlace(ad, event.getBlock().getState());
 		if(event.getBlock().getType() == Material.TNT)
 			this.tntList.addEntry(ad.getInfo().getName(), placed);
+		
+		final ActiveDungeon dungeon = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(event.getPlayer().getName());
 		for(final TriggerLocationEntry entry : this.locations)
+		{
 			if(entry.equals(event.getBlock().getLocation()))
+			{
 				for(final Trigger t : entry.getTriggersForType(TriggerType.BLOCK_PLACE))
 				{
+					final String dungeonID = t.getOption("dungeon_id");		
+					if(dungeon != null && dungeonID != null && (!dungeonID.equals("" + dungeon.getInfo().getID()) || !dungeonID.equals("" + dungeon.getInfo().getName())))
+						continue;
+					
 					final String block_id = t.getOption("block_id");
 					if(block_id != null)
 						try
@@ -259,6 +306,8 @@ public class DLEventHandler implements Listener
 						}
 					DragonsLairMain.getDungeonManager().callTrigger(t, p);
 				}
+			}
+		}
 	}
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
@@ -307,6 +356,10 @@ public class DLEventHandler implements Listener
 			if(entry.equals(placed.getLocation()))
 				for(final Trigger t : entry.getTriggersForType(TriggerType.BLOCK_BREAK))
 				{
+					final String dungeonID = t.getOption("dungeon_id");		
+					if(ad != null && dungeonID != null && (!dungeonID.equals("" + ad.getInfo().getID()) || !dungeonID.equals("" + ad.getInfo().getName())))
+						continue;
+					
 					final String block_id = t.getOption("block_id");
 					if(block_id != null)
 						try
@@ -371,12 +424,21 @@ public class DLEventHandler implements Listener
 		final Location interacted = interactedBlock.getLocation();
 		if(!DragonsLairMain.isWorldEnabled(interacted.getWorld().getName()))
 			return;
+		
+		final ActiveDungeon dungeon = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(event.getPlayer().getName());
 		for(final TriggerLocationEntry entry : this.locations)
+		{
 			if(entry.equals(interactedBlock.getLocation()))
+			{
 				for(final Trigger t : entry.getTriggersForType(TriggerType.BLOCK_INTERACT))
 				{
+					final String dungeonID = t.getOption("dungeon_id");		
+					if(dungeon != null && dungeonID != null && (!dungeonID.equals("" + dungeon.getInfo().getID()) || !dungeonID.equals("" + dungeon.getInfo().getName())))
+						continue;
+					
 					final String block_id = t.getOption("block_id");
 					if(block_id != null)
+					{
 						try
 						{
 							final int id = Integer.parseInt(block_id);
@@ -392,8 +454,11 @@ public class DLEventHandler implements Listener
 								if(interactedBlock.getType() != m)
 									continue;
 						}
+					}
 					DragonsLairMain.getDungeonManager().callTrigger(t, p);
 				}
+			}
+		}
 	}
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -712,8 +777,13 @@ public class DLEventHandler implements Listener
 		final Material outcome = event.getRecipe().getResult().getType();
 		if(!this.triggers.containsKey(TriggerType.ITEM_CRAFT))
 			return;
+		final ActiveDungeon dungeon = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(event.getView().getPlayer().getName());
 		for(final Trigger t : this.triggers.get(TriggerType.ITEM_CRAFT))
 		{
+			final String dungeonID = t.getOption("dungeon_id");		
+			if(dungeon != null && dungeonID != null && (!dungeonID.equals("" + dungeon.getInfo().getID()) || !dungeonID.equals("" + dungeon.getInfo().getName())))
+				continue;
+			
 			Material m;
 			try
 			{
@@ -729,7 +799,7 @@ public class DLEventHandler implements Listener
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
-	public void onRespawn(final PlayerRespawnEvent event) // TODO should this really happen when a player dies? Maybe something like a ghost mode or being able to get revived?
+	public void onRespawn(final PlayerRespawnEvent event)
 	{
 		final ActiveDungeon ad = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(event.getPlayer().getName());
 		if(ad != null)
@@ -766,7 +836,7 @@ public class DLEventHandler implements Listener
 			{
 				if(pl.getName().equals(member) || playerSet.contains(pl.getName()) || (DragonsLairMain.getDungeonManager().getDungeonOfPlayer(pl.getName()) != null && !DragonsLairMain.canPlayersInteract()))
 					continue;
-				player.hidePlayer(pl);
+				player.showPlayer(pl);
 			}
 		}
 	}
@@ -824,8 +894,10 @@ public class DLEventHandler implements Listener
 	public void onPlayerJoin(final PlayerJoinEvent event)
 	{
 		for(final Player p : Bukkit.getOnlinePlayers())
+		{
 			if(DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName()) != null && !DragonsLairMain.canPlayersInteract())
 				event.getPlayer().hidePlayer(p);
+		}
 	}
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
@@ -833,6 +905,7 @@ public class DLEventHandler implements Listener
 	{
 		if(!(event.getEntity() instanceof Player) || !(event.getDamager() instanceof Player))
 			return;
+		
 		final Player p = (Player)event.getEntity();
 		final Player damager = (Player)event.getDamager();
 		final ActiveDungeon pDungeon = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
@@ -842,10 +915,12 @@ public class DLEventHandler implements Listener
 			if(damagerDungeon != null && DragonsLairMain.canPlayersInteract())
 				event.setCancelled(true);
 		}
-		else if(pDungeon != null)
+		else
+		{
 			if(damagerDungeon == null && DragonsLairMain.canPlayersInteract())
 				event.setCancelled(true);
 			else if(!pDungeon.getInfo().getName().equals(damagerDungeon.getInfo().getName()) && DragonsLairMain.canPlayersInteract())
 				event.setCancelled(true);
+		}
 	}
 }

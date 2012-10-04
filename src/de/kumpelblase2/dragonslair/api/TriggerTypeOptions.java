@@ -6,25 +6,25 @@ public enum TriggerTypeOptions
 {
 	BLOCK_PLACE(
 			new String[] { "world", "x", "y", "z" },
-			new String[] { "block_id", "x2", "y2", "z2" }),
+			new String[] { "block_id", "x2", "y2", "z2", "dungeon_id" }),
 	NPC_INTERACT(
 			new String[] { "npc_id" },
-			new String[0]),
+			new String[] { "dungeon_id" }),
 	MOVEMENT(
 			new String[] { "world", "x", "y", "z" },
-			new String[] { "x2", "y2", "z2" }),
+			new String[] { "x2", "y2", "z2", "dungeon_id" }),
 	BLOCK_BREAK(
 			new String[] { "world", "x", "y", "z" },
-			new String[] { "block_id", "x2", "y2", "z2" }),
+			new String[] { "block_id", "x2", "y2", "z2", "dungeon_id" }),
 	NPC_TOUCH(
 			new String[] { "npc_id" },
-			new String[0]),
+			new String[] { "dungeon_id" }),
 	DIALOG_OCCUR(
 			new String[] { "npc_id", "dialog_id" },
 			new String[0]),
 	BLOCK_INTERACT(
 			new String[] { "world", "x", "y", "z" },
-			new String[] { "block_id", "x2", "y2", "z2" }),
+			new String[] { "block_id", "x2", "y2", "z2", "dungeon_id" }),
 	CHAPTER_CHANGE(
 			new String[] { "chapter_id" },
 			new String[] { "dungeon_id" }),
@@ -33,7 +33,7 @@ public enum TriggerTypeOptions
 			new String[] { "dungeon_id" }),
 	NPC_DAMAGE(
 			new String[] { "npc_id" },
-			new String[0]),
+			new String[] { "dungeon_id" }),
 	GATHER_ITEM(
 			new String[] { "item_id", "amount" },
 			new String[] { "dungeon_id" }),
@@ -48,7 +48,7 @@ public enum TriggerTypeOptions
 			new String[] { "dungeon_id" }),
 	ITEM_CRAFT(
 			new String[] { "item_id" },
-			new String[0]);
+			new String[] { "dungeon_id" });
 	private String[] requiredOptions;
 	private String[] optionalOptions;
 	private final String[] generalOptions = new String[] { "delay", "cooldown" };

@@ -212,7 +212,7 @@ public class NPCManager
 
 	public NPC getNPC(final String id)
 	{
-		return this.npcs.get(id);
+		return this.npcs.get(Integer.parseInt(id));
 	}
 
 	public boolean isNPC(final org.bukkit.entity.Entity e)

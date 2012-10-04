@@ -4,15 +4,15 @@ import org.bukkit.conversations.Conversation;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 
-public class ConversationStartEvent extends ConversationNextDialogEvent
+public class ConversationEndEvent extends ConversationEvent
 {
 	private static HandlerList handlers = new HandlerList();
-
-	public ConversationStartEvent(final Player inPlayer, final int inID, final Conversation inConv, final int next)
+	
+	public ConversationEndEvent(Player inPlayer, int inID, Conversation inConv)
 	{
-		super(inPlayer, inID, inConv, next);
+		super(inPlayer, inID, inConv);
 	}
-
+	
 	public static HandlerList getHandlerList()
 	{
 		return handlers;

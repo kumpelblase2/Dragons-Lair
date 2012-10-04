@@ -2,7 +2,7 @@ package de.kumpelblase2.npclib.nms;
 
 // original provided by Topcat, modified by kumpelblase2
 import net.minecraft.server.*;
-import org.bukkit.craftbukkit.CraftServer;
+import org.bukkit.Bukkit;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityTargetEvent;
@@ -39,27 +39,24 @@ public class NPCEntity extends EntityPlayer
 	public boolean c(final EntityHuman entity)
 	{
 		final EntityTargetEvent event = new NpcEntityTargetEvent(this.getBukkitEntity(), entity.getBukkitEntity(), NpcEntityTargetEvent.NpcTargetReason.NPC_RIGHTCLICKED);
-		final CraftServer server = ((WorldServer)this.world).getServer();
-		server.getPluginManager().callEvent(event);
+		Bukkit.getPluginManager().callEvent(event);
 		return super.c(entity);
 	}
-
+	
 	@Override
 	public void b_(final EntityHuman entity)
 	{
 		if((this.lastBounceId != entity.id || System.currentTimeMillis() - this.lastBounceTick > 1000) && entity.getBukkitEntity().getLocation().distanceSquared(this.getBukkitEntity().getLocation()) <= 1)
 		{
 			final EntityTargetEvent event = new NpcEntityTargetEvent(this.getBukkitEntity(), entity.getBukkitEntity(), NpcEntityTargetEvent.NpcTargetReason.NPC_BOUNCED);
-			final CraftServer server = ((WorldServer)this.world).getServer();
-			server.getPluginManager().callEvent(event);
+			Bukkit.getPluginManager().callEvent(event);
 			this.lastBounceTick = System.currentTimeMillis();
 			this.lastBounceId = entity.id;
 		}
 		if(this.lastTargetId == -1 || this.lastTargetId != entity.id)
 		{
 			final EntityTargetEvent event = new NpcEntityTargetEvent(this.getBukkitEntity(), entity.getBukkitEntity(), NpcEntityTargetEvent.NpcTargetReason.CLOSEST_PLAYER);
-			final CraftServer server = ((WorldServer)this.world).getServer();
-			server.getPluginManager().callEvent(event);
+			Bukkit.getPluginManager().callEvent(event);
 			this.lastTargetId = entity.id;
 		}
 		super.b_(entity);
@@ -71,8 +68,7 @@ public class NPCEntity extends EntityPlayer
 		if(this.lastBounceId != entity.id || System.currentTimeMillis() - this.lastBounceTick > 1000)
 		{
 			final EntityTargetEvent event = new NpcEntityTargetEvent(this.getBukkitEntity(), entity.getBukkitEntity(), NpcEntityTargetEvent.NpcTargetReason.NPC_BOUNCED);
-			final CraftServer server = ((WorldServer)this.world).getServer();
-			server.getPluginManager().callEvent(event);
+			Bukkit.getPluginManager().callEvent(event);
 			this.lastBounceTick = System.currentTimeMillis();
 		}
 		this.lastBounceId = entity.id;
@@ -85,8 +81,7 @@ public class NPCEntity extends EntityPlayer
 		if(damage.getEntity() instanceof EntityPlayer)
 		{
 			final EntityDamageByEntityEvent event = new NpcDamageEvent(this.getBukkitEntity(), damage.getEntity().getBukkitEntity(), DamageCause.ENTITY_ATTACK, i);
-			final CraftServer server = ((WorldServer)this.world).getServer();
-			server.getPluginManager().callEvent(event);
+			Bukkit.getPluginManager().callEvent(event);
 			if(event.isCancelled())
 				return 0;
 			i = event.getDamage();

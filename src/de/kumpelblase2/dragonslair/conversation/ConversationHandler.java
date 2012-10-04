@@ -14,13 +14,13 @@ public class ConversationHandler implements ConversationAbandonedListener
 	private final Set<String> safeWordConversations = new HashSet<String>();
 	private final Set<String> respawnConversations = new HashSet<String>();
 
-	public static Prompt getPromptByID(final int id, final String npc)
+	public static Prompt getPromptByID(final int id, final NPC inNPC)
 	{
 		final Dialog d = DragonsLairMain.getSettings().getDialogs().get(id);
 		if(d.getType() == DialogType.MESSAGE)
-			return new StorylineMessagePrompt(d, npc);
+			return new StorylineMessagePrompt(d, inNPC);
 		else
-			return new StorylineQuestionPromt(d, npc);
+			return new StorylineQuestionPromt(d, inNPC);
 	}
 
 	public Map<String, NPCConversation> getConversations()
@@ -33,8 +33,8 @@ public class ConversationHandler implements ConversationAbandonedListener
 		if(this.isInConversation(p))
 			p.abandonConversation(this.conversations.get(p.getName()).getConversation());
 		final ConversationFactory f = DragonsLairMain.getDungeonManager().getConversationFactory();
-		final Conversation c = f.withFirstPrompt(ConversationHandler.getPromptByID(dialogID, n.getName())).buildConversation(p);
-		final ConversationStartEvent event = new ConversationStartEvent(n.getName(), c, dialogID);
+		final Conversation c = f.withFirstPrompt(ConversationHandler.getPromptByID(dialogID, n)).buildConversation(p);
+		final ConversationStartEvent event = new ConversationStartEvent(p, n.getID(), c, dialogID);
 		Bukkit.getPluginManager().callEvent(event);
 		if(event.isCancelled())
 		{

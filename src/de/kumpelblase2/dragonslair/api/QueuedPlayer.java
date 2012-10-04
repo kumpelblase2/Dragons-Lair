@@ -14,8 +14,7 @@ public class QueuedPlayer
 		this.player = p.getName();
 	}
 
-	@Override
-	public boolean equals(final Object object)
+	public boolean isPlayer(final Object object)
 	{
 		if(object instanceof String)
 			return this.player.equals(object);

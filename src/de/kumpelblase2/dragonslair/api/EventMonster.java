@@ -15,8 +15,7 @@ public class EventMonster
 		this.mob = entity;
 	}
 
-	@Override
-	public boolean equals(final Object object)
+	public boolean isMob(final Object object)
 	{
 		if(object instanceof LivingEntity)
 			return this.mob.equals(object);

@@ -17,8 +17,7 @@ public class MapEntry
 		this.map = map;
 	}
 
-	@Override
-	public boolean equals(final Object object)
+	public boolean is(final Object object)
 	{
 		if(object instanceof Player)
 			return this.map.getPlayer().getName().equals(((Player)object).getName());
@@ -56,5 +55,10 @@ public class MapEntry
 			}
 		}
 		this.map = null;
+	}
+	
+	public int hashCode()
+	{
+		return this.map.getPlayer().getEntityId();
 	}
 }
