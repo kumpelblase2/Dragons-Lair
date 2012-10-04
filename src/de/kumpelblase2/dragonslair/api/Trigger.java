@@ -254,7 +254,7 @@ public class Trigger
 	{
 		try
 		{
-			final PreparedStatement st = DragonsLairMain.createStatement("DELETE FROM " + Tables.TRIGGERS + " WHERE `trigger_ id` = ?");
+			final PreparedStatement st = DragonsLairMain.createStatement("DELETE FROM " + Tables.TRIGGERS + " WHERE `trigger_id` = ?");
 			st.setInt(1, this.getID());
 			st.execute();
 		}
