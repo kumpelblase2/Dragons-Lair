@@ -123,7 +123,7 @@ public class HumanNPC extends NPC
 	public void setYaw(final float newYaw)
 	{
 		this.getEntity().yaw = newYaw;
-		((EntityPlayer)this.getEntity()).as = newYaw;
+		((EntityPlayer)this.getEntity()).ay = newYaw;
 	}
 
 	public void setPitch(final float newPitch)
