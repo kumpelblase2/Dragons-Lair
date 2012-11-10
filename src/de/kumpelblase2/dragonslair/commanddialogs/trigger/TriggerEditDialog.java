@@ -128,8 +128,9 @@ public class TriggerEditDialog extends ValidatingPrompt
 			}
 			else if(option.equals("type"))
 			{
-				this.t.setType(TriggerType.valueOf(arg1));
+				this.t.setType(TriggerType.valueOf(arg1.toUpperCase().replace(" ", "_")));
 				this.t.save();
+				DragonsLairMain.getInstance().getEventHandler().reloadTriggers();
 				arg0.setSessionData("trigger_id", null);
 				arg0.setSessionData("option", null);
 				return new TriggerManageDialog();

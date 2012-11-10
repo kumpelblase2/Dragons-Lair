@@ -153,7 +153,7 @@ public class NPC
 						return;
 					}
 					this.getEntity().setPositionRotation(n.b.getX() + 0.5, n.b.getY(), n.b.getZ() + 0.5, angle, look);
-					((EntityPlayer)this.getEntity()).as = angle;
+					((EntityPlayer)this.getEntity()).ay = angle;
 				}
 				else
 					this.onFail.run();
@@ -163,7 +163,7 @@ public class NPC
 		else
 		{
 			this.getEntity().setPositionRotation(this.runningPath.getEnd().getX(), this.runningPath.getEnd().getY(), this.runningPath.getEnd().getZ(), this.runningPath.getEnd().getYaw(), this.runningPath.getEnd().getPitch());
-			((EntityPlayer)this.getEntity()).as = this.runningPath.getEnd().getYaw();
+			((EntityPlayer)this.getEntity()).ay = this.runningPath.getEnd().getYaw();
 			Bukkit.getServer().getScheduler().cancelTask(this.taskid);
 			this.taskid = 0;
 		}
