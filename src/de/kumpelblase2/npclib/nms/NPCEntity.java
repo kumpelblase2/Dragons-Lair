@@ -36,15 +36,15 @@ public class NPCEntity extends EntityPlayer
 	}
 
 	@Override
-	public boolean c(final EntityHuman entity)
+	public boolean a(final EntityHuman entity)
 	{
 		final EntityTargetEvent event = new NpcEntityTargetEvent(this.getBukkitEntity(), entity.getBukkitEntity(), NpcEntityTargetEvent.NpcTargetReason.NPC_RIGHTCLICKED);
 		Bukkit.getPluginManager().callEvent(event);
-		return super.c(entity);
+		return super.a(entity);
 	}
 	
 	@Override
-	public void b_(final EntityHuman entity)
+	public void c_(final EntityHuman entity)
 	{
 		if((this.lastBounceId != entity.id || System.currentTimeMillis() - this.lastBounceTick > 1000) && entity.getBukkitEntity().getLocation().distanceSquared(this.getBukkitEntity().getLocation()) <= 1)
 		{
@@ -59,7 +59,7 @@ public class NPCEntity extends EntityPlayer
 			Bukkit.getPluginManager().callEvent(event);
 			this.lastTargetId = entity.id;
 		}
-		super.b_(entity);
+		super.c_(entity);
 	}
 
 	@Override

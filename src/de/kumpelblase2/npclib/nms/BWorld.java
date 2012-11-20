@@ -77,16 +77,6 @@ public class BWorld
 		return this.wProvider;
 	}
 
-	/*public boolean createExplosion(final double x, final double y, final double z, final float power)
-	{
-		return this.wServer.explode(null, x, y, z, power).wasCanceled ? false : true;
-	}
-
-	public boolean createExplosion(final Location l, final float power)
-	{
-		return this.wServer.explode(null, l.getX(), l.getY(), l.getZ(), power).wasCanceled ? false : true;
-	}*/
-
 	@SuppressWarnings("unchecked")
 	public void removeEntity(final String name, final Player player, final JavaPlugin plugin)
 	{
