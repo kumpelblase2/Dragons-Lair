@@ -17,6 +17,10 @@
       <id>spout-repo</id>
       <url>http://repo.spout.org</url>
     </repository>
+    <repository>
+    	<id>remoteentities</id>
+    	<url>http://repo.infinityblade.de/remoteentities/releases</url>
+    </repository>
   </repositories>
   <build>
     <sourceDirectory>src</sourceDirectory>
@@ -73,6 +77,11 @@
     	<version>1.2.1</version>
     	<scope>system</scope>
     	<systemPath>${basedir}/libs/Citizens.jar</systemPath>
+    </dependency>
+    <dependency>
+    	<groupId>de.kumpelblase2</groupId>
+    	<artifactId>remoteentities</artifactId>
+    	<version>1.1.1</version>
     </dependency>
   </dependencies>
 </project>

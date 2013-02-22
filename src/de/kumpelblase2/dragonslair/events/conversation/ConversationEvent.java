@@ -6,12 +6,12 @@ import org.bukkit.event.HandlerList;
 import de.kumpelblase2.dragonslair.DragonsLairMain;
 import de.kumpelblase2.dragonslair.api.NPC;
 import de.kumpelblase2.dragonslair.events.BaseEvent;
-import de.kumpelblase2.npclib.entity.HumanNPC;
+import de.kumpelblase2.remoteentities.api.RemoteEntity;
 
 public class ConversationEvent extends BaseEvent
 {
 	protected final NPC npc;
-	protected final HumanNPC hnpc;
+	protected final RemoteEntity hnpc;
 	protected final Conversation conv;
 	protected final Player player;
 	private static HandlerList handlers = new HandlerList();
@@ -19,7 +19,7 @@ public class ConversationEvent extends BaseEvent
 	public ConversationEvent(final Player inPlayer, final int inID, final Conversation inConv)
 	{
 		this.npc = DragonsLairMain.getSettings().getNPCs().get(inID);
-		this.hnpc = DragonsLairMain.getDungeonManager().getNPCByID(inID);
+		this.hnpc = DragonsLairMain.getDungeonManager().getNPCManager().getByDatabaseID(inID);
 		this.conv = inConv;
 		this.player = inPlayer;
 	}
@@ -29,7 +29,7 @@ public class ConversationEvent extends BaseEvent
 		return this.npc;
 	}
 
-	public HumanNPC getNPCEntity()
+	public RemoteEntity getNPCEntity()
 	{
 		return this.hnpc;
 	}

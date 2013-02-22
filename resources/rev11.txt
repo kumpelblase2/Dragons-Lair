@@ -1,0 +1,1 @@
+ALTER TABLE `npcs` ADD COLUMN `npc_type` enum('Human','Zombie','Spider','Creeper','Blaze','Skeleton','CaveSpider','Chicken','Cow','EnderDragon','Enderman','Ghast','IronGolem','LavaSlime','Mushroom','Ocelot','Pig','Pigmen','Sheep','Silverfish','Slime','Snowman','Squid','Villager','Wolf','Wither','Witch','Bat') AFTER `npc_invincible`;

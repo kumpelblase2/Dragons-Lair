@@ -31,7 +31,7 @@ public class DragonsLairMain extends JavaPlugin
 	private DLEventHandler eventHandler;
 	private ConversationHandler conversationHandler;
 	private LoggingManager logManager;
-	private final int DATABASE_REV = 10;
+	private final int DATABASE_REV = 11;
 	private boolean citizensEnabled = false;
 	private boolean economyEnabled = false;
 	private EventScheduler eventScheduler;
@@ -391,7 +391,7 @@ public class DragonsLairMain extends JavaPlugin
 				@Override
 				public int getValue()
 				{
-					return DragonsLairMain.getDungeonManager().getNPCManager().getSpawnedNPCIDs().size();
+					return DragonsLairMain.getDungeonManager().getNPCManager().getAllEntities().size();
 				}
 
 				@Override

@@ -4,7 +4,8 @@ import org.bukkit.entity.Player;
 import de.kumpelblase2.dragonslair.DragonsLairMain;
 import de.kumpelblase2.dragonslair.api.Event;
 import de.kumpelblase2.dragonslair.api.NPC;
-import de.kumpelblase2.npclib.entity.HumanNPC;
+import de.kumpelblase2.remoteentities.api.Fightable;
+import de.kumpelblase2.remoteentities.api.RemoteEntity;
 
 public class NPCStopAttackEventExecutor implements EventExecutor
 {
@@ -22,9 +23,9 @@ public class NPCStopAttackEventExecutor implements EventExecutor
 				if(n == null)
 					return false;
 			}
-			final HumanNPC npc = DragonsLairMain.getDungeonManager().getNPCByID(n.getID());
-			if(npc != null)
-				npc.stopAttacking();
+			final RemoteEntity npc = DragonsLairMain.getDungeonManager().getNPCManager().getByDatabaseID(n.getID());
+			if(npc != null && npc instanceof Fightable)
+				((Fightable)npc).loseTarget();
 			return true;
 		}
 		catch(final Exception ex)

@@ -41,7 +41,7 @@ public class NPCSpawnDialog extends ValidatingPrompt
 			final Integer id = Integer.parseInt(arg1);
 			if(DragonsLairMain.getSettings().getNPCs().containsKey(id))
 			{
-				if(DragonsLairMain.getDungeonManager().getSpawnedNPCIDs().containsKey(id))
+				if(DragonsLairMain.getDungeonManager().getNPCManager().isSpawned(id))
 				{
 					arg0.getForWhom().sendRawMessage(ChatColor.RED + "The npc is already spawned.");
 					return false;
@@ -60,7 +60,7 @@ public class NPCSpawnDialog extends ValidatingPrompt
 			final NPC n = DragonsLairMain.getSettings().getNPCByName(arg1);
 			if(n != null)
 			{
-				if(DragonsLairMain.getDungeonManager().getSpawnedNPCIDs().containsKey(n.getID()))
+				if(DragonsLairMain.getDungeonManager().getNPCManager().isSpawned(n.getID()))
 				{
 					arg0.getForWhom().sendRawMessage(ChatColor.RED + "The npc is already spawned.");
 					return false;
