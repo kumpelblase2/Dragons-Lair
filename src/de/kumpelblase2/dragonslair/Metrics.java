@@ -27,6 +27,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.scheduler.BukkitTask;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -103,12 +104,13 @@ public class Metrics
 	/**
 	 * Id of the scheduled task
 	 */
-	private volatile int taskId = -1;
+	private volatile BukkitTask task = null;
 
 	public Metrics(final Plugin plugin) throws IOException
 	{
 		if(plugin == null)
 			throw new IllegalArgumentException("Plugin cannot be null");
+		
 		this.plugin = plugin;
 		// load the config
 		this.configurationFile = new File(CONFIG_FILE);
@@ -144,6 +146,19 @@ public class Metrics
 		// and return back
 		return graph;
 	}
+	
+	/**
+     * Add a Graph object to BukkitMetrics that represents data for the plugin that should be sent to the backend
+     *
+     * @param graph The name of the graph
+     */
+    public void addGraph(final Graph graph) {
+        if (graph == null) {
+            throw new IllegalArgumentException("Graph cannot be null");
+        }
+
+        graphs.add(graph);
+    }
 
 	/**
 	 * Adds a custom data plotter to the default graph
@@ -175,10 +190,10 @@ public class Metrics
 			if(this.isOptOut())
 				return false;
 			// Is metrics already running?
-			if(this.taskId >= 0)
+			if(this.task != null)
 				return true;
 			// Begin hitting the server with glorious data
-			this.taskId = this.plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(this.plugin, new Runnable()
+			this.task = this.plugin.getServer().getScheduler().runTaskTimerAsynchronously(this.plugin, new Runnable()
 			{
 				private boolean firstPost = true;
 
@@ -188,19 +203,22 @@ public class Metrics
 					try
 					{
 						// This has to be synchronized or it can collide with the disable method.
-						synchronized(Metrics.this.optOutLock)
+						synchronized(optOutLock)
 						{
 							// Disable Task, if it is running and the server owner decided to opt-out
-							if(Metrics.this.isOptOut() && Metrics.this.taskId > 0)
-							{
-								Metrics.this.plugin.getServer().getScheduler().cancelTask(Metrics.this.taskId);
-								Metrics.this.taskId = -1;
-							}
+							if (isOptOut() && task != null) {
+                                task.cancel();
+                                task = null;
+                                // Tell all plotters to stop gathering information.
+                                for (Graph graph : graphs) {
+                                    graph.onOptOut();
+                                }
+                            }
 						}
 						// We use the inverse of firstPost because if it is the first time we are posting,
 						// it is not a interval ping, so it evaluates to FALSE
 						// Each time thereafter it will evaluate to TRUE, i.e PING!
-						Metrics.this.postPlugin(!this.firstPost);
+						postPlugin(!this.firstPost);
 						// After the first post we set firstPost to false
 						// Each post thereafter will be a ping
 						this.firstPost = false;
@@ -260,7 +278,7 @@ public class Metrics
 				this.configuration.save(this.configurationFile);
 			}
 			// Enable Task, if it is not running
-			if(this.taskId < 0)
+			if(this.task == null)
 				this.start();
 		}
 	}
@@ -282,10 +300,10 @@ public class Metrics
 				this.configuration.save(this.configurationFile);
 			}
 			// Disable Task, if it is running
-			if(this.taskId > 0)
+			if(this.task != null)
 			{
-				this.plugin.getServer().getScheduler().cancelTask(this.taskId);
-				this.taskId = -1;
+				this.task.cancel();
+				this.task = null;
 			}
 		}
 	}
@@ -295,86 +313,121 @@ public class Metrics
 	 */
 	private void postPlugin(final boolean isPing) throws IOException
 	{
-		// The plugin's description file containg all of the plugin data such as name, version, author, etc
-		final PluginDescriptionFile description = this.plugin.getDescription();
-		// Construct the post data
-		final StringBuilder data = new StringBuilder();
-		data.append(encode("guid")).append('=').append(encode(this.guid));
-		encodeDataPair(data, "version", description.getVersion());
-		encodeDataPair(data, "server", Bukkit.getVersion());
-		encodeDataPair(data, "players", Integer.toString(Bukkit.getServer().getOnlinePlayers().length));
-		encodeDataPair(data, "revision", String.valueOf(REVISION));
-		// If we're pinging, append it
-		if(isPing)
-			encodeDataPair(data, "ping", "true");
-		// Acquire a lock on the graphs, which lets us make the assumption we also lock everything
-		// inside of the graph (e.g plotters)
-		synchronized(this.graphs)
-		{
-			final Iterator<Graph> iter = this.graphs.iterator();
-			while(iter.hasNext())
-			{
-				final Graph graph = iter.next();
-				// Because we have a lock on the graphs set already, it is reasonable to assume
-				// that our lock transcends down to the individual plotters in the graphs also.
-				// Because our methods are private, no one but us can reasonably access this list
-				// without reflection so this is a safe assumption without adding more code.
-				for(final Plotter plotter : graph.getPlotters())
-				{
-					// The key name to send to the metrics server
-					// The format is C-GRAPHNAME-PLOTTERNAME where separator - is defined at the top
-					// Legacy (R4) submitters use the format Custom%s, or CustomPLOTTERNAME
-					final String key = String.format("C%s%s%s%s", CUSTOM_DATA_SEPARATOR, graph.getName(), CUSTOM_DATA_SEPARATOR, plotter.getColumnName());
-					// The value to send, which for the foreseeable future is just the string
-					// value of plotter.getValue()
-					final String value = Integer.toString(plotter.getValue());
-					// Add it to the http post data :)
-					encodeDataPair(data, key, value);
-				}
-			}
-		}
-		// Create the url
-		final URL url = new URL(BASE_URL + String.format(REPORT_URL, encode(this.plugin.getDescription().getName())).replace("+", "%20"));
-		// Connect to the website
-		URLConnection connection;
-		// Mineshafter creates a socks proxy, so we can safely bypass it
-		// It does not reroute POST requests so we need to go around it
-		try
-		{
-			if(this.isMineshafterPresent())
-				connection = url.openConnection(Proxy.NO_PROXY);
-			else
-				connection = url.openConnection();
-			connection.setDoOutput(true);
-			// Write the data
-			final OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
-			writer.write(data.toString());
-			writer.flush();
-			// Now read the response
-			final BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-			final String response = reader.readLine();
-			// close resources
-			writer.close();
-			reader.close();
-			if(response == null || response.startsWith("ERR"))
-				throw new IOException(response); // Throw the exception
-			else // Is this the first update this hour?
-			if(response.contains("OK This is your first update this hour"))
-				synchronized(this.graphs)
-				{
-					final Iterator<Graph> iter = this.graphs.iterator();
-					while(iter.hasNext())
-					{
-						final Graph graph = iter.next();
-						for(final Plotter plotter : graph.getPlotters())
-							plotter.reset();
-					}
-				}
-		}
-		catch(final Exception e)
-		{
-		}
-		// if (response.startsWith("OK")) - We should get "OK" followed by an optional description if everything goes right
+		// Server software specific section
+        PluginDescriptionFile description = plugin.getDescription();
+        String pluginName = description.getName();
+        boolean onlineMode = Bukkit.getServer().getOnlineMode(); // TRUE if online mode is enabled
+        String pluginVersion = description.getVersion();
+        String serverVersion = Bukkit.getVersion();
+        int playersOnline = Bukkit.getServer().getOnlinePlayers().length;
+
+        // END server software specific section -- all code below does not use any code outside of this class / Java
+
+        // Construct the post data
+        final StringBuilder data = new StringBuilder();
+
+        // The plugin's description file containg all of the plugin data such as name, version, author, etc
+        data.append(encode("guid")).append('=').append(encode(guid));
+        encodeDataPair(data, "version", pluginVersion);
+        encodeDataPair(data, "server", serverVersion);
+        encodeDataPair(data, "players", Integer.toString(playersOnline));
+        encodeDataPair(data, "revision", String.valueOf(REVISION));
+
+        // New data as of R6
+        String osname = System.getProperty("os.name");
+        String osarch = System.getProperty("os.arch");
+        String osversion = System.getProperty("os.version");
+        String java_version = System.getProperty("java.version");
+        int coreCount = Runtime.getRuntime().availableProcessors();
+
+        // normalize os arch .. amd64 -> x86_64
+        if (osarch.equals("amd64")) {
+            osarch = "x86_64";
+        }
+
+        encodeDataPair(data, "osname", osname);
+        encodeDataPair(data, "osarch", osarch);
+        encodeDataPair(data, "osversion", osversion);
+        encodeDataPair(data, "cores", Integer.toString(coreCount));
+        encodeDataPair(data, "online-mode", Boolean.toString(onlineMode));
+        encodeDataPair(data, "java_version", java_version);
+
+        // If we're pinging, append it
+        if (isPing) {
+            encodeDataPair(data, "ping", "true");
+        }
+
+        // Acquire a lock on the graphs, which lets us make the assumption we also lock everything
+        // inside of the graph (e.g plotters)
+        synchronized (graphs) {
+            final Iterator<Graph> iter = graphs.iterator();
+
+            while (iter.hasNext()) {
+                final Graph graph = iter.next();
+
+                for (Plotter plotter : graph.getPlotters()) {
+                    // The key name to send to the metrics server
+                    // The format is C-GRAPHNAME-PLOTTERNAME where separator - is defined at the top
+                    // Legacy (R4) submitters use the format Custom%s, or CustomPLOTTERNAME
+                    final String key = String.format("C%s%s%s%s", CUSTOM_DATA_SEPARATOR, graph.getName(), CUSTOM_DATA_SEPARATOR, plotter.getColumnName());
+
+                    // The value to send, which for the foreseeable future is just the string
+                    // value of plotter.getValue()
+                    final String value = Integer.toString(plotter.getValue());
+
+                    // Add it to the http post data :)
+                    encodeDataPair(data, key, value);
+                }
+            }
+        }
+
+        // Create the url
+        URL url = new URL(BASE_URL + String.format(REPORT_URL, encode(pluginName)));
+
+        // Connect to the website
+        URLConnection connection;
+
+        // Mineshafter creates a socks proxy, so we can safely bypass it
+        // It does not reroute POST requests so we need to go around it
+        if (isMineshafterPresent()) {
+            connection = url.openConnection(Proxy.NO_PROXY);
+        } else {
+            connection = url.openConnection();
+        }
+
+        connection.setDoOutput(true);
+
+        // Write the data
+        final OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+        writer.write(data.toString());
+        writer.flush();
+
+        // Now read the response
+        final BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        final String response = reader.readLine();
+
+        // close resources
+        writer.close();
+        reader.close();
+
+        if (response == null || response.startsWith("ERR")) {
+            throw new IOException(response); //Throw the exception
+        } else {
+            // Is this the first update this hour?
+            if (response.contains("OK This is your first update this hour")) {
+                synchronized (graphs) {
+                    final Iterator<Graph> iter = graphs.iterator();
+
+                    while (iter.hasNext()) {
+                        final Graph graph = iter.next();
+
+                        for (Plotter plotter : graph.getPlotters()) {
+                            plotter.reset();
+                        }
+                    }
+                }
+            }
+        }
 	}
 
 	/**
@@ -500,6 +553,12 @@ public class Metrics
 			final Graph graph = (Graph)object;
 			return graph.name.equals(this.name);
 		}
+		
+		/**
+         * Called when the server owner decides to opt-out of BukkitMetrics while the server is running.
+         */
+        protected void onOptOut() {
+        }
 	}
 	/**
 	 * Interface used to collect custom data for a plugin
@@ -564,6 +623,7 @@ public class Metrics
 		{
 			if(!(object instanceof Plotter))
 				return false;
+			
 			final Plotter plotter = (Plotter)object;
 			return plotter.name.equals(this.name) && plotter.getValue() == this.getValue();
 		}
