@@ -275,9 +275,11 @@ public class DungeonManager
 	{
 		if(this.isDungeonStarted(name))
 			return null;
+		
 		final Dungeon d = this.getSettings().getDungeonByName(name);
 		if(d == null)
 			return null;
+		
 		return this.queue.start(d);
 	}
 
