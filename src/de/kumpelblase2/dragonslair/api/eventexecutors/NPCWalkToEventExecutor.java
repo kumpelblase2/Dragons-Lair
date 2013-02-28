@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import de.kumpelblase2.dragonslair.DragonsLairMain;
 import de.kumpelblase2.dragonslair.api.Event;
 import de.kumpelblase2.dragonslair.api.NPC;
-import de.kumpelblase2.npclib.entity.HumanNPC;
+import de.kumpelblase2.remoteentities.api.RemoteEntity;
 
 public class NPCWalkToEventExecutor implements EventExecutor
 {
@@ -28,9 +28,9 @@ public class NPCWalkToEventExecutor implements EventExecutor
 			final String z = e.getOption("z");
 			if(x == null || y == null || z == null)
 				return false;
-			final HumanNPC npc = DragonsLairMain.getDungeonManager().getNPCByID(n.getID());
+			final RemoteEntity npc = DragonsLairMain.getDungeonManager().getNPCManager().getByDatabaseID(n.getID());
 			if(npc != null)
-				npc.walkTo(new Location(npc.getBukkitEntity().getLocation().getWorld(), Integer.parseInt(x), Integer.parseInt(y), Integer.parseInt(z)));
+				npc.move(new Location(npc.getBukkitEntity().getLocation().getWorld(), Integer.parseInt(x), Integer.parseInt(y), Integer.parseInt(z)));
 			return true;
 		}
 		catch(final Exception ex)

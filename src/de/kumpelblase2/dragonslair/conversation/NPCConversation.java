@@ -5,21 +5,21 @@ import org.bukkit.conversations.Conversation.ConversationState;
 import org.bukkit.entity.Player;
 import de.kumpelblase2.dragonslair.DragonsLairMain;
 import de.kumpelblase2.dragonslair.api.NPC;
-import de.kumpelblase2.npclib.entity.HumanNPC;
+import de.kumpelblase2.remoteentities.api.RemoteEntity;
 
 public class NPCConversation
 {
 	private final Player player;
 	private final NPC npc;
 	private final Conversation conv;
-	private final HumanNPC hnpc;
+	private final RemoteEntity hnpc;
 
 	public NPCConversation(final Player p, final NPC n, final Conversation c)
 	{
 		this.player = p;
 		this.npc = n;
 		this.conv = c;
-		this.hnpc = DragonsLairMain.getDungeonManager().getNPCByID(this.npc.getID());
+		this.hnpc = DragonsLairMain.getDungeonManager().getNPCManager().getByDatabaseID(n.getID());
 	}
 
 	public void adandon()
@@ -47,7 +47,7 @@ public class NPCConversation
 		return this.conv;
 	}
 
-	public HumanNPC getNPCEntity()
+	public RemoteEntity getNPCEntity()
 	{
 		return this.hnpc;
 	}

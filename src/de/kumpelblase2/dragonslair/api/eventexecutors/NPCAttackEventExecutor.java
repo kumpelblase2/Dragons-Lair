@@ -6,7 +6,8 @@ import de.kumpelblase2.dragonslair.DragonsLairMain;
 import de.kumpelblase2.dragonslair.api.Event;
 import de.kumpelblase2.dragonslair.api.NPC;
 import de.kumpelblase2.dragonslair.utilities.WorldUtility;
-import de.kumpelblase2.npclib.entity.HumanNPC;
+import de.kumpelblase2.remoteentities.api.Fightable;
+import de.kumpelblase2.remoteentities.api.RemoteEntity;
 
 public class NPCAttackEventExecutor implements EventExecutor
 {
@@ -25,8 +26,8 @@ public class NPCAttackEventExecutor implements EventExecutor
 					return false;
 			}
 			final String target = e.getOption("target");
-			final HumanNPC npc = DragonsLairMain.getDungeonManager().getNPCByID(n.getID());
-			if(npc == null)
+			final RemoteEntity npc = DragonsLairMain.getDungeonManager().getNPCManager().getByDatabaseID(n.getID());
+			if(npc == null || !(npc instanceof Fightable))
 				return false;
 			List<EntityType> types = new ArrayList<EntityType>();
 			if(target == null || target.equals("enemy"))
@@ -38,7 +39,8 @@ public class NPCAttackEventExecutor implements EventExecutor
 			}
 			final LivingEntity nearest = WorldUtility.getNearestEntity(npc.getBukkitEntity().getLocation(), npc.getBukkitEntity().getNearbyEntities(10, 3, 10), types);
 			if(nearest != null && npc != null)
-				npc.startAttacking(nearest);
+				((Fightable)npc).attack(nearest);
+			
 			return true;
 		}
 		catch(final Exception ex)

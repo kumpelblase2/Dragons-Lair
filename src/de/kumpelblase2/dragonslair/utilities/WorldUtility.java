@@ -17,7 +17,7 @@ public final class WorldUtility
 		{
 			if(!(e instanceof LivingEntity) || excluded.contains(e.getType()))
 				continue;
-			if(e instanceof Player && DragonsLairMain.getDungeonManager().getNPCManager().isNPC(e))
+			if(e instanceof Player && DragonsLairMain.getDungeonManager().getNPCManager().isRemoteEntity((LivingEntity)e))
 				continue;
 			final double squared = e.getLocation().distanceSquared(loc);
 			if(squared < current && squared < 1024D)

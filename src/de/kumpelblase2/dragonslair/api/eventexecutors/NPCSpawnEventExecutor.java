@@ -21,6 +21,7 @@ public class NPCSpawnEventExecutor implements EventExecutor
 				final int id = Integer.parseInt(npc);
 				if(!DragonsLairMain.getSettings().getNPCs().containsKey(id))
 					return false;
+				
 				DragonsLairMain.getDungeonManager().spawnNPC(DragonsLairMain.getSettings().getNPCs().get(id).getName());
 			}
 			else

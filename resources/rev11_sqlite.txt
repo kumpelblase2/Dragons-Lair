@@ -1,0 +1,1 @@
+ALTER TABLE `npcs` ADD COLUMN `npc_type` text;

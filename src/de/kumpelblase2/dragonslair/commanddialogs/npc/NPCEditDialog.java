@@ -86,7 +86,7 @@ public class NPCEditDialog extends ValidatingPrompt
 			}
 			final String option = (String)arg0.getSessionData("edit_option");
 			final NPC n = DragonsLairMain.getSettings().getNPCByName((String)arg0.getSessionData("npc_name"));
-			final boolean respawn = DragonsLairMain.getDungeonManager().despawnNPC(n);
+			final boolean respawn = DragonsLairMain.getDungeonManager().despawnNPC(n.getID());
 			if(option.equals("name"))
 				n.setName(arg1);
 			else if(option.equals("skin"))

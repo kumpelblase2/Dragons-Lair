@@ -26,8 +26,7 @@ import de.kumpelblase2.dragonslair.logging.TNTList;
 import de.kumpelblase2.dragonslair.logging.TNTList.TNTEntry;
 import de.kumpelblase2.dragonslair.map.DLMap;
 import de.kumpelblase2.dragonslair.utilities.InventoryUtilities;
-import de.kumpelblase2.npclib.nms.*;
-import de.kumpelblase2.npclib.nms.NpcEntityTargetEvent.NpcTargetReason;
+import de.kumpelblase2.remoteentities.api.events.RemoteEntityInteractEvent;
 
 public class DLEventHandler implements Listener
 {
@@ -106,64 +105,64 @@ public class DLEventHandler implements Listener
 	}
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-	public void onInteractNPC(final EntityTargetEvent event)
+	public void onInteractNPC(final RemoteEntityInteractEvent event)
 	{
-		if(!DragonsLairMain.isWorldEnabled(event.getEntity().getWorld().getName()))
+		if(!DragonsLairMain.isWorldEnabled(event.getRemoteEntity().getBukkitEntity().getWorld().getName()))
 			return;
-		if(event instanceof NpcEntityTargetEvent)
-			if(((NpcEntityTargetEvent)event).getNpcReason() == NpcTargetReason.NPC_RIGHTCLICKED)
+		
+		if(!this.triggers.containsKey(TriggerType.NPC_INTERACT))
+			return;
+		
+		final ActiveDungeon dungeon = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(event.getInteractor().getName());
+		final int databaseid = DragonsLairMain.getDungeonManager().getNPCManager().getDatabaseIDFromEntity(event.getRemoteEntity());
+		for(final Trigger t : this.triggers.get(TriggerType.NPC_INTERACT))
+		{
+			final String npcid = t.getOption("npc_id");
+			if(npcid == null)
+				continue;
+			
+			final String dungeonID = t.getOption("dungeon_id");		
+			if(dungeon != null && dungeonID != null && (!dungeonID.equals("" + dungeon.getInfo().getID()) || !dungeonID.equals("" + dungeon.getInfo().getName())))
+				continue;
+			
+			if(npcid.equals(databaseid + ""))
+				DragonsLairMain.getDungeonManager().callTrigger(t, event.getInteractor());
+		}
+		/*else if(((NpcEntityTargetEvent)event).getNpcReason() == NpcTargetReason.NPC_BOUNCED)
+		{
+			if(!this.triggers.containsKey(TriggerType.NPC_TOUCH))
+				return;
+			final NPC npc = DragonsLairMain.getDungeonManager().getNPCByNPCEntity(event.getEntity());
+			final ActiveDungeon dungeon = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(((Player)event.getTarget()).getName());
+			for(final Trigger t : this.triggers.get(TriggerType.NPC_TOUCH))
 			{
-				if(!this.triggers.containsKey(TriggerType.NPC_INTERACT))
-					return;
+				final String npcid = t.getOption("npc_id");
+				if(npcid == null)
+					continue;
 				
-				final ActiveDungeon dungeon = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(((Player)event.getTarget()).getName());
-				final NPC npc = DragonsLairMain.getDungeonManager().getNPCByNPCEntity(event.getEntity());
-				for(final Trigger t : this.triggers.get(TriggerType.NPC_INTERACT))
-				{
-					final String npcid = t.getOption("npc_id");
-					if(npcid == null)
-						continue;
-					
-					final String dungeonID = t.getOption("dungeon_id");		
-					if(dungeon != null && dungeonID != null && (!dungeonID.equals("" + dungeon.getInfo().getID()) || !dungeonID.equals("" + dungeon.getInfo().getName())))
-						continue;
-					
-					if(npcid.equals(npc.getID() + ""))
-						DragonsLairMain.getDungeonManager().callTrigger(t, (Player)event.getTarget());
-				}
+				final String dungeonID = t.getOption("dungeon_id");		
+				if(dungeon != null && dungeonID != null && (!dungeonID.equals("" + dungeon.getInfo().getID()) || !dungeonID.equals("" + dungeon.getInfo().getName())))
+					continue;
+				
+				if(npcid.equals(npc.getID() + ""))
+					DragonsLairMain.getDungeonManager().callTrigger(t, (Player)event.getTarget());
 			}
-			else if(((NpcEntityTargetEvent)event).getNpcReason() == NpcTargetReason.NPC_BOUNCED)
-			{
-				if(!this.triggers.containsKey(TriggerType.NPC_TOUCH))
-					return;
-				final NPC npc = DragonsLairMain.getDungeonManager().getNPCByNPCEntity(event.getEntity());
-				final ActiveDungeon dungeon = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(((Player)event.getTarget()).getName());
-				for(final Trigger t : this.triggers.get(TriggerType.NPC_TOUCH))
-				{
-					final String npcid = t.getOption("npc_id");
-					if(npcid == null)
-						continue;
-					
-					final String dungeonID = t.getOption("dungeon_id");		
-					if(dungeon != null && dungeonID != null && (!dungeonID.equals("" + dungeon.getInfo().getID()) || !dungeonID.equals("" + dungeon.getInfo().getName())))
-						continue;
-					
-					if(npcid.equals(npc.getID() + ""))
-						DragonsLairMain.getDungeonManager().callTrigger(t, (Player)event.getTarget());
-				}
-			}
+		}*/
 	}
 
 	@EventHandler(ignoreCancelled = true)
-	public void onNPCDamage(final NpcDamageEvent event)
+	public void onNPCDamage(final EntityDamageByEntityEvent event)
 	{
+		if(!DragonsLairMain.getDungeonManager().getNPCManager().isRemoteEntity((LivingEntity)event.getEntity()))
+			return;
+		
 		if(!(event.getDamager() instanceof Player))
 			return;
 		if(!this.triggers.containsKey(TriggerType.NPC_DAMAGE))
 			return;
 		if(!DragonsLairMain.isWorldEnabled(event.getDamager().getWorld().getName()))
 			return;
-		final NPC npc = DragonsLairMain.getDungeonManager().getNPCByNPCEntity(event.getEntity());
+		final NPC npc = DragonsLairMain.getDungeonManager().getNPCManager().getNPCFromEntity(DragonsLairMain.getDungeonManager().getNPCByEntity((LivingEntity)event.getEntity()));
 		final ActiveDungeon dungeon = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(((Player)event.getDamager()).getName());
 		for(final Trigger t : this.triggers.get(TriggerType.NPC_DAMAGE))
 		{
@@ -674,7 +673,7 @@ public class DLEventHandler implements Listener
 		{
 			if(!this.triggers.containsKey(TriggerType.NPC_DEATH))
 				return;
-			final NPC n = DragonsLairMain.getSettings().getNPCByName(DragonsLairMain.getDungeonManager().getNPCByEntity(e).getName());
+			final NPC n = DragonsLairMain.getDungeonManager().getNPCManager().getNPCFromEntity(DragonsLairMain.getDungeonManager().getNPCByEntity(e));
 			if(n != null)
 				for(final Trigger t : this.triggers.get(TriggerType.NPC_DEATH))
 				{

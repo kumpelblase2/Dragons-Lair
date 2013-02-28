@@ -5,6 +5,7 @@ import org.bukkit.*;
 import org.bukkit.inventory.ItemStack;
 import de.kumpelblase2.dragonslair.*;
 import de.kumpelblase2.dragonslair.utilities.*;
+import de.kumpelblase2.remoteentities.api.RemoteEntityType;
 
 public class NPC
 {
@@ -16,6 +17,7 @@ public class NPC
 	private ItemStack[] armor;
 	private boolean shoudSpawnAtBeginning;
 	private boolean isInvincible;
+	private RemoteEntityType type;
 
 	public NPC()
 	{
@@ -23,6 +25,7 @@ public class NPC
 		this.armor = new ItemStack[4];
 		this.shoudSpawnAtBeginning = false;
 		this.heldItem = Material.AIR;
+		this.type = RemoteEntityType.Human;
 	}
 
 	public NPC(final ResultSet result)
@@ -37,6 +40,7 @@ public class NPC
 			this.shoudSpawnAtBeginning = result.getBoolean(TableColumns.NPCs.SHOULD_SPAWN_AT_BEGINNING);
 			this.armor = InventoryUtilities.stringToItems(result.getString(TableColumns.NPCs.ARMOR));
 			this.isInvincible = result.getBoolean(TableColumns.NPCs.INVINCIBLE);
+			this.type = RemoteEntityType.valueOf(result.getString(TableColumns.NPCs.TYPE));
 		}
 		catch(final SQLException e)
 		{
@@ -108,6 +112,16 @@ public class NPC
 	{
 		this.isInvincible = invincible;
 	}
+	
+	public RemoteEntityType getType()
+	{
+		return this.type;
+	}
+	
+	public void setType(RemoteEntityType inType)
+	{
+		this.type = inType;
+	}
 
 	public void save()
 	{
@@ -115,7 +129,7 @@ public class NPC
 		{
 			if(this.id != -1)
 			{
-				final PreparedStatement st = DragonsLairMain.createStatement("REPLACE INTO " + Tables.NPCS + "(" + "npc_id," + "npc_name," + "npc_skin," + "npc_location," + "npc_held_item," + "npc_armor," + "npc_spawned_from_beginning," + "npc_invincible" + ") VALUES(?,?,?,?,?,?,?,?)");
+				final PreparedStatement st = DragonsLairMain.createStatement("REPLACE INTO " + Tables.NPCS + "(" + "npc_id," + "npc_name," + "npc_skin," + "npc_location," + "npc_held_item," + "npc_armor," + "npc_spawned_from_beginning," + "npc_invincible,"  + "npc_type" + ") VALUES(?,?,?,?,?,?,?,?,?)");
 				st.setInt(1, this.id);
 				st.setString(2, this.name);
 				st.setString(3, this.skin);
@@ -124,11 +138,12 @@ public class NPC
 				st.setString(6, InventoryUtilities.itemsToString(this.armor));
 				st.setBoolean(7, this.shoudSpawnAtBeginning);
 				st.setBoolean(8, this.isInvincible);
+				st.setString(9, this.type.name());
 				st.execute();
 			}
 			else
 			{
-				final PreparedStatement st = DragonsLairMain.createStatement("INSERT INTO " + Tables.NPCS + "(" + "npc_name," + "npc_skin," + "npc_location," + "npc_held_item," + "npc_armor," + "npc_spawned_from_beginning," + "npc_invincible" + ") VALUES(?,?,?,?,?,?,?)");
+				final PreparedStatement st = DragonsLairMain.createStatement("INSERT INTO " + Tables.NPCS + "(" + "npc_name," + "npc_skin," + "npc_location," + "npc_held_item," + "npc_armor," + "npc_spawned_from_beginning," + "npc_invincible," + "npc_type" + ") VALUES(?,?,?,?,?,?,?,?)");
 				st.setString(1, this.name);
 				st.setString(2, this.skin);
 				st.setString(3, WorldUtility.locationToString(this.loc));
@@ -136,6 +151,7 @@ public class NPC
 				st.setString(5, InventoryUtilities.itemsToString(this.armor));
 				st.setBoolean(6, this.shoudSpawnAtBeginning);
 				st.setBoolean(7, this.isInvincible);
+				st.setString(8, this.type.name());
 				st.execute();
 				final ResultSet keys = st.getGeneratedKeys();
 				if(keys.next())

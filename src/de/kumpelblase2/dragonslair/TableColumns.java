@@ -49,6 +49,7 @@ public final class TableColumns
 		public static final String ARMOR = "npc_armor";
 		public static final String SHOULD_SPAWN_AT_BEGINNING = "npc_spawned_from_beginning";
 		public static final String INVINCIBLE = "npc_invincible";
+		public static final String TYPE = "npc_type";
 	}
 	public final class Objectives
 	{

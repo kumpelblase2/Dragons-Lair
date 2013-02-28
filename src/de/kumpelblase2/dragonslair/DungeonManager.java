@@ -4,7 +4,6 @@ import java.sql.PreparedStatement;
 import java.util.*;
 import org.bukkit.Bukkit;
 import org.bukkit.conversations.ConversationFactory;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -18,14 +17,13 @@ import de.kumpelblase2.dragonslair.map.DLMap;
 import de.kumpelblase2.dragonslair.map.MapList;
 import de.kumpelblase2.dragonslair.settings.Settings;
 import de.kumpelblase2.dragonslair.utilities.EnumChange;
-import de.kumpelblase2.npclib.NPCManager;
-import de.kumpelblase2.npclib.entity.HumanNPC;
+import de.kumpelblase2.remoteentities.api.RemoteEntity;
 
 public class DungeonManager
 {
 	private final Map<String, Dungeon> dungeons = new HashMap<String, Dungeon>();
 	private final ConversationFactory cfactory;
-	private final NPCManager npcManager;
+	private final DLEntityManager npcManager;
 	private final Settings settings = new Settings();
 	private final Map<EventActionType, EventExecutor> executors = new HashMap<EventActionType, EventExecutor>();
 	private final Set<ActiveDungeon> activeDungeons = new HashSet<ActiveDungeon>();
@@ -39,7 +37,7 @@ public class DungeonManager
 	public DungeonManager()
 	{
 		this.cfactory = new ConversationFactory(DragonsLairMain.getInstance());
-		this.npcManager = new NPCManager(DragonsLairMain.getInstance());
+		this.npcManager = new DLEntityManager();
 	}
 
 	public ConversationFactory getConversationFactory()
@@ -52,7 +50,7 @@ public class DungeonManager
 		return this.dungeons;
 	}
 
-	public NPCManager getNPCManager()
+	public DLEntityManager getNPCManager()
 	{
 		return this.npcManager;
 	}
@@ -62,27 +60,22 @@ public class DungeonManager
 		return this.settings;
 	}
 
-	public Map<Integer, de.kumpelblase2.npclib.entity.NPC> getSpawnedNPCIDs()
+	public List<RemoteEntity> getSpawnedNPCIDs()
 	{
-		return this.npcManager.getNPCs();
+		return this.npcManager.getAllEntities();
 	}
 
-	public HumanNPC getNPCByName(final String inName)
+	public RemoteEntity getNPCByName(final String inName)
 	{
 		final NPC n = DragonsLairMain.getSettings().getNPCByName(inName);
 		if(n == null)
 			return null;
-		return this.npcManager.getNPC(n.getID());
+		return this.npcManager.getByDatabaseID(n.getID());
 	}
 
-	public HumanNPC getNPCByEntity(final Entity e)
+	public RemoteEntity getNPCByEntity(final LivingEntity e)
 	{
-		return this.npcManager.getNPC(this.npcManager.getNPCIdFromEntity(e));
-	}
-
-	public de.kumpelblase2.dragonslair.api.NPC getNPCByNPCEntity(final Entity npc)
-	{
-		return this.getSettings().getNPCs().get(this.npcManager.getNPCIdFromEntity(npc));
+		return this.npcManager.getRemoteEntityFromEntity(e);
 	}
 
 	public boolean executeEvent(final Event e, final Player p)
@@ -224,15 +217,7 @@ public class DungeonManager
 
 	public void spawnNPC(final NPC npc)
 	{
-		final HumanNPC hnpc = (HumanNPC)this.getNPCManager().spawnHumanNPC(npc);
-		if(hnpc != null)
-		{
-			DragonsLairMain.debugLog("Spawning NPC with id '" + npc.getID() + "'");
-			if(npc.getSkin() != null && !npc.getSkin().equals(""))
-				hnpc.setSkin(npc.getSkin());
-			hnpc.setItemInHand(npc.getHeldItem());
-			hnpc.getInventory().setArmorContents(npc.getArmorParts());
-		}
+		this.npcManager.createNPC(npc);
 	}
 
 	public boolean despawnNPC(final String name)
@@ -240,13 +225,16 @@ public class DungeonManager
 		final NPC n = DragonsLairMain.getSettings().getNPCByName(name);
 		if(n == null)
 			return false;
+		
 		return this.despawnNPC(n.getID());
 	}
 
 	public boolean despawnNPC(final Integer id)
 	{
+		boolean despawned = this.getNPCManager().isSpawned(id);
 		DragonsLairMain.debugLog("Despawning NPC with id '" + id + "'");
-		return this.npcManager.despawnById(id);
+		this.npcManager.removeEntity(this.npcManager.getEntityIDFromDatabaseID(id));
+		return despawned;
 	}
 
 	public void spawnNPCs()
@@ -270,10 +258,12 @@ public class DungeonManager
 		Bukkit.getPluginManager().callEvent(event);
 		if(event.isCancelled())
 			return null;
+		
 		final ActiveDungeon ad = new ActiveDungeon(d, Party.getPartyOfPlayers(players, id));
 		this.activeDungeons.add(ad);
 		for(final String p : players)
 			this.m_playerDungeons.put(p, ad.getInfo().getID());
+		
 		ad.giveMaps();
 		ad.sendMessage(ad.getInfo().getStartingMessage());
 		ad.reloadProgress();
@@ -285,9 +275,11 @@ public class DungeonManager
 	{
 		if(this.isDungeonStarted(name))
 			return null;
+		
 		final Dungeon d = this.getSettings().getDungeonByName(name);
 		if(d == null)
 			return null;
+		
 		return this.queue.start(d);
 	}
 
@@ -643,16 +635,6 @@ public class DungeonManager
 		if(d == null)
 			return null;
 		return this.getActiveDungeonByName(d.getName());
-	}
-
-	public HumanNPC getNPCByID(final Integer npcID)
-	{
-		return this.npcManager.getNPC(npcID);
-	}
-
-	public boolean despawnNPC(final NPC n)
-	{
-		return this.despawnNPC(n.getID());
 	}
 
 	public void removeMapHolder(final Player dead)

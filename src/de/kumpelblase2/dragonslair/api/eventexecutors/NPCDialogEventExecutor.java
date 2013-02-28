@@ -16,6 +16,7 @@ public class NPCDialogEventExecutor implements EventExecutor
 		final String dialogid = e.getOption("dialog_id");
 		if(npcid == null)
 			return false;
+		
 		NPC npc = null;
 		int dialog = -1;
 		try
@@ -26,6 +27,7 @@ public class NPCDialogEventExecutor implements EventExecutor
 				final Integer id = Integer.parseInt(npcid);
 				if(!DragonsLairMain.getSettings().getNPCs().containsKey(id))
 					return false;
+				
 				npc = DragonsLairMain.getSettings().getNPCs().get(id);
 			}
 			if(dialogid == null)
@@ -40,8 +42,10 @@ public class NPCDialogEventExecutor implements EventExecutor
 		}
 		if(npc == null)
 			return false;
+		
 		if(dialog == -1)
 			dialog = 0;
+		
 		final String sendTo = e.getOption("send_to");
 		if(sendTo != null && (sendTo.equalsIgnoreCase("all") || sendTo.equalsIgnoreCase("party")))
 		{

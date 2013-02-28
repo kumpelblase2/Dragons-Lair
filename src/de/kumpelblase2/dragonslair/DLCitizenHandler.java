@@ -4,9 +4,8 @@ import net.citizensnpcs.api.event.NPCRightClickEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityTargetEvent;
 import de.kumpelblase2.dragonslair.api.NPC;
-import de.kumpelblase2.npclib.nms.NpcEntityTargetEvent;
+import de.kumpelblase2.remoteentities.api.events.RemoteEntityInteractEvent;
 
 public class DLCitizenHandler implements Listener
 {
@@ -19,7 +18,7 @@ public class DLCitizenHandler implements Listener
 		if(!DragonsLairMain.isWorldEnabled(event.getClicker().getWorld().getName()))
 			return;
 		
-		final EntityTargetEvent event2 = new NpcEntityTargetEvent(DragonsLairMain.getDungeonManager().getNPCByID(npc.getID()).getBukkitEntity(), event.getClicker(), NpcEntityTargetEvent.NpcTargetReason.NPC_RIGHTCLICKED);
+		final RemoteEntityInteractEvent event2 = new RemoteEntityInteractEvent(DragonsLairMain.getDungeonManager().getNPCByEntity(event.getNPC().getBukkitEntity()), event.getClicker());
 		Bukkit.getPluginManager().callEvent(event2);
 		event.setCancelled(!event2.isCancelled());
 	}
