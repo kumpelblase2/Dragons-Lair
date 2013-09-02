@@ -27,12 +27,13 @@ public enum EventActionOptions
 	REMOVE_POTION_EFFECT(new String[]{ "potiontype" }, new String[]{ "duration", "scope" }),
 	CHANGE_LEVEL(new String[]{ "amount", "change_type" }, new String[]{ "scope" }),
 	CHANGE_HEALTH(new String[]{ "amount", "change_type" }, new String[]{ "scope" }),
-	CHANGE_HUNGER(new String[]{ "amout", "change_type" }, new String[]{ "scope" }),
+	CHANGE_HUNGER(new String[]{ "amount", "change_type" }, new String[]{ "scope" }),
 	EXECUTE_COMMAND(new String[]{ "command" }, new String[]{ "execute_as" }),
 	START_SCHEDULED_EVENT(new String[]{ "event_id" }, new String[0]),
 	STOP_SCHEDULED_EVENT(new String[]{ "event_id" }, new String[0]);
-	private String[] requiredOptions;
-	private String[] optionalOptions;
+
+	private final String[] requiredOptions;
+	private final String[] optionalOptions;
 	private final String[] generalOptions = new String[]{ "delay", "cooldown" };
 
 	private EventActionOptions(final String[] required, final String[] optional)
@@ -64,20 +65,20 @@ public enum EventActionOptions
 		final StringBuilder sb = new StringBuilder();
 		for(final String required : this.requiredOptions)
 		{
-			sb.append(ChatColor.AQUA + required + ChatColor.WHITE + ", ");
+			sb.append(ChatColor.AQUA).append(required).append(ChatColor.WHITE).append(", ");
 		}
 
 		if(this.optionalOptions.length == 0 && sb.length() > 2)
 			sb.substring(0, sb.length() - 2);
 
-		for(int i = 0; i < this.optionalOptions.length; i++)
+		for(String optionalOption : this.optionalOptions)
 		{
-			sb.append(ChatColor.YELLOW + this.optionalOptions[i] + ChatColor.WHITE + ", ");
+			sb.append(ChatColor.YELLOW).append(optionalOption).append(ChatColor.WHITE).append(", ");
 		}
 
 		for(int i = 0; i < this.generalOptions.length; i++)
 		{
-			sb.append(ChatColor.YELLOW + this.generalOptions[i] + ChatColor.WHITE);
+			sb.append(ChatColor.YELLOW).append(this.generalOptions[i]).append(ChatColor.WHITE);
 			if(i != this.optionalOptions.length - 1)
 				sb.append(", ");
 		}

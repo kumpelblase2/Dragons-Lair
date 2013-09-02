@@ -46,10 +46,7 @@ public class ItemTracker
 		{
 			if(entry.getEntityID() == itemID)
 			{
-				if(entry.getDungeon().equals(dungeon) || DragonsLairMain.canPlayersInteract())
-					return true;
-
-				return false;
+				return entry.getDungeon().equals(dungeon) || DragonsLairMain.canPlayersInteract();
 			}
 		}
 		return true;

@@ -235,10 +235,7 @@ public class NPCEditDialog extends ValidatingPrompt
 			else if(option.equals("armor"))
 			{
 				final ItemStack[] armor = InventoryUtilities.stringToItems(arg1);
-				if(armor.length != 4)
-					return false;
-
-				return true;
+				return armor.length == 4;
 			}
 			else
 				return new AnswerConverter(arg1).convert() != AnswerType.NOTHING;

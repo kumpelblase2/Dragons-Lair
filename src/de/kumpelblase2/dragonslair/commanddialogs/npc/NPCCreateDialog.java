@@ -224,19 +224,13 @@ public class NPCCreateDialog extends ValidatingPrompt
 		else if(arg0.getSessionData("npc_armor") == null)
 		{
 			final ItemStack[] armor = InventoryUtilities.stringToItems(arg1.replace(":", ";"));
-			if(armor.length != 4)
-				return false;
-
-			return true;
+			return armor.length == 4;
 		}
 		else if(arg0.getSessionData("npc_invincible") == null || arg0.getSessionData("npc_should_spawn") == null)
 		{
 			final AnswerConverter conv = new AnswerConverter(arg1);
 			final AnswerType type = conv.convert();
-			if(type != AnswerType.NOTHING)
-				return true;
-
-			return false;
+			return type != AnswerType.NOTHING;
 		}
 
 		return false;

@@ -1,7 +1,6 @@
 package de.kumpelblase2.dragonslair.commanddialogs.npc;
 
-import java.util.Arrays;
-import java.util.Comparator;
+import java.util.*;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.*;
 import de.kumpelblase2.dragonslair.DragonsLairMain;
@@ -24,7 +23,8 @@ public class NPCListDialog extends MessagePrompt
 	@Override
 	public String getPromptText(final ConversationContext arg0)
 	{
-		final NPC[] npcs = DragonsLairMain.getSettings().getNPCs().values().toArray(new NPC[0]);
+		Collection<NPC> var = DragonsLairMain.getSettings().getNPCs().values();
+		final NPC[] npcs = var.toArray(new NPC[var.size()]);
 		Arrays.sort(npcs, new Comparator<NPC>()
 		{
 			@Override
@@ -35,7 +35,7 @@ public class NPCListDialog extends MessagePrompt
 				return 0;
 			}
 		});
-		arg0.getForWhom().sendRawMessage(ChatColor.GREEN + "There is/are " + npcs.length + " npc(s) avaiblable.");
+		arg0.getForWhom().sendRawMessage(ChatColor.GREEN + "There is/are " + npcs.length + " npc(s) available.");
 		if(12 * this.page > npcs.length)
 			this.page = npcs.length / 12;
 

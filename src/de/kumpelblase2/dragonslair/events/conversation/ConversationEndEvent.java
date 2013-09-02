@@ -6,7 +6,7 @@ import org.bukkit.event.HandlerList;
 
 public class ConversationEndEvent extends ConversationEvent
 {
-	private static HandlerList handlers = new HandlerList();
+	private static final HandlerList handlers = new HandlerList();
 
 	public ConversationEndEvent(Player inPlayer, int inID, Conversation inConv)
 	{

@@ -30,7 +30,7 @@ public class NPCDeleteDialog extends ValidatingPrompt
 			if(input.equals("back"))
 				return new NPCManageDialog();
 
-			Integer id = 0;
+			Integer id;
 			try
 			{
 				id = Integer.parseInt(input);

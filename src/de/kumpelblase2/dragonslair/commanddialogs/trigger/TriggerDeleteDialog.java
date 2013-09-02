@@ -44,7 +44,7 @@ public class TriggerDeleteDialog extends ValidatingPrompt
 			{
 				final int id = (Integer)arg0.getSessionData("trigger_id");
 				DragonsLairMain.debugLog("Deleted trigger with id '" + id + "'");
-				DragonsLairMain.getSettings().getTriggers().get((Integer)id).remove();
+				DragonsLairMain.getSettings().getTriggers().get(id).remove();
 				DragonsLairMain.getSettings().getTriggers().remove(id);
 				DragonsLairMain.getInstance().getEventHandler().reloadTriggers();
 			}
@@ -81,10 +81,7 @@ public class TriggerDeleteDialog extends ValidatingPrompt
 		}
 		else
 		{
-			if(arg1.length() > 0)
-				return true;
-
-			return false;
+			return arg1.length() > 0;
 		}
 	}
 }

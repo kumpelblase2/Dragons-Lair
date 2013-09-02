@@ -24,7 +24,7 @@ public class RespawnPrompt extends ValidatingPrompt
 		}
 		else
 		{
-			arg0.getForWhom().sendRawMessage(ChatColor.GREEN + "Do you really whish to get ressurrected? This will cost you " + DragonsLairMain.getInstance().getConfig().getInt("resurrect") + " but you'll get your items back.");
+			arg0.getForWhom().sendRawMessage(ChatColor.GREEN + "Do you really wish to get resurrected? This will cost you " + DragonsLairMain.getInstance().getConfig().getInt("resurrect") + " but you'll get your items back.");
 			return ChatColor.YELLOW + "If you are sure, type 'yes' in the chat.";
 		}
 	}

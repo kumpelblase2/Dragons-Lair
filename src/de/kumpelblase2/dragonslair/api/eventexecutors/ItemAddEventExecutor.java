@@ -17,7 +17,7 @@ public class ItemAddEventExecutor implements EventExecutor
 		try
 		{
 			final String scope = e.getOption("scope");
-			Material itemMat = Material.AIR;
+			Material itemMat;
 			if(e.getOption("item_id").equals("money"))
 			{
 				if(DragonsLairMain.getInstance().isEconomyEnabled())

@@ -9,7 +9,7 @@ public class EventCallEvent extends BaseEvent
 	private final Player m_player;
 	private final Event m_event;
 	private boolean m_onCooldown;
-	private static HandlerList handlers = new HandlerList();
+	private static final HandlerList handlers = new HandlerList();
 
 	public EventCallEvent(final Event e, final Player p, final boolean onCD)
 	{

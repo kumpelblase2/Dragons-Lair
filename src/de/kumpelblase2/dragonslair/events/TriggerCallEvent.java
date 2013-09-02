@@ -9,7 +9,7 @@ public class TriggerCallEvent extends BaseEvent
 	private final Trigger m_trigger;
 	private final Player m_player;
 	private boolean m_onCooldown;
-	private static HandlerList handlers = new HandlerList();
+	private static final HandlerList handlers = new HandlerList();
 
 	public TriggerCallEvent(final Trigger t, final Player p, final boolean onCD)
 	{

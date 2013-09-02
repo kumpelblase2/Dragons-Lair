@@ -8,7 +8,7 @@ public class ChapterChangeEvent extends BaseEvent
 {
 	private final ActiveDungeon dungeon;
 	private final Chapter nextChapter;
-	private static HandlerList handlers = new HandlerList();
+	private static final HandlerList handlers = new HandlerList();
 
 	public ChapterChangeEvent(final ActiveDungeon dungeon, final Chapter chapter)
 	{

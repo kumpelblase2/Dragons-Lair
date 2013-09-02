@@ -15,9 +15,9 @@ public enum Tables
 	SCHEDULED_EVENTS("scheduled_events", "CREATE TABLE `scheduled_events` (" + "`schedule_id` int(10) unsigned AUTO_INCREMENT," + "`event_ids` varchar(255) NOT NULL," + "`init_delay` int(10) unsigned," + "`repeating` tinyint(1) unsigned," + "`repeating_delay` int(10) unsigned," + "`auto_start` tinyint(1) unsigned," + "PRIMARY KEY (`schedule_id`)" + ") ENGINE=InnoDB DEFAULT CHARSET=latin1", "CREATE TABLE \"scheduled_events\" (" + "\"schedule_id\" INTEGER PRIMARY KEY AUTOINCREMENT," + "\"event_ids\" text," + "\"init_delay\" INTEGER," + "\"repeating\" integer(1,0)," + "\"repeating_delay\" INTEGER," + "\"auto_start\" integer(1,0))"),
 	DEATH_LOCATIONS("death_locations", "CREATE TABLE `death_locations` (" + "`player_name`varchar(16) NOT NULL," + "`party_id` bigint(20) unsigned," + "`death_location` varchar(255) NOT NULL," + "`armor` varchar(255) NOT NULL," + "`inventory` text" + ") ENGINE=InnoDB DEFAULT CHARSET=latin1", "CREATE TABLE \"death_locations\" (" + "\"player_name\" text," + "\"party_id\" INTEGER," + "\"death_location\" text," + "\"armor\" text," + "\"inventory\" text" + ")");
 
-	private String table;
-	private String create;
-	private String sqliteCreate;
+	private final String table;
+	private final String create;
+	private final String sqliteCreate;
 
 	private Tables(final String name, final String creatQuery, final String sqliteQuery)
 	{

@@ -1,5 +1,6 @@
 package de.kumpelblase2.dragonslair.commanddialogs.trigger;
 
+import java.util.List;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.*;
 import de.kumpelblase2.dragonslair.DragonsLairMain;
@@ -30,9 +31,10 @@ public class TriggerEditDialog extends ValidatingPrompt
 			{
 				arg0.getForWhom().sendRawMessage("Please enter an event id to remove:");
 				final StringBuilder sb = new StringBuilder();
-				for(final Integer id : this.t.getEventIDs().toArray(new Integer[0]))
+				List<Integer> var = this.t.getEventIDs();
+				for(final Integer id : var.toArray(new Integer[var.size()]))
 				{
-					sb.append(id + ", ");
+					sb.append(id).append(", ");
 				}
 
 				if(sb.length() >= 2)
@@ -46,7 +48,7 @@ public class TriggerEditDialog extends ValidatingPrompt
 				final StringBuilder sb = new StringBuilder();
 				for(final TriggerType type : TriggerType.values())
 				{
-					sb.append(type.toString() + ", ");
+					sb.append(type.toString()).append(", ");
 				}
 
 				if(sb.length() >= 2)

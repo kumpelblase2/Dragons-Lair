@@ -21,7 +21,7 @@ public class MapList
 		return null;
 	}
 
-	public void addMap(final Player p, final DLMap map)
+	public void addMap(final DLMap map)
 	{
 		this.maps.add(new MapEntry(map));
 	}

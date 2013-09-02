@@ -21,15 +21,15 @@ public class TriggerCreateDialog extends ValidatingPrompt
 			final StringBuilder sb = new StringBuilder();
 			for(int i = 0; i < TriggerType.values().length; i++)
 			{
-				sb.append(ChatColor.AQUA + TriggerType.values()[i].toString() + ChatColor.WHITE);
+				sb.append(ChatColor.AQUA).append(TriggerType.values()[i].toString()).append(ChatColor.WHITE);
 				if(i != TriggerType.values().length - 1)
 					sb.append(", ");
 			}
 
-			return ChatColor.GREEN + "Avaible types: " + sb.toString();
+			return ChatColor.GREEN + "Available types: " + sb.toString();
 		}
 		else if(arg0.getSessionData("event_ids") == null)
-			return ChatColor.GREEN + "Please enter the event ids that should be excuted (separated by a komma):";
+			return ChatColor.GREEN + "Please enter the event ids that should be executed (separated by a comma):";
 		else if(arg0.getSessionData("add_option") == null)
 			return ChatColor.GREEN + "Do you want to add another option to the trigger?";
 		else if((Boolean)arg0.getSessionData("add_option"))
@@ -121,7 +121,7 @@ public class TriggerCreateDialog extends ValidatingPrompt
 				}
 
 				t.setEventIDs(ids);
-				t.setOptions((options).toArray(new Option[0]));
+				t.setOptions((options).toArray(new Option[(options).size()]));
 				GeneralUtilities.recalculateOptions(t);
 				t.save();
 				DragonsLairMain.debugLog("Created trigger with id '" + t.getID() + "'");
@@ -227,10 +227,7 @@ public class TriggerCreateDialog extends ValidatingPrompt
 		else if(arg0.getSessionData("add_option") == null)
 		{
 			final AnswerType type = new AnswerConverter(arg1).convert();
-			if(type == AnswerType.NOTHING)
-				return false;
-
-			return true;
+			return type != AnswerType.NOTHING;
 		}
 		else if((Boolean)arg0.getSessionData("add_option"))
 		{
@@ -238,7 +235,7 @@ public class TriggerCreateDialog extends ValidatingPrompt
 			if(options.hasOption(arg1))
 				return true;
 
-			arg0.getForWhom().sendRawMessage(ChatColor.RED + "The option is not avaiable for this trigger type.");
+			arg0.getForWhom().sendRawMessage(ChatColor.RED + "The option is not available for this trigger type.");
 			return false;
 		}
 		else

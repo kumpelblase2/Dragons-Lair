@@ -107,9 +107,9 @@ public class LoggingManager
 		this.logEntry(ad, inCurrent, entry);
 	}
 
-	public void logEntry(final ActiveDungeon ad, final BlockState inNew, final Recoverable entry)
+	void logEntry(final ActiveDungeon ad, final BlockState inNew, final Recoverable entry)
 	{
-		Map<Integer, Map<Location, Recoverable>> partyEntries = new HashMap<Integer, Map<Location, Recoverable>>();
+		Map<Integer, Map<Location, Recoverable>> partyEntries;
 		if(this.m_logEntries.containsKey(ad.getInfo().getName()))
 		{
 			partyEntries = this.m_logEntries.get(ad.getInfo().getName());
@@ -152,12 +152,12 @@ public class LoggingManager
 		entry.save();
 	}
 
-	public void addEntry(final String inDungeon, final int inParty, final Recoverable inEntry)
+	void addEntry(final String inDungeon, final int inParty, final Recoverable inEntry)
 	{
 		if(inEntry == null)
 			return;
 
-		Map<Integer, Map<Location, Recoverable>> partyEntries = new HashMap<Integer, Map<Location, Recoverable>>();
+		Map<Integer, Map<Location, Recoverable>> partyEntries;
 		if(this.m_logEntries.containsKey(inDungeon))
 		{
 			partyEntries = this.m_logEntries.get(inDungeon);

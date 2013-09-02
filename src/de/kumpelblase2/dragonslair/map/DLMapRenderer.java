@@ -57,7 +57,7 @@ public class DLMapRenderer extends MapRenderer
 		map.setRendered(true);
 	}
 
-	public static void clear(final MapCanvas canvas)
+	private static void clear(final MapCanvas canvas)
 	{
 		for(int i = 0; i < 128; i++)
 		{

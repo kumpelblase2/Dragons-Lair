@@ -22,12 +22,12 @@ public class NPCConversation
 		this.hnpc = DragonsLairMain.getDungeonManager().getNPCManager().getByDatabaseID(n.getID());
 	}
 
-	public void adandon()
+	public void abandon()
 	{
 		this.conv.abandon();
 	}
 
-	public boolean isAdandoned()
+	public boolean isAbandoned()
 	{
 		return this.conv.getState() == ConversationState.ABANDONED;
 	}

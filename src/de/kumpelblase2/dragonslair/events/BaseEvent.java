@@ -4,7 +4,7 @@ import org.bukkit.event.*;
 
 public abstract class BaseEvent extends Event implements Cancellable
 {
-	protected static HandlerList handlers = new HandlerList();
+	private static final HandlerList handlers = new HandlerList();
 	private boolean cancelled = false;
 
 	@Override

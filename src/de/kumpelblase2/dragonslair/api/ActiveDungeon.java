@@ -68,7 +68,7 @@ public class ActiveDungeon
 			pl.getInventory().clear();
 			final PlayerSave save = new PlayerSave(pl, p);
 			if(!save.restore())
-				WorldUtility.enhancedTelepot(pl, this.getInfo().getStartingPosition());
+				WorldUtility.enhancedTeleport(pl, this.getInfo().getStartingPosition());
 
 			pl.updateInventory();
 			save.remove();

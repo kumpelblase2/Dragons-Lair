@@ -22,7 +22,7 @@ public class DialogEditDialog extends ValidatingPrompt
 			final StringBuilder sb = new StringBuilder();
 			for(final String option : this.options)
 			{
-				sb.append(option + ", ");
+				sb.append(option).append(", ");
 			}
 
 			sb.substring(sb.length() - 2);

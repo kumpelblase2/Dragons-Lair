@@ -13,7 +13,7 @@ import de.kumpelblase2.dragonslair.utilities.WorldUtility;
 
 public class DungeonEditDialog extends ValidatingPrompt
 {
-	public final String[] options = new String[]{ "name", "starting objective", "starting chapter", "starting pos", "safe word", "min players", "max players", "starting message", "ending message", "ready message", "breakable blocks" };
+	private final String[] options = new String[]{ "name", "starting objective", "starting chapter", "starting pos", "safe word", "min players", "max players", "starting message", "ending message", "ready message", "breakable blocks" };
 
 	@Override
 	public String getPromptText(final ConversationContext context)
@@ -41,7 +41,7 @@ public class DungeonEditDialog extends ValidatingPrompt
 				return ChatColor.GREEN + "Please enter a new starting message:";
 			else if(option.equals("ending message"))
 				return ChatColor.GREEN + "Please enter a new ending message:";
-			else if(option.equals("reapty message"))
+			else if(option.equals("ready message"))
 				return ChatColor.GREEN + "Please enter a new ready message:";
 			else
 				return ChatColor.GREEN + "Should blocks be breakable?";
@@ -51,7 +51,7 @@ public class DungeonEditDialog extends ValidatingPrompt
 		final StringBuilder sb = new StringBuilder();
 		for(int i = 0; i < this.options.length; i++)
 		{
-			sb.append(ChatColor.AQUA + this.options[i]);
+			sb.append(ChatColor.AQUA).append(this.options[i]);
 			if(i != this.options.length - 1)
 				sb.append(",");
 		}
@@ -113,7 +113,7 @@ public class DungeonEditDialog extends ValidatingPrompt
 			final String option = (String)arg0.getSessionData("option");
 			if(option.equals("name"))
 				d.setName(arg1);
-			else if(option.equals("starting objecitve"))
+			else if(option.equals("starting objective"))
 				d.setStartingObjective(Integer.parseInt(arg1));
 			else if(option.equals("starting chapter"))
 				d.setStartingChapter(Integer.parseInt(arg1));
@@ -157,7 +157,7 @@ public class DungeonEditDialog extends ValidatingPrompt
 
 		if(arg0.getSessionData("dungeon") == null)
 		{
-			Dungeon d = null;
+			Dungeon d;
 			try
 			{
 				final Integer id = Integer.parseInt(arg1);

@@ -251,10 +251,7 @@ public class DungeonManager
 	public boolean despawnNPC(final String name)
 	{
 		final NPC n = DragonsLairMain.getSettings().getNPCByName(name);
-		if(n == null)
-			return false;
-
-		return this.despawnNPC(n.getID());
+		return n != null && this.despawnNPC(n.getID());
 	}
 
 	public boolean despawnNPC(final Integer id)
@@ -438,7 +435,7 @@ public class DungeonManager
 			return;
 
 		DragonsLairMain.debugLog("Giving dungeon map to '" + player.getName() + "'");
-		this.maps.addMap(player, new DLMap(player));
+		this.maps.addMap(new DLMap(player));
 	}
 
 	public DLMap getMapOfPlayer(final Player p)
@@ -508,7 +505,7 @@ public class DungeonManager
 		return null;
 	}
 
-	public void clearMobs(final int id)
+	void clearMobs(final int id)
 	{
 		final Iterator<EventMonster> mobs = this.spawnedEntities.iterator();
 		while(mobs.hasNext())
@@ -597,7 +594,7 @@ public class DungeonManager
 				final StringBuilder sb = new StringBuilder();
 				for(final EventActionType ctype : EventActionType.values())
 				{
-					sb.append("'" + ctype.toString().toLowerCase() + "',");
+					sb.append("'").append(ctype.toString().toLowerCase()).append("',");
 				}
 
 				if(sb.length() > 1)
@@ -627,7 +624,8 @@ public class DungeonManager
 				final StringBuilder sb = new StringBuilder();
 				for(final EventActionType ctype : EventActionType.values())
 				{
-					if(!ctype.toString().equalsIgnoreCase(type)) sb.append("'" + ctype.toString().toLowerCase() + "',");
+					if(!ctype.toString().equalsIgnoreCase(type))
+						sb.append("'").append(ctype.toString().toLowerCase()).append("',");
 				}
 
 				if(sb.length() > 1)
@@ -658,7 +656,7 @@ public class DungeonManager
 				final StringBuilder sb = new StringBuilder();
 				for(final TriggerType ctype : TriggerType.values())
 				{
-					sb.append("'" + ctype.toString().toLowerCase() + "',");
+					sb.append("'").append(ctype.toString().toLowerCase()).append("',");
 				}
 
 				if(sb.length() > 1)
@@ -689,7 +687,7 @@ public class DungeonManager
 				for(final TriggerType ctype : TriggerType.values())
 				{
 					if(!ctype.toString().equalsIgnoreCase(type))
-						sb.append("'" + ctype.toString().toLowerCase() + "',");
+						sb.append("'").append(ctype.toString().toLowerCase()).append("',");
 				}
 
 				if(sb.length() > 1)

@@ -10,11 +10,11 @@ import de.kumpelblase2.remoteentities.api.RemoteEntity;
 
 public class ConversationEvent extends BaseEvent
 {
-	protected final NPC npc;
-	protected final RemoteEntity hnpc;
-	protected final Conversation conv;
-	protected final Player player;
-	private static HandlerList handlers = new HandlerList();
+	private final NPC npc;
+	private final RemoteEntity hnpc;
+	private final Conversation conv;
+	private final Player player;
+	private static final HandlerList handlers = new HandlerList();
 
 	public ConversationEvent(final Player inPlayer, final int inID, final Conversation inConv)
 	{

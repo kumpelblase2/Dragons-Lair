@@ -8,8 +8,8 @@ import de.kumpelblase2.dragonslair.api.Dialog;
 
 public class ConversationNextDialogEvent extends ConversationEvent
 {
-	protected final int nextDialog;
-	private static HandlerList handlers = new HandlerList();
+	private final int nextDialog;
+	private static final HandlerList handlers = new HandlerList();
 
 	public ConversationNextDialogEvent(final Player inPlayer, final int inID, final Conversation inConv, final int next)
 	{

@@ -7,7 +7,7 @@ import sun.reflect.*;
 @SuppressWarnings("restriction")
 public final class EnumChange
 {
-	private static ReflectionFactory reflectionFactory = ReflectionFactory.getReflectionFactory();
+	private static final ReflectionFactory reflectionFactory = ReflectionFactory.getReflectionFactory();
 
 	private static void setFailsafeFieldValue(final Field field, final Object target, final Object value) throws NoSuchFieldException, IllegalAccessException
 	{
@@ -57,7 +57,7 @@ public final class EnumChange
 	{
 		final Object[] parms = new Object[additionalValues.length + 2];
 		parms[0] = value;
-		parms[1] = Integer.valueOf(ordinal);
+		parms[1] = ordinal;
 		System.arraycopy(additionalValues, 0, parms, 2, additionalValues.length);
 		return enumClass.cast(getConstructorAccessor(enumClass, additionalTypes).newInstance(parms));
 	}

@@ -21,14 +21,14 @@ public class PlayerTeleportEventExecutor implements EventExecutor
 			final int y = Integer.parseInt(e.getOption("y"));
 			final int z = Integer.parseInt(e.getOption("z"));
 			if(scope == null || scope.equalsIgnoreCase("single"))
-				WorldUtility.enhancedTelepot(p, new Location(Bukkit.getWorld(world), x, y, z));
+				WorldUtility.enhancedTeleport(p, new Location(Bukkit.getWorld(world), x, y, z));
 			else
 			{
 				final ActiveDungeon d = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
 				for(final String member : d.getCurrentParty().getMembers())
 				{
 					final Player pl = Bukkit.getPlayer(member);
-					WorldUtility.enhancedTelepot(pl, new Location(Bukkit.getWorld(world), x, y, z));
+					WorldUtility.enhancedTeleport(pl, new Location(Bukkit.getWorld(world), x, y, z));
 				}
 			}
 		}

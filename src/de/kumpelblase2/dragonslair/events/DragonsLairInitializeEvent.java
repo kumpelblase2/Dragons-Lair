@@ -6,7 +6,7 @@ import de.kumpelblase2.dragonslair.DragonsLairMain;
 public class DragonsLairInitializeEvent extends BaseEvent
 {
 	private final DragonsLairMain instance;
-	private static HandlerList handlers = new HandlerList();
+	private static final HandlerList handlers = new HandlerList();
 
 	public DragonsLairInitializeEvent(final DragonsLairMain plugin)
 	{

@@ -7,7 +7,7 @@ import de.kumpelblase2.dragonslair.events.BaseEvent;
 public class DungeonEndEvent extends BaseEvent
 {
 	private final ActiveDungeon dungeon;
-	private static HandlerList handlers = new HandlerList();
+	private static final HandlerList handlers = new HandlerList();
 
 	public DungeonEndEvent(final ActiveDungeon dungeon)
 	{

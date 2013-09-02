@@ -42,16 +42,16 @@ public class DungeonManageDialog extends ValidatingPrompt
 	{
 		if(arg1.contains(" "))
 		{
-			final String splitt[] = arg1.split("\\ ");
-			if(!splitt[0].equals("list"))
+			final String split[] = arg1.split("\\ ");
+			if(!split[0].equals("list"))
 				return false;
-			else if(splitt.length > 2)
+			else if(split.length > 2)
 				return false;
 			else
 			{
 				try
 				{
-					Integer.parseInt(splitt[1]);
+					Integer.parseInt(split[1]);
 					return true;
 				}
 				catch(final Exception e)

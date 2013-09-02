@@ -118,7 +118,7 @@ public class DLMap
 			}
 		}
 
-		return mapLines.toArray(new String[0]);
+		return mapLines.toArray(new String[mapLines.size()]);
 	}
 
 	public String getText()

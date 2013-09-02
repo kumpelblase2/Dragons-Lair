@@ -9,12 +9,12 @@ import de.kumpelblase2.dragonslair.api.NPC;
 import de.kumpelblase2.dragonslair.events.conversation.ConversationNextDialogEvent;
 import de.kumpelblase2.dragonslair.utilities.GeneralUtilities;
 
-public class StorylineQuestionPromt extends ValidatingPrompt
+public class StorylineQuestionPrompt extends ValidatingPrompt
 {
 	private final Dialog dialog;
 	private final NPC npc;
 
-	public StorylineQuestionPromt(final Dialog d, final NPC inNPC)
+	public StorylineQuestionPrompt(final Dialog d, final NPC inNPC)
 	{
 		this.dialog = d;
 		this.npc = inNPC;

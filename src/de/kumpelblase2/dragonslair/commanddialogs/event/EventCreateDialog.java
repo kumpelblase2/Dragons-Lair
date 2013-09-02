@@ -22,7 +22,7 @@ public class EventCreateDialog extends ValidatingPrompt
 			final StringBuilder types = new StringBuilder();
 			for(final EventActionType type : EventActionType.values())
 			{
-				types.append(ChatColor.AQUA + type.toString() + ChatColor.WHITE + ", ");
+				types.append(ChatColor.AQUA).append(type.toString()).append(ChatColor.WHITE).append(", ");
 			}
 
 			return types.deleteCharAt(types.length() - 2).toString();
@@ -41,6 +41,7 @@ public class EventCreateDialog extends ValidatingPrompt
 					currentOptions.append("; ");
 			}
 
+			arg0.getForWhom().sendRawMessage(ChatColor.YELLOW + currentOptions.toString());
 			return ChatColor.GREEN + "Do you want to add another option to the event?";
 		}
 		else if((Boolean)arg0.getSessionData("add_option"))
@@ -125,8 +126,7 @@ public class EventCreateDialog extends ValidatingPrompt
 			}
 
 			final String type = (String)arg0.getSessionData("event_option_type");
-			final String value = arg1;
-			final Option o = new Option(type, value);
+			final Option o = new Option(type, arg1);
 			if(arg0.getSessionData("event_options") == null)
 			{
 				final ArrayList<Option> options = new ArrayList<Option>();
@@ -167,7 +167,7 @@ public class EventCreateDialog extends ValidatingPrompt
 
 		final Event e = new Event();
 		e.setActionType(EventActionType.valueOf(((String)context.getSessionData("event_type")).replace(" ", "_").toUpperCase()));
-		e.setOptions((options).toArray(new Option[0]));
+		e.setOptions(options.toArray(new Option[options.size()]));
 		e.save();
 		DragonsLairMain.getSettings().getEvents().put(e.getID(), e);
 		return e;
@@ -195,10 +195,7 @@ public class EventCreateDialog extends ValidatingPrompt
 		else if(arg0.getSessionData("add_option") == null)
 		{
 			final AnswerType answer = new AnswerConverter(arg1).convert();
-			if(answer != AnswerType.NOTHING)
-				return true;
-
-			return false;
+			return answer != AnswerType.NOTHING;
 		}
 		else if((Boolean)arg0.getSessionData("add_option"))
 		{
@@ -206,7 +203,7 @@ public class EventCreateDialog extends ValidatingPrompt
 				return true;
 			else
 			{
-				arg0.getForWhom().sendRawMessage(ChatColor.RED + "This option is not avaiable for this event type.");
+				arg0.getForWhom().sendRawMessage(ChatColor.RED + "This option is not available for this event type.");
 				return false;
 			}
 		}

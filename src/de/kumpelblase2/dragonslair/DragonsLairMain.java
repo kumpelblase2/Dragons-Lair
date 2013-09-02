@@ -116,7 +116,7 @@ public class DragonsLairMain extends JavaPlugin
 					debugLog("Loaded " + DragonsLairMain.this.manager.getSettings().getTriggers().size() + " triggers");
 					debugLog("Loaded " + DragonsLairMain.this.manager.getSettings().getEvents().size() + " events");
 					debugLog("Loaded " + DragonsLairMain.this.manager.getSettings().getDialogs().size() + " dialogs");
-					debugLog("Loaded " + DragonsLairMain.this.manager.getSettings().getObjectives().size() + " objectivess");
+					debugLog("Loaded " + DragonsLairMain.this.manager.getSettings().getObjectives().size() + " objectives");
 					debugLog("Loaded " + DragonsLairMain.this.manager.getSettings().getChapters().size() + " chapters");
 					debugLog("Loaded " + DragonsLairMain.this.eventScheduler.getEvents().size() + " scheduled events.");
 				}
@@ -307,7 +307,7 @@ public class DragonsLairMain extends JavaPlugin
 			}
 
 			final BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-			String s = "";
+			String s;
 			while((s = reader.readLine()) != null)
 			{
 				createStatement(s).execute();
@@ -326,8 +326,10 @@ public class DragonsLairMain extends JavaPlugin
 		final Connection conn = getInstance().getMysqlConnection();
 		try
 		{
-			if(conn == null || !isDatabaseAlive()) DragonsLairMain.getInstance().setupDatabase();
+			if(conn == null || !isDatabaseAlive())
+				DragonsLairMain.getInstance().setupDatabase();
 
+			assert conn != null;
 			return conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 		}
 		catch(final SQLException e)
@@ -445,7 +447,7 @@ public class DragonsLairMain extends JavaPlugin
 		this.saveConfig();
 	}
 
-	public void startUpdateCheck()
+	void startUpdateCheck()
 	{
 		if(this.getConfig().getBoolean("update-notice"))
 			Bukkit.getScheduler().scheduleAsyncRepeatingTask(this, new Runnable()
@@ -458,7 +460,7 @@ public class DragonsLairMain extends JavaPlugin
 			}, 1L, this.getConfig().getInt("update-notice-interval") * 20 * 60);
 	}
 
-	public void checkForUpdates()
+	void checkForUpdates()
 	{
 		try
 		{
@@ -468,7 +470,7 @@ public class DragonsLairMain extends JavaPlugin
 			if(currentVersion.getNodeType() == Node.ELEMENT_NODE)
 			{
 				final NodeList description = ((Element)currentVersion).getElementsByTagName("title");
-				final Node titleNode = ((Element)description.item(0)).getFirstChild();
+				final Node titleNode = description.item(0).getFirstChild();
 				String title = titleNode.getNodeValue();
 				title = title.replace("Dragons", "").replace("Lair", "").replace("v", "").replace(" - ", "").replace("Beta", "").replace(" ", "");
 				if(this.getDescription().getVersion().equals(title)) return;

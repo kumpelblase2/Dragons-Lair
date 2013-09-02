@@ -1,7 +1,6 @@
 package de.kumpelblase2.dragonslair.commanddialogs.objectives;
 
-import java.util.Arrays;
-import java.util.Comparator;
+import java.util.*;
 import org.bukkit.conversations.*;
 import de.kumpelblase2.dragonslair.DragonsLairMain;
 import de.kumpelblase2.dragonslair.api.Objective;
@@ -23,7 +22,8 @@ public class ObjectiveListDialog extends MessagePrompt
 	@Override
 	public String getPromptText(final ConversationContext arg0)
 	{
-		final Objective[] objectives = DragonsLairMain.getSettings().getObjectives().values().toArray(new Objective[0]);
+		Collection<Objective> var = DragonsLairMain.getSettings().getObjectives().values();
+		final Objective[] objectives = var.toArray(new Objective[var.size()]);
 		Arrays.sort(objectives, new Comparator<Objective>()
 		{
 			@Override
@@ -34,7 +34,7 @@ public class ObjectiveListDialog extends MessagePrompt
 				else return 0;
 			}
 		});
-		arg0.getForWhom().sendRawMessage("There is/are " + objectives.length + " objective(s) avaiblable.");
+		arg0.getForWhom().sendRawMessage("There is/are " + objectives.length + " objective(s) available.");
 		if(10 * this.page >= objectives.length) this.page = objectives.length / 12;
 		for(int i = 12 * this.page; i < objectives.length && i < 10 * this.page + 12; i++)
 		{

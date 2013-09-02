@@ -12,7 +12,7 @@ public class Dungeon
 	private int id;
 	private Objective startingObjective;
 	private Chapter startingChapter;
-	private Location startinPosition;
+	private Location startingPosition;
 	private String safeWord;
 	private int minPlayers;
 	private int maxPlayers;
@@ -34,7 +34,7 @@ public class Dungeon
 			this.name = result.getString(TableColumns.Dungeons.NAME);
 			this.startingObjective = DragonsLairMain.getSettings().getObjectives().get(result.getInt(TableColumns.Dungeons.STARTING_OBJECTIVE));
 			this.startingChapter = DragonsLairMain.getSettings().getChapters().get(result.getInt(TableColumns.Dungeons.STARTING_CHAPTER));
-			this.startinPosition = WorldUtility.stringToLocation(result.getString(TableColumns.Dungeons.STARTING_POSITION));
+			this.startingPosition = WorldUtility.stringToLocation(result.getString(TableColumns.Dungeons.STARTING_POSITION));
 			this.safeWord = result.getString(TableColumns.Dungeons.SAFE_WORD);
 			this.maxPlayers = result.getInt(TableColumns.Dungeons.MAX_PLAYERS);
 			this.minPlayers = result.getInt(TableColumns.Dungeons.MIN_PLAYERS);
@@ -95,12 +95,12 @@ public class Dungeon
 
 	public Location getStartingPosition()
 	{
-		return this.startinPosition;
+		return this.startingPosition;
 	}
 
 	public void setStartingLocation(final Location loc)
 	{
-		this.startinPosition = loc;
+		this.startingPosition = loc;
 	}
 
 	public String getSafeWord()
@@ -184,7 +184,7 @@ public class Dungeon
 				st.setString(2, this.name);
 				st.setInt(3, this.startingObjective.getID());
 				st.setInt(4, this.startingChapter.getID());
-				st.setString(5, WorldUtility.locationToString(this.startinPosition));
+				st.setString(5, WorldUtility.locationToString(this.startingPosition));
 				st.setString(6, this.safeWord);
 				st.setInt(7, this.minPlayers);
 				st.setInt(8, this.maxPlayers);
@@ -200,7 +200,7 @@ public class Dungeon
 				st.setString(1, this.name);
 				st.setInt(2, this.startingObjective.getID());
 				st.setInt(3, this.startingChapter.getID());
-				st.setString(4, WorldUtility.locationToString(this.startinPosition));
+				st.setString(4, WorldUtility.locationToString(this.startingPosition));
 				st.setString(5, this.safeWord);
 				st.setInt(6, this.minPlayers);
 				st.setInt(7, this.maxPlayers);

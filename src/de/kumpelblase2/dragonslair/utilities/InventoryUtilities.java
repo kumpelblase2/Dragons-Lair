@@ -101,11 +101,11 @@ public final class InventoryUtilities
 			return new ItemStack[0];
 
 		ItemStack[] items;
-		final String[] itemSplitt = inv.split(";");
-		items = new ItemStack[itemSplitt.length];
-		for(int i = 0; i < itemSplitt.length; i++)
+		final String[] itemSplit = inv.split(";");
+		items = new ItemStack[itemSplit.length];
+		for(int i = 0; i < itemSplit.length; i++)
 		{
-			final String[] itemdata = itemSplitt[i].split(":");
+			final String[] itemdata = itemSplit[i].split(":");
 			try
 			{
 				if(itemdata.length >= 3)
@@ -127,8 +127,7 @@ public final class InventoryUtilities
 			}
 			catch(final Exception e)
 			{
-				DragonsLairMain.Log.warning("Unable to parse item: " + itemSplitt[i]);
-				continue;
+				DragonsLairMain.Log.warning("Unable to parse item: " + itemSplit[i]);
 			}
 		}
 
@@ -147,12 +146,12 @@ public final class InventoryUtilities
 				itemString.append("0:0:0");
 			else
 			{
-				itemString.append(items[i].getTypeId() + ":" + items[i].getAmount() + ":" + items[i].getDurability());
+				itemString.append(items[i].getTypeId()).append(":").append(items[i].getAmount()).append(":").append(items[i].getDurability());
 				if(items[i].getEnchantments().size() > 0)
 				{
 					for(final Entry<Enchantment, Integer> enchantment : items[i].getEnchantments().entrySet())
 					{
-						itemString.append(":" + enchantment.getKey().getName() + ":" + enchantment.getValue());
+						itemString.append(":").append(enchantment.getKey().getName()).append(":").append(enchantment.getValue());
 					}
 				}
 			}

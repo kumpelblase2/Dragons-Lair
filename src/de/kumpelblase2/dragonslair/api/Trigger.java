@@ -28,18 +28,18 @@ public class Trigger
 			final String options = result.getString(TableColumns.Triggers.TYPE_OPTIONS);
 			if(options.contains(":"))
 			{
-				final String[] optionSplitt = options.split(";");
-				this.type_options = new Option[optionSplitt.length];
-				for(int i = 0; i < optionSplitt.length; i++)
+				final String[] optionSplit = options.split(";");
+				this.type_options = new Option[optionSplit.length];
+				for(int i = 0; i < optionSplit.length; i++)
 				{
 					try
 					{
-						final String[] splitt = optionSplitt[i].split(":");
-						this.type_options[i] = new Option(splitt[0], splitt[1]);
+						final String[] split = optionSplit[i].split(":");
+						this.type_options[i] = new Option(split[0], split[1]);
 					}
 					catch(final Exception e)
 					{
-						DragonsLairMain.Log.warning("Unable to parse trigger option: " + optionSplitt[i]);
+						DragonsLairMain.Log.warning("Unable to parse trigger option: " + optionSplit[i]);
 					}
 				}
 			}
@@ -49,17 +49,17 @@ public class Trigger
 			final String eventsString = result.getString(TableColumns.Triggers.ACTION_EVENT_ID);
 			if(eventsString != null && eventsString.contains(";"))
 			{
-				final String[] eventsSplitt = eventsString.split(";");
-				final Integer[] eventIDs = new Integer[eventsSplitt.length];
-				for(int i = 0; i < eventsSplitt.length; i++)
+				final String[] eventsSplit = eventsString.split(";");
+				final Integer[] eventIDs = new Integer[eventsSplit.length];
+				for(int i = 0; i < eventsSplit.length; i++)
 				{
 					try
 					{
-						eventIDs[i] = Integer.parseInt(eventsSplitt[i]);
+						eventIDs[i] = Integer.parseInt(eventsSplit[i]);
 					}
 					catch(final Exception e)
 					{
-						DragonsLairMain.Log.warning("Unable to parse event id " + eventsSplitt[i]);
+						DragonsLairMain.Log.warning("Unable to parse event id " + eventsSplit[i]);
 					}
 				}
 
@@ -136,8 +136,8 @@ public class Trigger
 		{
 			try
 			{
-				final String[] splitt = inOptions[i].split(":");
-				tmpOptions[i] = new Option(splitt[0], splitt[1]);
+				final String[] split = inOptions[i].split(":");
+				tmpOptions[i] = new Option(split[0], split[1]);
 			}
 			catch(final Exception e)
 			{
@@ -171,7 +171,7 @@ public class Trigger
 			final StringBuilder optionString = new StringBuilder();
 			for(int i = 0; i < this.type_options.length; i++)
 			{
-				optionString.append(this.type_options[i].getType() + ":" + this.type_options[i].getValue());
+				optionString.append(this.type_options[i].getType()).append(":").append(this.type_options[i].getValue());
 				if(i != this.type_options.length - 1)
 					optionString.append(";");
 			}
@@ -222,7 +222,7 @@ public class Trigger
 		final StringBuilder sb = new StringBuilder();
 		for(int i = 0; i < this.type_options.length; i++)
 		{
-			sb.append(this.type_options[i].getType() + ":" + this.type_options[i].getValue());
+			sb.append(this.type_options[i].getType()).append(":").append(this.type_options[i].getValue());
 			if(i != this.type_options.length)
 				sb.append(";");
 		}
@@ -234,7 +234,7 @@ public class Trigger
 	{
 		final List<Option> options = new ArrayList<Option>(Arrays.asList(this.type_options));
 		options.add(o);
-		this.type_options = options.toArray(new Option[0]);
+		this.type_options = options.toArray(new Option[options.size()]);
 	}
 
 	public void setOption(final String key, final String value)
@@ -318,8 +318,7 @@ public class Trigger
 		final StringBuilder sb = new StringBuilder();
 		for(final Cooldown cd : this.cooldowns)
 		{
-			sb.append(cd.getDungeonName() + ":" + cd.getRemainingTime());
-			sb.append(";");
+			sb.append(cd.getDungeonName()).append(":").append(cd.getRemainingTime()).append(";");
 		}
 
 		if(sb.length() > 1)

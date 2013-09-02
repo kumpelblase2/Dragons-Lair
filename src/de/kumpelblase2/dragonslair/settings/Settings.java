@@ -12,7 +12,7 @@ public class Settings
 {
 	private final Map<Integer, Event> events = new HashMap<Integer, Event>();
 	private final Map<Integer, Trigger> triggers = new HashMap<Integer, Trigger>();
-	private final Map<Integer, Chapter> chapers = new HashMap<Integer, Chapter>();
+	private final Map<Integer, Chapter> chapters = new HashMap<Integer, Chapter>();
 	private final Map<Integer, Dialog> dialogs = new HashMap<Integer, Dialog>();
 	private final Map<Integer, Dungeon> dungeons = new HashMap<Integer, Dungeon>();
 	private final Map<Integer, Objective> objectives = new HashMap<Integer, Objective>();
@@ -29,7 +29,7 @@ public class Settings
 		this.loadDungeons();
 	}
 
-	public void loadDungeons()
+	void loadDungeons()
 	{
 		this.dungeons.clear();
 		try
@@ -45,11 +45,10 @@ public class Settings
 		catch(final Exception e)
 		{
 			DragonsLairMain.Log.info("Unable to load dungeons from database: " + e.getMessage());
-			return;
 		}
 	}
 
-	public void loadTriggers()
+	void loadTriggers()
 	{
 		this.triggers.clear();
 		try
@@ -65,13 +64,12 @@ public class Settings
 		catch(final Exception e)
 		{
 			DragonsLairMain.Log.info("Unable to load triggers from database: " + e.getMessage());
-			return;
 		}
 	}
 
-	public void loadChapters()
+	void loadChapters()
 	{
-		this.chapers.clear();
+		this.chapters.clear();
 		try
 		{
 			final PreparedStatement m = DragonsLairMain.createStatement("SELECT * FROM " + Tables.CHAPTERS);
@@ -79,17 +77,16 @@ public class Settings
 			while(result.next())
 			{
 				final Chapter c = new Chapter(result);
-				this.chapers.put(c.getID(), c);
+				this.chapters.put(c.getID(), c);
 			}
 		}
 		catch(final Exception e)
 		{
 			DragonsLairMain.Log.info("Unable to load chapters from database: " + e.getMessage());
-			return;
 		}
 	}
 
-	public void loadDialogs()
+	void loadDialogs()
 	{
 		this.dialogs.clear();
 		try
@@ -105,11 +102,10 @@ public class Settings
 		catch(final Exception e)
 		{
 			DragonsLairMain.Log.info("Unable to load dialogs from database: " + e.getMessage());
-			return;
 		}
 	}
 
-	public void loadObjectives()
+	void loadObjectives()
 	{
 		this.objectives.clear();
 		try
@@ -125,11 +121,10 @@ public class Settings
 		catch(final Exception e)
 		{
 			DragonsLairMain.Log.info("Unable to load objectives from database: " + e.getMessage());
-			return;
 		}
 	}
 
-	public void loadNPCs()
+	void loadNPCs()
 	{
 		this.npcs.clear();
 		try
@@ -146,11 +141,10 @@ public class Settings
 		{
 			DragonsLairMain.Log.info("Unable to load npcs from database:");
 			e.printStackTrace();
-			return;
 		}
 	}
 
-	public void loadEvents()
+	void loadEvents()
 	{
 		this.events.clear();
 		try
@@ -166,7 +160,6 @@ public class Settings
 		catch(final Exception e)
 		{
 			DragonsLairMain.Log.info("Unable to load events from database: " + e.getMessage());
-			return;
 		}
 	}
 
@@ -219,7 +212,7 @@ public class Settings
 
 	public Map<Integer, Chapter> getChapters()
 	{
-		return this.chapers;
+		return this.chapters;
 	}
 
 	public Map<Integer, Objective> getObjectives()

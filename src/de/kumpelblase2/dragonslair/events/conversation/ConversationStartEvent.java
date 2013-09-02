@@ -6,7 +6,7 @@ import org.bukkit.event.HandlerList;
 
 public class ConversationStartEvent extends ConversationNextDialogEvent
 {
-	private static HandlerList handlers = new HandlerList();
+	private static final HandlerList handlers = new HandlerList();
 
 	public ConversationStartEvent(final Player inPlayer, final int inID, final Conversation inConv, final int next)
 	{

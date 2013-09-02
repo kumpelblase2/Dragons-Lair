@@ -28,7 +28,7 @@ public class PlayerQueue
 			}
 		}
 
-		return DragonsLairMain.getDungeonManager().startDungeon(dungeon.getID(), startingPlayers.toArray(new String[0]));
+		return DragonsLairMain.getDungeonManager().startDungeon(dungeon.getID(), startingPlayers.toArray(new String[startingPlayers.size()]));
 	}
 
 	public boolean hasEnoughPeople(final Dungeon dungeon)

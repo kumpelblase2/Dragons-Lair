@@ -56,10 +56,21 @@ public class DLEventHandler implements Listener
 				y2 = t.getOption("y2");
 				z2 = t.getOption("z2");
 				final String world = t.getOption("world");
-				if(x2 == null) x2 = x;
-				if(y2 == null) y2 = y;
-				if(z2 == null) z2 = z;
-				int minx = 0, maxx = 0, miny = 0, maxy = 0, minz = 0, maxz = 0;
+				if(x2 == null)
+					x2 = x;
+
+				if(y2 == null)
+					y2 = y;
+
+				if(z2 == null)
+					z2 = z;
+				
+				int minx;
+				int maxx;
+				int miny;
+				int maxy;
+				int minz;
+				int maxz;
 				try
 				{
 					minx = Integer.parseInt(x);
@@ -1042,8 +1053,11 @@ public class DLEventHandler implements Listener
 		{
 			if(damagerDungeon == null && DragonsLairMain.canPlayersInteract())
 				event.setCancelled(true);
-			else if(!pDungeon.getInfo().getName().equals(damagerDungeon.getInfo().getName()) && DragonsLairMain.canPlayersInteract())
-				event.setCancelled(true);
+			else if(damagerDungeon != null)
+			{
+				if(!pDungeon.getInfo().getName().equals(damagerDungeon.getInfo().getName()) && DragonsLairMain.canPlayersInteract())
+					event.setCancelled(true);
+			}
 		}
 	}
 }

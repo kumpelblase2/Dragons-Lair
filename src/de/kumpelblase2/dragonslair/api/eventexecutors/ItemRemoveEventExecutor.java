@@ -55,7 +55,7 @@ public class ItemRemoveEventExecutor implements EventExecutor
 			}
 			else
 			{
-				Material itemMat = Material.AIR;
+				Material itemMat;
 				if(Material.getMaterial(e.getOption("item_id").replace(" ", "_").toUpperCase()) == null)
 					itemMat = Material.getMaterial(Integer.parseInt(e.getOption("item_id")));
 				else

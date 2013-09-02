@@ -1,7 +1,6 @@
 package de.kumpelblase2.dragonslair.commanddialogs.trigger;
 
-import java.util.Arrays;
-import java.util.Comparator;
+import java.util.*;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.*;
 import de.kumpelblase2.dragonslair.DragonsLairMain;
@@ -24,7 +23,8 @@ public class TriggerListDialog extends MessagePrompt
 	@Override
 	public String getPromptText(final ConversationContext arg0)
 	{
-		final Trigger[] triggers = DragonsLairMain.getSettings().getTriggers().values().toArray(new Trigger[0]);
+		Collection<Trigger> var = DragonsLairMain.getSettings().getTriggers().values();
+		final Trigger[] triggers = var.toArray(new Trigger[var.size()]);
 		Arrays.sort(triggers, new Comparator<Trigger>()
 		{
 			@Override

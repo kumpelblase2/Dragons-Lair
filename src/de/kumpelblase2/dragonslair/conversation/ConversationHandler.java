@@ -20,7 +20,7 @@ public class ConversationHandler implements ConversationAbandonedListener
 		if(d.getType() == DialogType.MESSAGE)
 			return new StorylineMessagePrompt(d, inNPC);
 		else
-			return new StorylineQuestionPromt(d, inNPC);
+			return new StorylineQuestionPrompt(d, inNPC);
 	}
 
 	public Map<String, NPCConversation> getConversations()

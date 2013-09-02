@@ -6,7 +6,7 @@ import de.kumpelblase2.dragonslair.commanddialogs.GeneralConfigDialog;
 
 public class EventManageDialog extends ValidatingPrompt
 {
-	private static String[] options = new String[]{ "create", "delete", "edit", "list", "back" };
+	private static final String[] options = new String[]{ "create", "delete", "edit", "list", "back" };
 
 	@Override
 	public String getPromptText(final ConversationContext arg0)
@@ -42,12 +42,12 @@ public class EventManageDialog extends ValidatingPrompt
 	{
 		if(arg1.contains(" "))
 		{
-			final String[] splitt = arg1.split(" ");
-			if(splitt[0].equals("list") && splitt.length == 2)
+			final String[] split = arg1.split(" ");
+			if(split[0].equals("list") && split.length == 2)
 			{
 				try
 				{
-					Integer.parseInt(splitt[1]);
+					Integer.parseInt(split[1]);
 					return true;
 				}
 				catch(final Exception e)

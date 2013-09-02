@@ -15,7 +15,7 @@ public class ScheduledEventCreateDialog extends ValidatingPrompt
 	public String getPromptText(final ConversationContext arg0)
 	{
 		if(arg0.getSessionData("event_ids") == null)
-			return ChatColor.GREEN + "Please enter the IDs that should be fired (separeted by a comma):";
+			return ChatColor.GREEN + "Please enter the IDs that should be fired (separated by a comma):";
 		else if(arg0.getSessionData("init_delay") == null)
 			return ChatColor.GREEN + "Please enter the delay before the events get executed:";
 		else if(arg0.getSessionData("repeating") == null)
@@ -94,7 +94,7 @@ public class ScheduledEventCreateDialog extends ValidatingPrompt
 			}
 
 			final AnswerType answer = new AnswerConverter(arg1).convert();
-			final boolean autoStart = (answer == AnswerType.AGREEMENT || answer == AnswerType.CONSIDERING_AGREEMENT ? true : false);
+			final boolean autoStart = (answer == AnswerType.AGREEMENT || answer == AnswerType.CONSIDERING_AGREEMENT);
 			final int repeat_delay = (arg0.getSessionData("repeat_delay") == null ? 1 : (Integer)arg0.getSessionData("repeat_delay"));
 			final boolean repeat = (Boolean)arg0.getSessionData("repeating");
 			final int init_delay = (Integer)arg0.getSessionData("init_delay");
@@ -184,10 +184,7 @@ public class ScheduledEventCreateDialog extends ValidatingPrompt
 		else if(arg0.getSessionData("repeating") == null)
 		{
 			final AnswerType answer = new AnswerConverter(arg1).convert();
-			if(answer != AnswerType.NOTHING)
-				return true;
-
-			return false;
+			return answer != AnswerType.NOTHING;
 		}
 		else if((Boolean)arg0.getSessionData("repeating") && arg0.getSessionData("repeat_delay") == null)
 		{
@@ -205,10 +202,7 @@ public class ScheduledEventCreateDialog extends ValidatingPrompt
 		else
 		{
 			final AnswerType answer = new AnswerConverter(arg1).convert();
-			if(answer != AnswerType.NOTHING)
-				return true;
-
-			return false;
+			return answer != AnswerType.NOTHING;
 		}
 	}
 }

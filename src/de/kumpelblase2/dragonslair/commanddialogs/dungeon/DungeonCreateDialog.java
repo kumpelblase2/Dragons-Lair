@@ -272,10 +272,7 @@ public class DungeonCreateDialog extends ValidatingPrompt
 		}
 		else if(context.getSessionData("safe_word") == null)
 		{
-			if(input.length() == 0)
-				return false;
-
-			return true;
+			return input.length() != 0;
 		}
 		else if(context.getSessionData("min_players") == null)
 		{

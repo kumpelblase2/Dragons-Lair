@@ -9,7 +9,7 @@ import de.kumpelblase2.remoteentities.api.RemoteEntity;
 
 public class DLEntityManager extends EntityManager
 {
-	private Map<Integer, NPC> m_npcs = new HashMap<Integer, NPC>();
+	private final Map<Integer, NPC> m_npcs = new HashMap<Integer, NPC>();
 
 	public DLEntityManager()
 	{

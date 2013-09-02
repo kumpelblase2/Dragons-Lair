@@ -160,10 +160,7 @@ public class ScheduledEventEditDialog extends ValidatingPrompt
 			else
 			{
 				final AnswerType answer = new AnswerConverter(arg1).convert();
-				if(answer == AnswerType.NOTHING || answer == AnswerType.CONSIDERING)
-					return false;
-
-				return true;
+				return !(answer == AnswerType.NOTHING || answer == AnswerType.CONSIDERING);
 			}
 		}
 	}

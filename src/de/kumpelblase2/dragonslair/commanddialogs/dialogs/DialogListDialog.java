@@ -1,7 +1,6 @@
 package de.kumpelblase2.dragonslair.commanddialogs.dialogs;
 
-import java.util.Arrays;
-import java.util.Comparator;
+import java.util.*;
 import org.bukkit.conversations.*;
 import de.kumpelblase2.dragonslair.DragonsLairMain;
 import de.kumpelblase2.dragonslair.api.Dialog;
@@ -23,7 +22,8 @@ public class DialogListDialog extends MessagePrompt
 	@Override
 	public String getPromptText(final ConversationContext arg0)
 	{
-		final Dialog[] dialogs = DragonsLairMain.getSettings().getDialogs().values().toArray(new Dialog[0]);
+		Collection<Dialog> var = DragonsLairMain.getSettings().getDialogs().values();
+		final Dialog[] dialogs = var.toArray(new Dialog[var.size()]);
 		Arrays.sort(dialogs, new Comparator<Dialog>()
 		{
 			@Override
@@ -34,7 +34,7 @@ public class DialogListDialog extends MessagePrompt
 				else return 0;
 			}
 		});
-		arg0.getForWhom().sendRawMessage("There is/are " + dialogs.length + " dialogs(s) avaiblable.");
+		arg0.getForWhom().sendRawMessage("There is/are " + dialogs.length + " dialogs(s) available.");
 		if(10 * this.page >= dialogs.length)
 			this.page = dialogs.length / 12;
 

@@ -23,9 +23,6 @@ public class BlockDataChangeEntry extends BlockEntry
 			return false;
 
 		// sanity check, just to make sure
-		if(!r.getNewData().get("data").equals(this.m_before.get("data")))
-			return false;
-
-		return true;
+		return r.getNewData().get("data").equals(this.m_before.get("data"));
 	}
 }

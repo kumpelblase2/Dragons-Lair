@@ -57,7 +57,7 @@ public class NPCDialogEventExecutor implements EventExecutor
 				final Player player = Bukkit.getPlayer(playername);
 				if(ch.getConversations().containsKey(p.getName()))
 				{
-					ch.getConversations().get(playername).adandon();
+					ch.getConversations().get(playername).abandon();
 					ch.getConversations().get(playername).getConversation().abandon();
 				}
 
@@ -68,7 +68,7 @@ public class NPCDialogEventExecutor implements EventExecutor
 		{
 			if(ch.getConversations().containsKey(p.getName()) && ch.getConversations().get(p.getName()) != null)
 			{
-				ch.getConversations().get(p.getName()).adandon();
+				ch.getConversations().get(p.getName()).abandon();
 				if(ch.getConversations().get(p.getName()) != null && ch.getConversations().get(p.getName()).getConversation() != null)
 					ch.getConversations().get(p.getName()).getConversation().abandon();
 			}

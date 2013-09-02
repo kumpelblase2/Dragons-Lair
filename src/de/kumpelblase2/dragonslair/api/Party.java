@@ -67,7 +67,7 @@ public class Party
 		this.members[inNumber - 1] = inName;
 	}
 
-	public String getMemberString()
+	String getMemberString()
 	{
 		final StringBuilder sb = new StringBuilder();
 		for(int i = 0; i < this.members.length; i++)

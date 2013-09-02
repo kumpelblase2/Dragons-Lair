@@ -58,7 +58,7 @@ public class BlockEntry implements Recoverable
 			StringBuilder sb = new StringBuilder();
 			for(final String key : this.m_before.keySet())
 			{
-				sb.append(key + (0x1D) + this.m_before.get(key) + ";");
+				sb.append(key).append(0x1D).append(this.m_before.get(key)).append(";");
 			}
 
 			if(sb.length() > 1)
@@ -68,7 +68,7 @@ public class BlockEntry implements Recoverable
 			sb = new StringBuilder();
 			for(final String key : this.m_new.keySet())
 			{
-				sb.append(key + (0x1D) + this.m_new.get(key) + ";");
+				sb.append(key).append(0x1D).append(this.m_new.get(key)).append(";");
 			}
 
 			if(sb.length() > 1)

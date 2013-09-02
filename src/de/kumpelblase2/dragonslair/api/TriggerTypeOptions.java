@@ -20,8 +20,8 @@ public enum TriggerTypeOptions
 	LEVEL_ACHIEVE(new String[]{ "amount" }, new String[]{ "dungeon_id" }),
 	ITEM_CRAFT(new String[]{ "item_id" }, new String[]{ "dungeon_id" });
 
-	private String[] requiredOptions;
-	private String[] optionalOptions;
+	private final String[] requiredOptions;
+	private final String[] optionalOptions;
 	private final String[] generalOptions = new String[]{ "delay", "cooldown" };
 
 	private TriggerTypeOptions(final String[] required, final String[] optional)
@@ -65,7 +65,7 @@ public enum TriggerTypeOptions
 		final StringBuilder sb = new StringBuilder();
 		for(final String required : this.getRequiredOptions())
 		{
-			sb.append(ChatColor.AQUA + required + ChatColor.WHITE + ", ");
+			sb.append(ChatColor.AQUA).append(required).append(ChatColor.WHITE).append(", ");
 		}
 
 		final String[] optional = this.getOptionalOptions();
@@ -74,7 +74,7 @@ public enum TriggerTypeOptions
 
 		for(int i = 0; i < optional.length; i++)
 		{
-			sb.append(ChatColor.YELLOW + optional[i] + ChatColor.WHITE);
+			sb.append(ChatColor.YELLOW).append(optional[i]).append(ChatColor.WHITE);
 			if(i != optional.length - 1)
 				sb.append(", ");
 		}

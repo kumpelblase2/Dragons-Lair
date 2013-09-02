@@ -1,7 +1,6 @@
 package de.kumpelblase2.dragonslair.commanddialogs.scheduledevents;
 
-import java.util.Arrays;
-import java.util.Comparator;
+import java.util.*;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.*;
 import de.kumpelblase2.dragonslair.DragonsLairMain;
@@ -24,7 +23,8 @@ public class ScheduledEventsListDialog extends MessagePrompt
 	@Override
 	public String getPromptText(final ConversationContext arg0)
 	{
-		final ScheduledEvent[] events = DragonsLairMain.getEventScheduler().getEvents().values().toArray(new ScheduledEvent[0]);
+		Collection<ScheduledEvent> var = DragonsLairMain.getEventScheduler().getEvents().values();
+		final ScheduledEvent[] events = var.toArray(new ScheduledEvent[var.size()]);
 		Arrays.sort(events, new Comparator<ScheduledEvent>()
 		{
 			@Override
