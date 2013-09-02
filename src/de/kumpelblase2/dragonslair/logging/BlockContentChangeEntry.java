@@ -29,7 +29,10 @@ public class BlockContentChangeEntry extends BlockEntry
 		final Map<String, String> options = new HashMap<String, String>();
 		final ItemStack[] contents = ((InventoryHolder)inBroken).getInventory().getContents();
 		for(int i = 0; i < contents.length; i++)
+		{
 			options.put("slot" + i, InventoryUtilities.itemToString(contents[i]));
+		}
+
 		return options;
 	}
 
@@ -44,9 +47,13 @@ public class BlockContentChangeEntry extends BlockEntry
 	{
 		if(inEntry.getNewData().size() != this.getOldData().size())
 			return false;
+
 		for(final String key : this.getOldData().keySet())
+		{
 			if(!this.getOldData().get(key).equals(inEntry.getOldData().get(key)))
 				return false;
+		}
+
 		return true;
 	}
 
@@ -55,11 +62,14 @@ public class BlockContentChangeEntry extends BlockEntry
 	{
 		final InventoryHolder c = (InventoryHolder)this.m_loc.getBlock().getState();
 		for(final String key : this.m_before.keySet())
+		{
 			if(key.startsWith("slot"))
 			{
 				final int index = Integer.parseInt(key.replace("slot", ""));
 				c.getInventory().setItem(index, InventoryUtilities.stringToItem(this.m_before.get(key)));
 			}
+		}
+
 		if(this.m_loc.getBlock().getState() instanceof Chest)
 			((Chest)this.m_loc.getBlock().getState()).getBlockInventory().setContents(((Chest)this.m_loc.getBlock().getState()).getInventory().getContents());
 	}
@@ -69,11 +79,14 @@ public class BlockContentChangeEntry extends BlockEntry
 	{
 		final InventoryHolder c = (InventoryHolder)this.m_loc.getBlock().getState();
 		for(final String key : this.m_new.keySet())
+		{
 			if(key.startsWith("slot"))
 			{
 				final int index = Integer.parseInt(key.replace("slot", ""));
 				c.getInventory().setItem(index, InventoryUtilities.stringToItem(this.m_new.get(key)));
 			}
+		}
+
 		if(this.m_loc.getBlock().getState() instanceof Chest)
 			((Chest)this.m_loc.getBlock().getState()).getBlockInventory().setContents(((Chest)this.m_loc.getBlock().getState()).getInventory().getContents());
 	}

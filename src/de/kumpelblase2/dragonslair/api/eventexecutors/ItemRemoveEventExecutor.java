@@ -38,11 +38,18 @@ public class ItemRemoveEventExecutor implements EventExecutor
 					else if(ad != null)
 					{
 						for(final String member : ad.getCurrentParty().getMembers())
+						{
 							if(ec.getBalance(member) < amount)
 								success = false;
+						}
+
 						if(success)
+						{
 							for(final String member : ad.getCurrentParty().getMembers())
+							{
 								ec.withdrawPlayer(member, amount);
+							}
+						}
 					}
 				}
 			}
@@ -53,6 +60,7 @@ public class ItemRemoveEventExecutor implements EventExecutor
 					itemMat = Material.getMaterial(Integer.parseInt(e.getOption("item_id")));
 				else
 					itemMat = Material.getMaterial(e.getOption("item_id").replace(" ", "_").toUpperCase());
+
 				final ItemStack item = new ItemStack(itemMat, (int)amount);
 				if(scope == null || scope.equalsIgnoreCase("single"))
 				{
@@ -60,22 +68,27 @@ public class ItemRemoveEventExecutor implements EventExecutor
 						success = false;
 				}
 				else if(ad != null)
+				{
 					for(final String member : ad.getCurrentParty().getMembers())
 					{
 						final Player pl = Bukkit.getPlayer(member);
 						if(InventoryUtilities.isInventoryEmpty(pl, true) || !InventoryUtilities.removeItem(pl, item))
 							success = false;
 					}
+				}
 			}
+
 			if(scope == null || scope.equalsIgnoreCase("single"))
 			{
 				if(!success)
 				{
 					if(onFail == null)
 						return true;
+
 					final int failid = Integer.parseInt(onFail);
 					DragonsLairMain.getDungeonManager().executeEvent(DragonsLairMain.getSettings().getEvents().get(failid), p);
 				}
+
 				if(onSuccess != null)
 				{
 					final int successid = Integer.parseInt(onSuccess);
@@ -86,6 +99,7 @@ public class ItemRemoveEventExecutor implements EventExecutor
 			{
 				final ActiveDungeon d = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
 				if(d != null)
+				{
 					for(final String player : d.getCurrentParty().getMembers())
 					{
 						final Player pl = Bukkit.getPlayer(player);
@@ -93,15 +107,18 @@ public class ItemRemoveEventExecutor implements EventExecutor
 						{
 							if(onFail == null)
 								continue;
+
 							final int failid = Integer.parseInt(onFail);
 							DragonsLairMain.getDungeonManager().executeEvent(DragonsLairMain.getSettings().getEvents().get(failid), pl);
 						}
+
 						if(onSuccess != null)
 						{
 							final int successid = Integer.parseInt(onSuccess);
 							DragonsLairMain.getDungeonManager().executeEvent(DragonsLairMain.getSettings().getEvents().get(successid), pl);
 						}
 					}
+				}
 			}
 		}
 		catch(final Exception ex)
@@ -110,6 +127,7 @@ public class ItemRemoveEventExecutor implements EventExecutor
 			DragonsLairMain.Log.warning(ex.getMessage());
 			return false;
 		}
+
 		return true;
 	}
 }

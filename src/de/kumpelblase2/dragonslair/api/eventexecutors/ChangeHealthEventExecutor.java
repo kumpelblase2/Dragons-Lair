@@ -22,8 +22,10 @@ public class ChangeHealthEventExecutor implements EventExecutor
 				{
 					if(amount > 20)
 						amount = 20;
+
 					if(amount < 0)
 						amount = 0;
+
 					p.setHealth(amount);
 				}
 				else if(type.equals("add"))
@@ -34,15 +36,18 @@ public class ChangeHealthEventExecutor implements EventExecutor
 						p.setHealth(p.getHealth() + amount);
 				}
 				else if(type.equals("remove"))
+				{
 					if(p.getHealth() - amount <= 0)
 						p.setHealth(0);
 					else
 						p.setHealth(p.getHealth() - amount);
+				}
 			}
 			else
 			{
 				final ActiveDungeon ad = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
 				if(ad != null)
+				{
 					for(final String member : ad.getCurrentParty().getMembers())
 					{
 						final Player pl = Bukkit.getPlayer(member);
@@ -50,8 +55,10 @@ public class ChangeHealthEventExecutor implements EventExecutor
 						{
 							if(amount > 20)
 								amount = 20;
+
 							if(amount < 0)
 								amount = 0;
+
 							pl.setHealth(amount);
 						}
 						else if(type.equals("add"))
@@ -62,11 +69,14 @@ public class ChangeHealthEventExecutor implements EventExecutor
 								pl.setHealth(pl.getHealth() + amount);
 						}
 						else if(type.equals("remove"))
+						{
 							if(pl.getHealth() - amount <= 0)
 								pl.setHealth(0);
 							else
 								pl.setHealth(pl.getHealth() - amount);
+						}
 					}
+				}
 				else
 					return false;
 			}
@@ -77,6 +87,7 @@ public class ChangeHealthEventExecutor implements EventExecutor
 			DragonsLairMain.Log.warning(ex.getMessage());
 			return false;
 		}
+
 		return true;
 	}
 }

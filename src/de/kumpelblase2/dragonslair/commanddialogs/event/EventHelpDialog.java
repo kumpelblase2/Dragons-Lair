@@ -1,9 +1,7 @@
 package de.kumpelblase2.dragonslair.commanddialogs.event;
 
 import org.bukkit.ChatColor;
-import org.bukkit.conversations.ConversationContext;
-import org.bukkit.conversations.MessagePrompt;
-import org.bukkit.conversations.Prompt;
+import org.bukkit.conversations.*;
 
 public class EventHelpDialog extends MessagePrompt
 {

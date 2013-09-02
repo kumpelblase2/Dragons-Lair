@@ -27,6 +27,7 @@ public class NPCHelpDialog extends FixedSetPrompt
 			arg0.getForWhom().sendRawMessage(ChatColor.YELLOW + "You can apply any skin to a NPC as long as Spout is installed on the server and the players use the Spoutcraft client.");
 		else if(arg1.equals("info"))
 			arg0.getForWhom().sendRawMessage(ChatColor.YELLOW + "NPCs can be used to guide players through the dungeon and can be required to finish it. They can also be used for dialogs outside of the dungeon.");
+
 		return this;
 	}
 }

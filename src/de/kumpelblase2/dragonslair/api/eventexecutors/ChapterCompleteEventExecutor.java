@@ -16,10 +16,12 @@ public class ChapterCompleteEventExecutor implements EventExecutor
 			final ActiveDungeon d = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
 			if(d == null)
 				return false;
+
 			final Integer id = Integer.parseInt(e.getOption("chapter_id"));
 			final Chapter next = DragonsLairMain.getSettings().getChapters().get(id);
 			if(next == null)
 				return false;
+
 			final ChapterChangeEvent event = new ChapterChangeEvent(d, next);
 			Bukkit.getPluginManager().callEvent(event);
 			if(!event.isCancelled())
@@ -31,6 +33,7 @@ public class ChapterCompleteEventExecutor implements EventExecutor
 			DragonsLairMain.Log.warning(ex.getMessage());
 			return false;
 		}
+
 		return true;
 	}
 }

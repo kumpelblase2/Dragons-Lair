@@ -26,8 +26,12 @@ public class AddPotionEffectEventExecutor implements EventExecutor
 			{
 				final ActiveDungeon ad = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
 				if(ad != null)
+				{
 					for(final String member : ad.getCurrentParty().getMembers())
+					{
 						Bukkit.getPlayerExact(member).addPotionEffect(pe, true);
+					}
+				}
 			}
 		}
 		catch(final Exception ex)
@@ -35,6 +39,7 @@ public class AddPotionEffectEventExecutor implements EventExecutor
 			DragonsLairMain.Log.warning("Unable to execute event with id: " + e.getID());
 			DragonsLairMain.Log.warning(ex.getMessage());
 		}
+
 		return true;
 	}
 }

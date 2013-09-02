@@ -7,7 +7,8 @@ import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.map.*;
+import org.bukkit.map.MapRenderer;
+import org.bukkit.map.MapView;
 import org.bukkit.map.MapView.Scale;
 import de.kumpelblase2.dragonslair.DragonsLairMain;
 import de.kumpelblase2.dragonslair.TableColumns;
@@ -46,9 +47,13 @@ public class ActiveDungeon
 			new PlayerSave(p, this.currentParty).save();
 			this.playerSaves.get(playername).restore();
 		}
+
 		this.playerSaves.clear();
 		for(final DeathLocation loc : this.deathLocations.values())
+		{
 			loc.save();
+		}
+
 		this.deathLocations.clear();
 	}
 
@@ -64,15 +69,18 @@ public class ActiveDungeon
 			final PlayerSave save = new PlayerSave(pl, p);
 			if(!save.restore())
 				WorldUtility.enhancedTelepot(pl, this.getInfo().getStartingPosition());
+
 			pl.updateInventory();
 			save.remove();
 			for(final Player pla : Bukkit.getOnlinePlayers())
 			{
 				if(pla.getName().equals(player) || playersSet.contains(pla.getName()) || (DragonsLairMain.getDungeonManager().getDungeonOfPlayer(pla.getName()) != null && !DragonsLairMain.canPlayersInteract()))
 					continue;
+
 				pl.hidePlayer(pla);
 			}
 		}
+
 		this.currentChapter = p.getCurrentChapter();
 		this.currentObjective = p.getCurrentObjective();
 		try
@@ -90,6 +98,7 @@ public class ActiveDungeon
 				final DeathLocation dloc = new DeathLocation(player, loc, party, armor, inv);
 				this.deathLocations.put(player, dloc);
 			}
+
 			DragonsLairMain.createStatement("DELETE FROM `death_locations` WHERE `party_id` = " + p.getID()).execute();
 		}
 		catch(final Exception e)
@@ -147,12 +156,18 @@ public class ActiveDungeon
 		else
 		{
 			for(final SavedPlayer p : this.playerSaves.values())
+			{
 				p.restore();
+			}
+
 			this.playerSaves.clear();
 			this.currentParty.remove();
 			for(final String member : this.currentParty.getMembers())
+			{
 				new PlayerSave(Bukkit.getPlayer(member), this.currentParty.getID()).remove();
+			}
 		}
+
 		if(DragonsLairMain.getInstance().getLoggingManager().getEntriesForDungeon(this.getInfo().getName()) != null && DragonsLairMain.getInstance().getLoggingManager().getEntriesForDungeon(this.getInfo().getName()).containsKey(this.currentParty.getID()))
 		{
 			final Map<Location, Recoverable> entries = DragonsLairMain.getInstance().getLoggingManager().getEntriesForDungeon(this.getInfo().getName()).get(this.currentParty.getID());
@@ -168,17 +183,23 @@ public class ActiveDungeon
 						toRemove.add(key);
 					}
 				}
+
 				for(final Location l : toRemove)
+				{
 					entries.remove(l);
+				}
+
 				if(entries.size() == 0)
 				{
 					DragonsLairMain.getInstance().getLoggingManager().getEntriesForDungeon(this.getInfo().getName()).remove(this.getCurrentParty().getID());
 					if(DragonsLairMain.getInstance().getLoggingManager().getEntriesForDungeon(this.getInfo().getName()).size() == 0)
 						DragonsLairMain.getInstance().getLoggingManager().getEntriesForDungeon(this.getInfo().getName()).remove(this.getInfo().getID());
 				}
+
 				toRemove.clear();
 			}
 		}
+
 		this.currentChapter = null;
 		this.currentObjective = null;
 		this.currentParty = null;
@@ -192,25 +213,33 @@ public class ActiveDungeon
 	public void giveMaps()
 	{
 		for(final String member : this.currentParty.getMembers())
+		{
 			this.giveMap(Bukkit.getPlayer(member));
+		}
 	}
 
 	public void sendMessage(final String message)
 	{
 		for(final String member : this.currentParty.getMembers())
+		{
 			Bukkit.getPlayer(member).sendMessage(message);
+		}
 	}
 
 	public void reloadProgress()
 	{
 		final LoggingManager logManager = DragonsLairMain.getInstance().getLoggingManager();
 		if(logManager.getEntriesForDungeon(this.getInfo().getName()) != null)
+		{
 			if(logManager.getEntriesForDungeon(this.getInfo().getName()).containsKey(this.getCurrentParty().getID()))
 			{
 				final Map<Location, Recoverable> entries = logManager.getEntriesForDungeon(this.getInfo().getName()).get(this.getCurrentParty().getID());
 				for(final Location key : entries.keySet())
+				{
 					entries.get(key).setNew();
+				}
 			}
+		}
 	}
 
 	public DeathLocation getDeathLocationForPlayer(final String player)
@@ -245,8 +274,10 @@ public class ActiveDungeon
 		{
 			if(member.equals(player))
 				continue;
+
 			Bukkit.getPlayer(member).hidePlayer(dead);
 		}
+
 		DragonsLairMain.getDungeonManager().removeMapHolder(dead);
 		this.createDeathLocation(dead.getName(), dead.getLocation(), dead.getInventory().getArmorContents(), dead.getInventory().getContents());
 	}
@@ -261,7 +292,10 @@ public class ActiveDungeon
 		mapview.setCenterZ(0);
 		mapview.setScale(Scale.FARTHEST);
 		for(final MapRenderer r : mapview.getRenderers())
+		{
 			mapview.removeRenderer(r);
+		}
+
 		mapview.addRenderer(new DLMapRenderer());
 		p.sendMap(mapview);
 		p.getInventory().addItem(map);

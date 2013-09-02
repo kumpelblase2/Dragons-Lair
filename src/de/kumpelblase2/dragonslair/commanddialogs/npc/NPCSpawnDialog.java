@@ -18,6 +18,7 @@ public class NPCSpawnDialog extends ValidatingPrompt
 	{
 		if(arg1.equals("back") || arg1.equals("cancel"))
 			return new NPCManageDialog();
+
 		try
 		{
 			final Integer id = Integer.parseInt(arg1);
@@ -27,6 +28,7 @@ public class NPCSpawnDialog extends ValidatingPrompt
 		{
 			DragonsLairMain.getDungeonManager().spawnNPC(arg1);
 		}
+
 		arg0.getForWhom().sendRawMessage(ChatColor.GREEN + "NPC spawned!");
 		return new NPCManageDialog();
 	}
@@ -36,6 +38,7 @@ public class NPCSpawnDialog extends ValidatingPrompt
 	{
 		if(arg1.equals("back") || arg1.equals("cancel"))
 			return true;
+
 		try
 		{
 			final Integer id = Integer.parseInt(arg1);
@@ -46,8 +49,8 @@ public class NPCSpawnDialog extends ValidatingPrompt
 					arg0.getForWhom().sendRawMessage(ChatColor.RED + "The npc is already spawned.");
 					return false;
 				}
-				else
-					return true;
+
+				else return true;
 			}
 			else
 			{

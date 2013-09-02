@@ -63,6 +63,7 @@ public class Party
 	{
 		if(inNumber > 4 || inNumber < 1)
 			return;
+
 		this.members[inNumber - 1] = inName;
 	}
 
@@ -74,7 +75,9 @@ public class Party
 			sb.append(this.members[i]);
 			if(i != this.members.length - 1)
 				sb.append(",");
+
 		}
+
 		return sb.toString();
 	}
 
@@ -141,8 +144,11 @@ public class Party
 	public boolean hasPlayer(final String player)
 	{
 		for(final String p : this.members)
+		{
 			if(p.equals(player))
 				return true;
+		}
+
 		return false;
 	}
 
@@ -167,12 +173,16 @@ public class Party
 			final PreparedStatement st = DragonsLairMain.createStatement("SELECT * FROM " + Tables.PARTIES + " WHERE (party_members = ?) AND (party_dungeon_id = ?)");
 			String memberstring = "";
 			for(int i = 0; i < players.length; i++)
+			{
 				memberstring += players[i] + ((i == players.length - 1) ? "" : ",");
+			}
+
 			st.setString(1, memberstring);
 			st.setInt(2, dungeonid);
 			final ResultSet result = st.executeQuery();
 			if(result == null || !result.next())
 				return new Party(players, DragonsLairMain.getSettings().getDungeons().get(dungeonid));
+
 			return new Party(result);
 		}
 		catch(final Exception e)

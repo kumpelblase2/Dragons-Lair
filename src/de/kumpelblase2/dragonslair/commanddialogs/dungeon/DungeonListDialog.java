@@ -40,8 +40,12 @@ public class DungeonListDialog extends MessagePrompt
 		arg0.getForWhom().sendRawMessage("There is/are " + dungeons.length + " dungeon(s) avaiblable.");
 		if(10 * this.page >= dungeons.length)
 			this.page = dungeons.length / 12;
+
 		for(int i = 12 * this.page; i < dungeons.length && i < 10 * this.page + 12; i++)
+		{
 			arg0.getForWhom().sendRawMessage("   " + dungeons[i].getID() + " - " + dungeons[i].getName());
+		}
+
 		return "---------------- Page " + (this.page + 1) + "/" + (dungeons.length / 12 + 1);
 	}
 

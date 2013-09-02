@@ -6,7 +6,7 @@ import de.kumpelblase2.dragonslair.commanddialogs.GeneralConfigDialog;
 
 public class TriggerManageDialog extends ValidatingPrompt
 {
-	private final String[] options = new String[] { "create", "delete", "edit", "list", "back" };
+	private final String[] options = new String[]{ "create", "delete", "edit", "list", "back" };
 
 	@Override
 	public String getPromptText(final ConversationContext context)
@@ -33,6 +33,7 @@ public class TriggerManageDialog extends ValidatingPrompt
 			return new TriggerEditDialog();
 		else if(input.equals("back"))
 			return new GeneralConfigDialog();
+
 		return this;
 	}
 
@@ -43,6 +44,7 @@ public class TriggerManageDialog extends ValidatingPrompt
 		{
 			final String[] splitt = arg1.split(" ");
 			if(splitt[0].equals("list") && splitt.length == 2)
+			{
 				try
 				{
 					Integer.parseInt(splitt[1]);
@@ -52,14 +54,18 @@ public class TriggerManageDialog extends ValidatingPrompt
 				{
 					return false;
 				}
+			}
 			else
 				return false;
 		}
 		else
 		{
 			for(final String option : this.options)
+			{
 				if(option.equals(arg1))
 					return true;
+			}
+
 			return false;
 		}
 	}

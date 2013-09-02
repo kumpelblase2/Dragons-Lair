@@ -18,7 +18,8 @@ public class ScheduledEventStartEventExecutor implements EventExecutor
 		{
 			DragonsLairMain.Log.warning("Unable to execute event with id: " + e.getID());
 			DragonsLairMain.Log.warning(ex.getMessage());
-			return false;
+			return
+					false;
 		}
 		return true;
 	}

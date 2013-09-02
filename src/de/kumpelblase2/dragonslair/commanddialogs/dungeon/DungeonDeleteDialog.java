@@ -27,8 +27,7 @@ public class DungeonDeleteDialog extends ValidatingPrompt
 		}
 		if(arg0.getSessionData("dungeon_name") == null)
 		{
-			if(arg1.equals("back"))
-				return new DungeonManageDialog();
+			if(arg1.equals("back")) return new DungeonManageDialog();
 			arg0.setSessionData("dungeon_name", arg1);
 			return this;
 		}
@@ -53,8 +52,7 @@ public class DungeonDeleteDialog extends ValidatingPrompt
 	{
 		if(arg0.getSessionData("dungeon_name") == null)
 		{
-			if(arg1.equals("back"))
-				return true;
+			if(arg1.equals("back")) return true;
 			final Dungeon d = DragonsLairMain.getSettings().getDungeonByName(arg1);
 			if(d == null)
 			{
@@ -62,11 +60,13 @@ public class DungeonDeleteDialog extends ValidatingPrompt
 				return false;
 			}
 			for(final ActiveDungeon ad : DragonsLairMain.getDungeonManager().getActiveDungeons())
+			{
 				if(ad.getInfo().getID() == d.getID())
 				{
 					arg0.getForWhom().sendRawMessage(ChatColor.RED + "The dungeon is currently in use.");
 					return false;
 				}
+			}
 			return true;
 		}
 		return true;

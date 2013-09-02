@@ -13,9 +13,15 @@ public class CooldownCleanup implements Runnable
 		final DungeonManager manager = DragonsLairMain.getDungeonManager();
 		if(manager == null)
 			return;
+
 		for(final Trigger t : manager.getSettings().getTriggers().values())
+		{
 			t.clearCooldowns();
+		}
+
 		for(final Event e : manager.getSettings().getEvents().values())
+		{
 			e.clearCooldowns();
+		}
 	}
 }

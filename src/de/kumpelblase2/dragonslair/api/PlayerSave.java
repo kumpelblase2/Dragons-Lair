@@ -1,6 +1,7 @@
 package de.kumpelblase2.dragonslair.api;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import org.bukkit.entity.Player;
 import de.kumpelblase2.dragonslair.*;
 import de.kumpelblase2.dragonslair.utilities.InventoryUtilities;
@@ -58,6 +59,7 @@ public class PlayerSave
 			final ResultSet result = st.executeQuery();
 			if(result == null || !result.next())
 				return false;
+
 			this.player.setHealth(result.getInt(TableColumns.Player_Saves.HEALTH));
 			this.player.setFoodLevel(result.getInt(TableColumns.Player_Saves.HUNGER));
 			this.player.getInventory().setArmorContents(InventoryUtilities.stringToItems(result.getString(TableColumns.Player_Saves.ARMOR)));

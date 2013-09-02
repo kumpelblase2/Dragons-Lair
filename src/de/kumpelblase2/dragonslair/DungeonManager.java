@@ -4,10 +4,9 @@ import java.sql.PreparedStatement;
 import java.util.*;
 import org.bukkit.Bukkit;
 import org.bukkit.conversations.ConversationFactory;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import de.kumpelblase2.dragonslair.api.*;
+import de.kumpelblase2.dragonslair.api.NPC;
 import de.kumpelblase2.dragonslair.api.eventexecutors.EventExecutor;
 import de.kumpelblase2.dragonslair.events.EventCallEvent;
 import de.kumpelblase2.dragonslair.events.TriggerCallEvent;
@@ -70,6 +69,7 @@ public class DungeonManager
 		final NPC n = DragonsLairMain.getSettings().getNPCByName(inName);
 		if(n == null)
 			return null;
+
 		return this.npcManager.getByDatabaseID(n.getID());
 	}
 
@@ -82,6 +82,7 @@ public class DungeonManager
 	{
 		if(e == null)
 			return false;
+
 		final ActiveDungeon ad = (p != null ? this.getDungeonOfPlayer(p.getName()) : null);
 		final String name = (ad == null) ? "_GENERAL_" : ad.getInfo().getName();
 		final boolean onCD = this.isOnCooldown(name, e);
@@ -90,20 +91,26 @@ public class DungeonManager
 		if(event.isCancelled())
 		{
 			if(event.isOnCooldown() != onCD)
+			{
 				if(event.isOnCooldown())
 					this.addCooldown(name, e);
 				else
 					this.removeCooldown(name, e);
+			}
+
 			return true;
 		}
+
 		DragonsLairMain.debugLog("Executing event with id '" + e.getID() + "' for player '" + (p != null ? p.getName() : "") + "'");
 		if(this.executors.containsKey(e.getActionType()) && !this.isOnCooldown(name, e))
 		{
 			final boolean result = this.executors.get(e.getActionType()).executeEvent(e, p);
 			if(result)
 				this.addCooldown(name, e);
+
 			return result;
 		}
+
 		return false;
 	}
 
@@ -111,6 +118,7 @@ public class DungeonManager
 	{
 		if(t == null)
 			return;
+
 		final ActiveDungeon ad = (p == null) ? null : this.getDungeonOfPlayer(p.getName());
 		final String name = (ad == null) ? "_GENERAL_" : ad.getInfo().getName();
 		final boolean onCD = this.isOnCooldown(name, t);
@@ -119,16 +127,22 @@ public class DungeonManager
 		if(event.isCancelled())
 		{
 			if(event.isOnCooldown() != onCD)
+			{
 				if(!event.isOnCooldown())
 					this.removeCooldown(name, t);
 				else
 					this.addCooldown(name, t);
+			}
+
 			return;
 		}
+
 		if(event.isOnCooldown())
 			return;
+
 		int delay = 0;
 		if(t.getOption("delay") != null)
+		{
 			try
 			{
 				delay = Integer.parseInt(t.getOption("delay"));
@@ -137,8 +151,11 @@ public class DungeonManager
 			{
 				DragonsLairMain.Log.info("Unable to parse delay for trigger: " + t.getOption("delay"));
 			}
+		}
+
 		DragonsLairMain.debugLog("Executing trigger with id '" + t.getID() + "' by player '" + (p != null ? p.getName() : "") + "'");
 		if(delay > 0)
+		{
 			Bukkit.getScheduler().scheduleSyncDelayedTask(DragonsLairMain.getInstance(), new Runnable()
 			{
 				@Override
@@ -149,10 +166,13 @@ public class DungeonManager
 					{
 						if(eid == 0)
 							continue;
+
 						final Event e = DragonsLairMain.getSettings().getEvents().get(eid);
 						if(e == null)
 							continue;
+
 						if(e.getOption("delay") != null)
+						{
 							Bukkit.getScheduler().scheduleSyncDelayedTask(DragonsLairMain.getInstance(), new Runnable()
 							{
 								@Override
@@ -161,12 +181,14 @@ public class DungeonManager
 									DragonsLairMain.getDungeonManager().executeEvent(e, p);
 								}
 							}, Integer.parseInt(e.getOption("delay")) * 20L);
+						}
 						else
 							DragonsLairMain.getDungeonManager().executeEvent(e, p);
 					}
 					t.use(name);
 				}
 			}, delay * 20);
+		}
 		else
 		{
 			final List<Integer> ids = t.getEventIDs();
@@ -174,10 +196,13 @@ public class DungeonManager
 			{
 				if(eid == 0)
 					continue;
+
 				final Event e = DragonsLairMain.getSettings().getEvents().get(eid);
 				if(e == null)
 					continue;
+
 				if(e.getOption("delay") != null)
+				{
 					Bukkit.getScheduler().scheduleSyncDelayedTask(DragonsLairMain.getInstance(), new Runnable()
 					{
 						@Override
@@ -186,9 +211,11 @@ public class DungeonManager
 							DragonsLairMain.getDungeonManager().executeEvent(e, p);
 						}
 					}, Integer.parseInt(e.getOption("delay")) * 20L);
+				}
 				else
 					DragonsLairMain.getDungeonManager().executeEvent(e, p);
 			}
+
 			t.use(name);
 		}
 	}
@@ -212,6 +239,7 @@ public class DungeonManager
 			DragonsLairMain.Log.warning("Unable to spawn NPC with id " + id + ".");
 			return;
 		}
+
 		this.spawnNPC(npc);
 	}
 
@@ -225,7 +253,7 @@ public class DungeonManager
 		final NPC n = DragonsLairMain.getSettings().getNPCByName(name);
 		if(n == null)
 			return false;
-		
+
 		return this.despawnNPC(n.getID());
 	}
 
@@ -245,8 +273,10 @@ public class DungeonManager
 			public void run()
 			{
 				for(final NPC n : DragonsLairMain.getSettings().getNPCs().values())
+				{
 					if(n.shouldSpawnAtBeginning())
 						DragonsLairMain.getDungeonManager().spawnNPC(n);
+				}
 			}
 		});
 	}
@@ -258,12 +288,14 @@ public class DungeonManager
 		Bukkit.getPluginManager().callEvent(event);
 		if(event.isCancelled())
 			return null;
-		
+
 		final ActiveDungeon ad = new ActiveDungeon(d, Party.getPartyOfPlayers(players, id));
 		this.activeDungeons.add(ad);
 		for(final String p : players)
+		{
 			this.m_playerDungeons.put(p, ad.getInfo().getID());
-		
+		}
+
 		ad.giveMaps();
 		ad.sendMessage(ad.getInfo().getStartingMessage());
 		ad.reloadProgress();
@@ -275,11 +307,11 @@ public class DungeonManager
 	{
 		if(this.isDungeonStarted(name))
 			return null;
-		
+
 		final Dungeon d = this.getSettings().getDungeonByName(name);
 		if(d == null)
 			return null;
-		
+
 		return this.queue.start(d);
 	}
 
@@ -314,6 +346,7 @@ public class DungeonManager
 					this.maps.removeMap(Bukkit.getPlayer(p));
 					this.m_playerDungeons.remove(p);
 				}
+
 				ad.stop(save);
 				this.clearMobs(ad.getInfo().getID());
 				this.killedMobs.remove(ad.getInfo().getName());
@@ -332,11 +365,14 @@ public class DungeonManager
 	{
 		int id = -1;
 		for(final ActiveDungeon d : this.activeDungeons)
+		{
 			if(d.getInfo().getName().equals(name))
 			{
 				id = d.getInfo().getID();
 				break;
 			}
+		}
+
 		if(id != -1)
 			this.stopDungeon(id, save);
 	}
@@ -347,9 +383,12 @@ public class DungeonManager
 		{
 			final int id = this.m_playerDungeons.get(name);
 			for(final ActiveDungeon ad : this.activeDungeons)
+			{
 				if(ad.getInfo().getID() == id)
 					return ad;
+			}
 		}
+
 		return null;
 	}
 
@@ -366,8 +405,10 @@ public class DungeonManager
 	public boolean isDungeonStarted(final String name)
 	{
 		for(final ActiveDungeon d : this.activeDungeons)
+		{
 			if(d.getInfo().getName().equalsIgnoreCase(name))
 				return true;
+		}
 		return false;
 	}
 
@@ -380,7 +421,9 @@ public class DungeonManager
 			final List<QueuedPlayer> players = this.queue.getQueueForDungeon(d);
 			final String readyMessage = d.getPartyReadyMessage();
 			for(final QueuedPlayer player : players)
+			{
 				player.getPlayer().sendMessage(readyMessage);
+			}
 		}
 	}
 
@@ -393,6 +436,7 @@ public class DungeonManager
 	{
 		if(player == null)
 			return;
+
 		DragonsLairMain.debugLog("Giving dungeon map to '" + player.getName() + "'");
 		this.maps.addMap(player, new DLMap(player));
 	}
@@ -405,7 +449,10 @@ public class DungeonManager
 	public void stopDungeons()
 	{
 		for(final ActiveDungeon ad : this.activeDungeons)
+		{
 			ad.stop(true);
+		}
+
 		this.activeDungeons.clear();
 	}
 
@@ -453,8 +500,11 @@ public class DungeonManager
 	public EventMonster getEventMonsterByEntity(final LivingEntity entity)
 	{
 		for(final EventMonster mob : this.spawnedEntities)
+		{
 			if(mob.isMob(entity))
 				return mob;
+		}
+
 		return null;
 	}
 
@@ -466,6 +516,7 @@ public class DungeonManager
 			final EventMonster mob = mobs.next();
 			if(mob.getDungeon().getInfo().getID() != id)
 				continue;
+
 			mob.getMonster().remove();
 			mobs.remove();
 		}
@@ -488,6 +539,7 @@ public class DungeonManager
 				break;
 			}
 		}
+
 		Map<Integer, Map<EntityType, Integer>> mobKills = this.getKills(ad);
 		if(mobKills != null)
 		{
@@ -520,26 +572,37 @@ public class DungeonManager
 	public void saveCooldowns()
 	{
 		for(final Event e : this.getSettings().getEvents().values())
+		{
 			e.save();
+		}
+
 		for(final Trigger t : this.getSettings().getTriggers().values())
+		{
 			t.save();
+		}
 	}
 
 	public void registerEventType(final String type, final String[] requiredOptions, final String[] optionalOptions, final boolean addToDb)
 	{
 		EnumChange.addEnum(EventActionType.class, type, new Class<?>[0], new Object[0]);
-		EnumChange.addEnum(EventActionOptions.class, type, new Class<?>[] { String[].class, String[].class }, new Object[] { requiredOptions, optionalOptions });
+		EnumChange.addEnum(EventActionOptions.class, type, new Class<?>[]{ String[].class, String[].class }, new Object[]{ requiredOptions, optionalOptions });
 		if(addToDb)
+		{
 			try
 			{
 				if(DragonsLairMain.getInstance().getConfig().getString("db.type").equals("sqlite"))
 					return;
+
 				final PreparedStatement st = DragonsLairMain.createStatement("ALTER TABLE `events` CHANGE COLUMN `event_action_type` `event_action_type` enum(?)");
 				final StringBuilder sb = new StringBuilder();
 				for(final EventActionType ctype : EventActionType.values())
+				{
 					sb.append("'" + ctype.toString().toLowerCase() + "',");
+				}
+
 				if(sb.length() > 1)
 					sb.substring(0, sb.length() - 1);
+
 				st.setString(1, sb.toString());
 			}
 			catch(final Exception e)
@@ -547,23 +610,29 @@ public class DungeonManager
 				DragonsLairMain.Log.warning("Unable to register type at database:");
 				DragonsLairMain.Log.warning(e.getMessage());
 			}
+		}
 	}
 
 	public void removeEventType(final String type, final boolean removeFromDb)
 	{
 		EnumChange.removeEnum(EventActionType.class, type);
 		if(removeFromDb)
+		{
 			try
 			{
 				if(DragonsLairMain.getInstance().getConfig().getString("db.type").equals("sqlite"))
 					return;
+
 				final PreparedStatement st = DragonsLairMain.createStatement("ALTER TABLE `events` CHANGE COLUMN `event_action_type` `event_action_type` enum(?)");
 				final StringBuilder sb = new StringBuilder();
 				for(final EventActionType ctype : EventActionType.values())
-					if(!ctype.toString().equalsIgnoreCase(type))
-						sb.append("'" + ctype.toString().toLowerCase() + "',");
+				{
+					if(!ctype.toString().equalsIgnoreCase(type)) sb.append("'" + ctype.toString().toLowerCase() + "',");
+				}
+
 				if(sb.length() > 1)
 					sb.substring(0, sb.length() - 1);
+
 				st.setString(1, sb.toString());
 			}
 			catch(final Exception e)
@@ -571,23 +640,30 @@ public class DungeonManager
 				DragonsLairMain.Log.warning("Unable to remove type at database:");
 				DragonsLairMain.Log.warning(e.getMessage());
 			}
+		}
 	}
 
 	public void registerTriggerType(final String type, final String[] requiredOptions, final String[] optionalOptions, final boolean addToDb)
 	{
 		EnumChange.addEnum(TriggerType.class, type, new Class<?>[0], new Object[0]);
-		EnumChange.addEnum(TriggerTypeOptions.class, type, new Class<?>[] { String[].class, String[].class }, new Object[] { requiredOptions, optionalOptions });
+		EnumChange.addEnum(TriggerTypeOptions.class, type, new Class<?>[]{ String[].class, String[].class }, new Object[]{ requiredOptions, optionalOptions });
 		if(addToDb)
+		{
 			try
 			{
 				if(DragonsLairMain.getInstance().getConfig().getString("db.type").equals("sqlite"))
 					return;
+
 				final PreparedStatement st = DragonsLairMain.createStatement("ALTER TABLE `triggers` CHANGE COLUMN `trigger_type` `trigger_type` enum(?)");
 				final StringBuilder sb = new StringBuilder();
 				for(final TriggerType ctype : TriggerType.values())
+				{
 					sb.append("'" + ctype.toString().toLowerCase() + "',");
+				}
+
 				if(sb.length() > 1)
 					sb.substring(0, sb.length() - 1);
+
 				st.setString(1, sb.toString());
 			}
 			catch(final Exception e)
@@ -595,23 +671,30 @@ public class DungeonManager
 				DragonsLairMain.Log.warning("Unable to register type at database:");
 				DragonsLairMain.Log.warning(e.getMessage());
 			}
+		}
 	}
 
 	public void removeTriggerType(final String type, final boolean removeFromDb)
 	{
 		EnumChange.removeEnum(TriggerType.class, type);
 		if(removeFromDb)
+		{
 			try
 			{
 				if(DragonsLairMain.getInstance().getConfig().getString("db.type").equals("sqlite"))
 					return;
+
 				final PreparedStatement st = DragonsLairMain.createStatement("ALTER TABLE `triggers` CHANGE COLUMN `trigger_type` `trigger_type` enum(?)");
 				final StringBuilder sb = new StringBuilder();
 				for(final TriggerType ctype : TriggerType.values())
+				{
 					if(!ctype.toString().equalsIgnoreCase(type))
 						sb.append("'" + ctype.toString().toLowerCase() + "',");
+				}
+
 				if(sb.length() > 1)
 					sb.substring(0, sb.length() - 1);
+
 				st.setString(1, sb.toString());
 			}
 			catch(final Exception e)
@@ -619,13 +702,17 @@ public class DungeonManager
 				DragonsLairMain.Log.warning("Unable to remove type at database:");
 				DragonsLairMain.Log.warning(e.getMessage());
 			}
+		}
 	}
 
 	public ActiveDungeon getActiveDungeonByName(final String name)
 	{
 		for(final ActiveDungeon ad : this.activeDungeons)
+		{
 			if(ad.getInfo().getName().equals(name))
 				return ad;
+		}
+
 		return null;
 	}
 
@@ -634,6 +721,7 @@ public class DungeonManager
 		final Dungeon d = DragonsLairMain.getSettings().getDungeons().get(id);
 		if(d == null)
 			return null;
+
 		return this.getActiveDungeonByName(d.getName());
 	}
 

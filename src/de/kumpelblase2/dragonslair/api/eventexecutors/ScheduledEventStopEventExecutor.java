@@ -20,6 +20,7 @@ public class ScheduledEventStopEventExecutor implements EventExecutor
 			DragonsLairMain.Log.warning(ex.getMessage());
 			return false;
 		}
+
 		return true;
 	}
 }

@@ -29,9 +29,10 @@ public class ItemAddEventExecutor implements EventExecutor
 					else
 					{
 						final ActiveDungeon d = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
-						if(d != null)
-							for(final String member : d.getCurrentParty().getMembers())
-								ec.depositPlayer(member, amount);
+						if(d != null) for(final String member : d.getCurrentParty().getMembers())
+						{
+							ec.depositPlayer(member, amount);
+						}
 					}
 				}
 			}
@@ -41,6 +42,7 @@ public class ItemAddEventExecutor implements EventExecutor
 					itemMat = Material.getMaterial(Integer.parseInt(e.getOption("item_id")));
 				else
 					itemMat = Material.getMaterial(e.getOption("item_id").replace(" ", "_").toUpperCase());
+
 				final int amount = Integer.parseInt(e.getOption("amount"));
 				final String damageString = e.getOption("damage");
 				final short damage = (damageString != null) ? Short.parseShort(damageString) : 0;
@@ -51,8 +53,12 @@ public class ItemAddEventExecutor implements EventExecutor
 				{
 					final ActiveDungeon d = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
 					if(d != null)
+					{
 						for(final String member : d.getCurrentParty().getMembers())
+						{
 							Bukkit.getPlayer(member).getInventory().addItem(item);
+						}
+					}
 				}
 			}
 		}
@@ -62,6 +68,7 @@ public class ItemAddEventExecutor implements EventExecutor
 			DragonsLairMain.Log.warning(ex.getMessage());
 			return false;
 		}
+
 		return true;
 	}
 }

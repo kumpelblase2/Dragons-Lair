@@ -32,6 +32,7 @@ public class HelpDialog extends FixedSetPrompt
 			return new TriggerHelpDialog();
 		else if(arg1.equals("events"))
 			return new EventHelpDialog();
+
 		return this;
 	}
 }

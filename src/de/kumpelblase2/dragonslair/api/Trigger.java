@@ -45,7 +45,7 @@ public class Trigger
 			}
 			else
 				this.type_options = new Option[0];
-			
+
 			final String eventsString = result.getString(TableColumns.Triggers.ACTION_EVENT_ID);
 			if(eventsString != null && eventsString.contains(";"))
 			{
@@ -60,10 +60,9 @@ public class Trigger
 					catch(final Exception e)
 					{
 						DragonsLairMain.Log.warning("Unable to parse event id " + eventsSplitt[i]);
-						continue;
 					}
 				}
-				
+
 				this.events = new ArrayList<Integer>(Arrays.asList(eventIDs));
 			}
 			else
@@ -81,7 +80,7 @@ public class Trigger
 					DragonsLairMain.Log.warning("Unable to parse event id " + eventsString);
 				}
 			}
-			
+
 			final String cooldownString = result.getString(TableColumns.Triggers.COOLDOWNS);
 			if(cooldownString != null && cooldownString.length() > 0)
 			{
@@ -122,8 +121,11 @@ public class Trigger
 	public String getOption(final String key)
 	{
 		for(final Option o : this.type_options)
+		{
 			if(o.getType().equals(key))
 				return o.getValue();
+		}
+
 		return null;
 	}
 
@@ -131,6 +133,7 @@ public class Trigger
 	{
 		final Option[] tmpOptions = new Option[inOptions.length];
 		for(int i = 0; i < inOptions.length; i++)
+		{
 			try
 			{
 				final String[] splitt = inOptions[i].split(":");
@@ -140,6 +143,8 @@ public class Trigger
 			{
 				DragonsLairMain.Log.warning("Unable to parse trigger option: " + inOptions[i]);
 			}
+		}
+
 		this.type_options = tmpOptions;
 	}
 
@@ -170,15 +175,18 @@ public class Trigger
 				if(i != this.type_options.length - 1)
 					optionString.append(";");
 			}
+
 			final StringBuilder eventString = new StringBuilder();
 			for(int i = 0; i < this.events.size(); i++)
 			{
 				if(this.events.get(i) == 0)
 					continue;
+
 				eventString.append(this.events.get(i));
 				if(i != this.events.size() - 1)
 					eventString.append(";");
 			}
+
 			if(this.id != -1)
 			{
 				final PreparedStatement st = DragonsLairMain.createStatement("REPLACE INTO " + Tables.TRIGGERS + "(" + "trigger_id," + "trigger_type," + "trigger_type_options," + "trigger_action_event," + "trigger_cooldowns" + ") VALUES(?,?,?,?,?)");
@@ -218,6 +226,7 @@ public class Trigger
 			if(i != this.type_options.length)
 				sb.append(";");
 		}
+
 		return sb.toString();
 	}
 
@@ -231,11 +240,14 @@ public class Trigger
 	public void setOption(final String key, final String value)
 	{
 		for(final Option o : this.type_options)
+		{
 			if(o.getType().equals(key))
 			{
 				o.setValue(value);
 				return;
 			}
+		}
+
 		this.addOption(new Option(key, value));
 	}
 
@@ -243,11 +255,13 @@ public class Trigger
 	{
 		final List<Option> options = new ArrayList<Option>(Arrays.asList(this.type_options));
 		for(int i = 0; i < options.size(); i++)
+		{
 			if(options.get(i).getType().equals(key))
 			{
 				options.remove(i);
 				return;
 			}
+		}
 	}
 
 	public void remove()
@@ -278,9 +292,11 @@ public class Trigger
 					this.cooldowns.remove(cd);
 					return false;
 				}
+
 				return true;
 			}
 		}
+
 		return false;
 	}
 
@@ -305,8 +321,10 @@ public class Trigger
 			sb.append(cd.getDungeonName() + ":" + cd.getRemainingTime());
 			sb.append(";");
 		}
+
 		if(sb.length() > 1)
 			sb.substring(0, sb.length() - 1);
+
 		return sb.toString();
 	}
 

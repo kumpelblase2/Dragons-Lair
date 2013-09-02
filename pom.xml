@@ -18,8 +18,12 @@
       <url>http://repo.spout.org</url>
     </repository>
     <repository>
-    	<id>remoteentities</id>
-    	<url>http://repo.infinityblade.de/remoteentities/releases</url>
+      <id>remoteentities</id>
+      <url>http://repo.infinityblade.de/remoteentities/releases</url>
+    </repository>
+    <repository>
+      <id>Plugin Metrics</id>
+      <url>http://repo.mcstats.org/content/repositories/public</url>
     </repository>
   </repositories>
   <build>
@@ -51,10 +55,6 @@
       </resource>
     </resources>
   </build>
-  <dependencyManagement>
-  	<dependencies>
-  	</dependencies>
-  </dependencyManagement>
   <dependencies>
   	<dependency>
 	  <groupId>org.bukkit</groupId>
@@ -81,7 +81,13 @@
     <dependency>
     	<groupId>de.kumpelblase2</groupId>
     	<artifactId>remoteentities</artifactId>
-    	<version>1.1.1</version>
+    	<version>1.7</version>
+    </dependency>
+    <dependency>
+      <groupId>org.mcstats.bukkit</groupId>
+      <artifactId>metrics</artifactId>
+      <version>R7</version>
+      <scope>compile</scope>
     </dependency>
   </dependencies>
 </project>

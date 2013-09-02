@@ -1,14 +1,12 @@
 package de.kumpelblase2.dragonslair.commanddialogs.scheduledevents;
 
 import org.bukkit.ChatColor;
-import org.bukkit.conversations.ConversationContext;
-import org.bukkit.conversations.Prompt;
-import org.bukkit.conversations.ValidatingPrompt;
+import org.bukkit.conversations.*;
 import de.kumpelblase2.dragonslair.commanddialogs.GeneralConfigDialog;
 
 public class ScheduledEventsManageDialog extends ValidatingPrompt
 {
-	private final String[] options = new String[] { "create", "list", "delete", "edit", "back" };
+	private final String[] options = new String[]{ "create", "list", "delete", "edit", "back" };
 
 	@Override
 	public String getPromptText(final ConversationContext arg0)
@@ -35,6 +33,7 @@ public class ScheduledEventsManageDialog extends ValidatingPrompt
 			return new ScheduledEventEditDialog();
 		else if(arg1.equalsIgnoreCase("back"))
 			return new GeneralConfigDialog();
+
 		return END_OF_CONVERSATION;
 	}
 
@@ -49,6 +48,7 @@ public class ScheduledEventsManageDialog extends ValidatingPrompt
 			else if(splitt.length > 2)
 				return false;
 			else
+			{
 				try
 				{
 					Integer.parseInt(splitt[1]);
@@ -58,11 +58,14 @@ public class ScheduledEventsManageDialog extends ValidatingPrompt
 				{
 					return false;
 				}
+			}
 		}
-		else
-			for(final String option : this.options)
-				if(option.equalsIgnoreCase(input))
-					return true;
+		else for(final String option : this.options)
+		{
+			if(option.equalsIgnoreCase(input))
+				return true;
+		}
+
 		return false;
 	}
 }

@@ -1,10 +1,9 @@
 package de.kumpelblase2.dragonslair.commanddialogs.dialogs;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import org.bukkit.ChatColor;
-import org.bukkit.conversations.ConversationContext;
-import org.bukkit.conversations.Prompt;
-import org.bukkit.conversations.ValidatingPrompt;
+import org.bukkit.conversations.*;
 import de.kumpelblase2.dragonslair.DragonsLairMain;
 import de.kumpelblase2.dragonslair.api.Dialog;
 import de.kumpelblase2.dragonslair.conversation.AnswerType;
@@ -44,6 +43,7 @@ public class DialogCreateDialog extends ValidatingPrompt
 		{
 			if(arg1.equals("back"))
 				return new DialogManageDialog();
+
 			arg0.setSessionData("message", arg1);
 		}
 		else if(arg0.getSessionData("agree") == null)
@@ -53,6 +53,7 @@ public class DialogCreateDialog extends ValidatingPrompt
 				arg0.setSessionData("message", null);
 				return this;
 			}
+
 			arg0.setSessionData("agree", Integer.parseInt(arg1));
 		}
 		else if(arg0.getSessionData("disagree") == null)
@@ -62,6 +63,7 @@ public class DialogCreateDialog extends ValidatingPrompt
 				arg0.setSessionData("agree", null);
 				return this;
 			}
+
 			arg0.setSessionData("disagree", Integer.parseInt(arg1));
 		}
 		else if(arg0.getSessionData("consider") == null)
@@ -71,6 +73,7 @@ public class DialogCreateDialog extends ValidatingPrompt
 				arg0.setSessionData("disagree", null);
 				return this;
 			}
+
 			arg0.setSessionData("consider", Integer.parseInt(arg1));
 		}
 		else if(arg0.getSessionData("consider_agree") == null)
@@ -80,6 +83,7 @@ public class DialogCreateDialog extends ValidatingPrompt
 				arg0.setSessionData("consider", null);
 				return this;
 			}
+
 			arg0.setSessionData("consider_agree", Integer.parseInt(arg1));
 		}
 		else
@@ -89,6 +93,7 @@ public class DialogCreateDialog extends ValidatingPrompt
 				arg0.setSessionData("consider_agree", null);
 				return this;
 			}
+
 			final Map<AnswerType, Integer> answers = new HashMap<AnswerType, Integer>();
 			answers.put(AnswerType.AGREEMENT, (Integer)arg0.getSessionData("agree"));
 			answers.put(AnswerType.DISAGREEMENT, (Integer)arg0.getSessionData("disagree"));
@@ -108,6 +113,7 @@ public class DialogCreateDialog extends ValidatingPrompt
 			arg0.setSessionData("consider_agree", null);
 			return new DialogManageDialog();
 		}
+
 		return this;
 	}
 
@@ -116,6 +122,7 @@ public class DialogCreateDialog extends ValidatingPrompt
 	{
 		if(arg1.equals("back") || arg1.equals("cancel"))
 			return true;
+
 		if(arg0.getSessionData("message") == null)
 			return true;
 		else
@@ -134,6 +141,7 @@ public class DialogCreateDialog extends ValidatingPrompt
 				arg0.getForWhom().sendRawMessage(ChatColor.RED + "Not a valid number.");
 				return false;
 			}
+
 			return true;
 		}
 	}

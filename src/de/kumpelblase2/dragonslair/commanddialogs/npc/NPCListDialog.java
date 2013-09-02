@@ -30,18 +30,20 @@ public class NPCListDialog extends MessagePrompt
 			@Override
 			public int compare(final NPC o1, final NPC o2)
 			{
-				if(o1.getID() > o2.getID())
-					return 1;
-				else if(o1.getID() < o2.getID())
-					return -1;
+				if(o1.getID() > o2.getID()) return 1;
+				else if(o1.getID() < o2.getID()) return -1;
 				return 0;
 			}
 		});
 		arg0.getForWhom().sendRawMessage(ChatColor.GREEN + "There is/are " + npcs.length + " npc(s) avaiblable.");
 		if(12 * this.page > npcs.length)
 			this.page = npcs.length / 12;
+
 		for(int i = 12 * this.page; i < npcs.length && i < 12 * this.page + 12; i++)
+		{
 			arg0.getForWhom().sendRawMessage("   " + npcs[i].getID() + " - " + npcs[i].getName());
+		}
+
 		return "---------------- Page " + (this.page + 1) + "/" + (npcs.length / 12 + 1);
 	}
 

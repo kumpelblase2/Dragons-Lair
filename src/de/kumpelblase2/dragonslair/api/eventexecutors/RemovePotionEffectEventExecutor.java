@@ -22,23 +22,31 @@ public class RemovePotionEffectEventExecutor implements EventExecutor
 			{
 				PotionEffect eff = null;
 				for(final PotionEffect effect : p.getActivePotionEffects())
+				{
 					if(effect.getType() == t)
 						eff = new PotionEffect(t, (time != null) ? Integer.parseInt(time) - effect.getDuration() * 20 : 0, effect.getAmplifier());
+				}
+
 				p.addPotionEffect(eff, true);
 			}
 			else
 			{
 				final ActiveDungeon ad = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
 				if(ad != null)
+				{
 					for(final String member : ad.getCurrentParty().getMembers())
 					{
 						final Player pl = Bukkit.getPlayer(member);
 						PotionEffect eff = null;
 						for(final PotionEffect effect : pl.getActivePotionEffects())
+						{
 							if(effect.getType() == t)
 								eff = new PotionEffect(t, (time != null) ? Integer.parseInt(time) - effect.getDuration() * 20 : 0, effect.getAmplifier());
+						}
+
 						pl.addPotionEffect(eff, true);
 					}
+				}
 			}
 		}
 		catch(final Exception ex)
@@ -46,6 +54,7 @@ public class RemovePotionEffectEventExecutor implements EventExecutor
 			DragonsLairMain.Log.warning("Unable to execute event with id: " + e.getID());
 			DragonsLairMain.Log.warning(ex.getMessage());
 		}
+
 		return false;
 	}
 }

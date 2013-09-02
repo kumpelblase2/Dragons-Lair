@@ -61,6 +61,7 @@ public class DLMap
 	{
 		if(this.line > this.getSplittedText(this.getTitle() + "////" + this.getText()).length - 1)
 			return;
+
 		this.line++;
 		this.setRendered(false);
 	}
@@ -70,12 +71,14 @@ public class DLMap
 		final ActiveDungeon ad = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(this.player);
 		if(ad == null)
 			return;
+
 		if(this.chapterid != ad.getCurrentChapter().getID())
 		{
 			this.chapterid = ad.getCurrentChapter().getID();
 			this.titleText = "Chapter://" + ad.getCurrentChapter().getName();
 			this.setRendered(false);
 		}
+
 		if(this.objectiveid != ad.getCurrentObjective().getID())
 		{
 			this.objectiveid = ad.getCurrentObjective().getID();
@@ -90,6 +93,7 @@ public class DLMap
 		final String[] lines = in.split("//");
 		final MinecraftFont f = MinecraftFont.Font;
 		for(final String line : lines)
+		{
 			if(f.getWidth(line) <= 100)
 				mapLines.add(line);
 			else
@@ -106,10 +110,14 @@ public class DLMap
 					}
 					else
 						current += chars[index] + " ";
+
 					index++;
 				}
+
 				mapLines.add(current);
 			}
+		}
+
 		return mapLines.toArray(new String[0]);
 	}
 

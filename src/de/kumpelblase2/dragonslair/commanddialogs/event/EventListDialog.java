@@ -30,22 +30,22 @@ public class EventListDialog extends MessagePrompt
 			@Override
 			public int compare(final Event o1, final Event o2)
 			{
-				if(o1.getID() > o2.getID())
-					return 1;
-				else if(o1.getID() < o2.getID())
-					return -1;
+				if(o1.getID() > o2.getID()) return 1;
+				else if(o1.getID() < o2.getID()) return -1;
 				return 0;
 			}
 		});
 		arg0.getForWhom().sendRawMessage(ChatColor.GREEN + "There is/are " + events.size() + " event(s) available.");
 		if(12 * this.page > events.size())
 			this.page = events.size() / 12;
+
 		for(int i = 12 * this.page; i < events.size() && i < 12 * this.page + 12; i++)
 		{
 			String info = events.get(i).getID() + " - " + events.get(i).getActionType() + " - " + events.get(i).getOptionString();
 			info = (info.length() > 60) ? info.substring(0, 60) : info;
 			arg0.getForWhom().sendRawMessage(info);
 		}
+
 		return "---------------- Page " + (this.page + 1) + "/" + (events.size() / 12 + 1);
 	}
 

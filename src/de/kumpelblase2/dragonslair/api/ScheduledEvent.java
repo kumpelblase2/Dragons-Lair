@@ -4,9 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-import de.kumpelblase2.dragonslair.DragonsLairMain;
-import de.kumpelblase2.dragonslair.TableColumns;
-import de.kumpelblase2.dragonslair.Tables;
+import de.kumpelblase2.dragonslair.*;
 
 public class ScheduledEvent
 {
@@ -27,7 +25,10 @@ public class ScheduledEvent
 		{
 			final String events = result.getString(TableColumns.Scheduled_Events.EVENT_IDS);
 			for(final String event : events.split(":"))
+			{
 				this.eventIDs.add(Integer.parseInt(event));
+			}
+
 			this.autoStart = result.getBoolean(TableColumns.Scheduled_Events.AUTO_START);
 			this.repeat = result.getBoolean(TableColumns.Scheduled_Events.REPEATING);
 			this.repeatDelay = result.getInt(TableColumns.Scheduled_Events.REPEATING_DELAY);
@@ -145,6 +146,7 @@ public class ScheduledEvent
 			if(i != this.eventIDs.size() - 1)
 				sb.append(",");
 		}
+
 		return sb.toString();
 	}
 
@@ -157,6 +159,7 @@ public class ScheduledEvent
 	{
 		if(this.id == -1)
 			return;
+
 		try
 		{
 			final PreparedStatement st = DragonsLairMain.createStatement("DELETE FROM " + Tables.SCHEDULED_EVENTS + " WHERE `schedule_id` = ?");

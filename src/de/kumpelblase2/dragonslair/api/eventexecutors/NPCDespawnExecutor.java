@@ -21,6 +21,7 @@ public class NPCDespawnExecutor implements EventExecutor
 				if(n == null)
 					return false;
 			}
+
 			DragonsLairMain.getDungeonManager().despawnNPC(n.getID());
 			return true;
 		}
@@ -29,6 +30,7 @@ public class NPCDespawnExecutor implements EventExecutor
 			DragonsLairMain.Log.warning("Unable to spawn npc from event: " + e.getID());
 			DragonsLairMain.Log.warning(ex.getMessage());
 		}
+
 		return false;
 	}
 }

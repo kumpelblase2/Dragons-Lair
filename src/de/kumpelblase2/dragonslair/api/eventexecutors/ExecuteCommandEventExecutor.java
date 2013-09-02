@@ -16,6 +16,7 @@ public class ExecuteCommandEventExecutor implements EventExecutor
 			final String as = e.getOption("execute_as");
 			if(command.startsWith("/"))
 				command = command.substring(1);
+
 			if(as == null || as.equals("player"))
 				Bukkit.dispatchCommand(p, command);
 			else
@@ -27,6 +28,7 @@ public class ExecuteCommandEventExecutor implements EventExecutor
 			DragonsLairMain.Log.warning(ex.getMessage());
 			return false;
 		}
+
 		return true;
 	}
 }

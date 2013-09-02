@@ -23,14 +23,17 @@ public class NPCWalkToEventExecutor implements EventExecutor
 				if(n == null)
 					return false;
 			}
+
 			final String x = e.getOption("x");
 			final String y = e.getOption("y");
 			final String z = e.getOption("z");
 			if(x == null || y == null || z == null)
 				return false;
+
 			final RemoteEntity npc = DragonsLairMain.getDungeonManager().getNPCManager().getByDatabaseID(n.getID());
 			if(npc != null)
 				npc.move(new Location(npc.getBukkitEntity().getLocation().getWorld(), Integer.parseInt(x), Integer.parseInt(y), Integer.parseInt(z)));
+
 			return true;
 		}
 		catch(final Exception ex)
@@ -38,6 +41,7 @@ public class NPCWalkToEventExecutor implements EventExecutor
 			DragonsLairMain.Log.warning("Unable to stop npc attack from event: " + e.getID());
 			DragonsLairMain.Log.warning(ex.getMessage());
 		}
+
 		return false;
 	}
 }

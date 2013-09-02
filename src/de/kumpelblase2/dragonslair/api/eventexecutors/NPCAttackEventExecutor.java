@@ -25,22 +25,25 @@ public class NPCAttackEventExecutor implements EventExecutor
 				if(n == null)
 					return false;
 			}
+
 			final String target = e.getOption("target");
 			final RemoteEntity npc = DragonsLairMain.getDungeonManager().getNPCManager().getByDatabaseID(n.getID());
 			if(npc == null || !(npc instanceof Fightable))
 				return false;
+
 			List<EntityType> types = new ArrayList<EntityType>();
 			if(target == null || target.equals("enemy"))
-				types = Arrays.asList(new EntityType[] { EntityType.PLAYER });
+				types = Arrays.asList(new EntityType[]{ EntityType.PLAYER });
 			else if(target.equals("player"))
 			{
 				types = new ArrayList<EntityType>(Arrays.asList(EntityType.values()));
 				types.remove(EntityType.PLAYER);
 			}
+
 			final LivingEntity nearest = WorldUtility.getNearestEntity(npc.getBukkitEntity().getLocation(), npc.getBukkitEntity().getNearbyEntities(10, 3, 10), types);
 			if(nearest != null && npc != null)
 				((Fightable)npc).attack(nearest);
-			
+
 			return true;
 		}
 		catch(final Exception ex)
@@ -48,6 +51,7 @@ public class NPCAttackEventExecutor implements EventExecutor
 			DragonsLairMain.Log.warning("Unable to let npc starting to attack from event: " + e.getID());
 			DragonsLairMain.Log.warning(ex.getMessage());
 		}
+
 		return false;
 	}
 }

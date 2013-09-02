@@ -41,12 +41,15 @@ public class Dungeon
 			this.startMessage = result.getString(TableColumns.Dungeons.START_MESSAGE);
 			if(result.wasNull())
 				this.startMessage = "";
+
 			this.endMessage = result.getString(TableColumns.Dungeons.END_MESSAGE);
 			if(result.wasNull())
 				this.endMessage = "";
+
 			this.readyMessage = result.getString(TableColumns.Dungeons.PARTY_READY_MESSAGE);
 			if(result.wasNull())
 				this.readyMessage = "";
+
 			this.breakableBlocks = result.getBoolean(TableColumns.Dungeons.BREAKABLE_BLOCKS);
 		}
 		catch(final SQLException e)
@@ -222,6 +225,7 @@ public class Dungeon
 	{
 		if(this.id == -1)
 			return;
+
 		try
 		{
 			final PreparedStatement st = DragonsLairMain.createStatement("DELETE FROM " + Tables.DUNGEONS + " WHERE `dungeon_id` = ?");

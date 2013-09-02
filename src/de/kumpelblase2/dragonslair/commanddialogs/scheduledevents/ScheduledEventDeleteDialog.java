@@ -1,9 +1,7 @@
 package de.kumpelblase2.dragonslair.commanddialogs.scheduledevents;
 
 import org.bukkit.ChatColor;
-import org.bukkit.conversations.ConversationContext;
-import org.bukkit.conversations.Prompt;
-import org.bukkit.conversations.ValidatingPrompt;
+import org.bukkit.conversations.*;
 import de.kumpelblase2.dragonslair.DragonsLairMain;
 
 public class ScheduledEventDeleteDialog extends ValidatingPrompt
@@ -24,6 +22,7 @@ public class ScheduledEventDeleteDialog extends ValidatingPrompt
 		{
 			if(arg1.equals("back") || arg1.equals("cancel"))
 				return new ScheduledEventsManageDialog();
+
 			arg0.setSessionData("event_id", Integer.parseInt(arg1));
 			return this;
 		}
@@ -43,6 +42,7 @@ public class ScheduledEventDeleteDialog extends ValidatingPrompt
 				arg0.setSessionData("event_id", null);
 				DragonsLairMain.getEventScheduler().removeEvent(id);
 			}
+
 			return new ScheduledEventsManageDialog();
 		}
 	}
@@ -52,7 +52,9 @@ public class ScheduledEventDeleteDialog extends ValidatingPrompt
 	{
 		if(arg1.equals("back") || arg1.equals("cancel"))
 			return true;
+
 		if(arg0.getSessionData("event_id") == null)
+		{
 			try
 			{
 				final Integer id = Integer.parseInt(arg1);
@@ -67,6 +69,8 @@ public class ScheduledEventDeleteDialog extends ValidatingPrompt
 				arg0.getForWhom().sendRawMessage(ChatColor.RED + "Not a valid number.");
 				return false;
 			}
+		}
+
 		return true;
 	}
 }

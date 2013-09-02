@@ -19,6 +19,7 @@ public class EventSchedulingTask implements Runnable
 		{
 			if(id <= 0)
 				continue;
+
 			DragonsLairMain.getDungeonManager().executeEvent(DragonsLairMain.getSettings().getEvents().get(id), null);
 		}
 	}

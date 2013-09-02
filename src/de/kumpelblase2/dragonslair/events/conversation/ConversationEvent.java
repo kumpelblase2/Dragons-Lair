@@ -49,7 +49,7 @@ public class ConversationEvent extends BaseEvent
 	{
 		return handlers;
 	}
-	
+
 	public Player getPlayer()
 	{
 		return this.player;

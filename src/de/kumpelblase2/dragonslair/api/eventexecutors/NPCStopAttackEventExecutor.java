@@ -23,9 +23,11 @@ public class NPCStopAttackEventExecutor implements EventExecutor
 				if(n == null)
 					return false;
 			}
+
 			final RemoteEntity npc = DragonsLairMain.getDungeonManager().getNPCManager().getByDatabaseID(n.getID());
 			if(npc != null && npc instanceof Fightable)
 				((Fightable)npc).loseTarget();
+
 			return true;
 		}
 		catch(final Exception ex)
@@ -33,6 +35,7 @@ public class NPCStopAttackEventExecutor implements EventExecutor
 			DragonsLairMain.Log.warning("Unable to stop npc attack from event: " + e.getID());
 			DragonsLairMain.Log.warning(ex.getMessage());
 		}
+
 		return false;
 	}
 }

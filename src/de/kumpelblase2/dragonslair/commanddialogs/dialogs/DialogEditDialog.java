@@ -1,9 +1,7 @@
 package de.kumpelblase2.dragonslair.commanddialogs.dialogs;
 
 import org.bukkit.ChatColor;
-import org.bukkit.conversations.ConversationContext;
-import org.bukkit.conversations.Prompt;
-import org.bukkit.conversations.ValidatingPrompt;
+import org.bukkit.conversations.*;
 import de.kumpelblase2.dragonslair.DragonsLairMain;
 import de.kumpelblase2.dragonslair.api.Dialog;
 import de.kumpelblase2.dragonslair.conversation.AnswerType;
@@ -11,7 +9,7 @@ import de.kumpelblase2.dragonslair.conversation.AnswerType;
 public class DialogEditDialog extends ValidatingPrompt
 {
 	private Dialog d;
-	private final String[] options = new String[] { "message", "agreement", "disagreement", "unsure", "consider agreement", "consider disagreement" };
+	private final String[] options = new String[]{ "message", "agreement", "disagreement", "unsure", "consider agreement", "consider disagreement" };
 
 	@Override
 	public String getPromptText(final ConversationContext context)
@@ -23,7 +21,10 @@ public class DialogEditDialog extends ValidatingPrompt
 			context.getForWhom().sendRawMessage(ChatColor.GREEN + "What do you want to edit?");
 			final StringBuilder sb = new StringBuilder();
 			for(final String option : this.options)
+			{
 				sb.append(option + ", ");
+			}
+
 			sb.substring(sb.length() - 2);
 			return ChatColor.AQUA + sb.toString();
 		}
@@ -44,6 +45,7 @@ public class DialogEditDialog extends ValidatingPrompt
 		{
 			if(input.equals("back"))
 				return new DialogManageDialog();
+
 			this.d = DragonsLairMain.getSettings().getDialogs().get(Integer.parseInt(input));
 			return this;
 		}
@@ -54,6 +56,7 @@ public class DialogEditDialog extends ValidatingPrompt
 				this.d = null;
 				return this;
 			}
+
 			context.setSessionData("option", input);
 			return this;
 		}
@@ -64,6 +67,7 @@ public class DialogEditDialog extends ValidatingPrompt
 				context.setSessionData("option", null);
 				return this;
 			}
+
 			final String option = (String)context.getSessionData("option");
 			if(option.equals("message"))
 				this.d.setText(input);
@@ -77,6 +81,7 @@ public class DialogEditDialog extends ValidatingPrompt
 				this.d.setNextID(AnswerType.CONSIDERING_AGREEMENT, Integer.parseInt(input));
 			else if(option.equals("consider disagreement"))
 				this.d.setNextID(AnswerType.CONSIDERING_DISAGREEMENT, Integer.parseInt(input));
+
 			this.d.save();
 			context.setSessionData("option", null);
 			return new DialogManageDialog();
@@ -88,7 +93,9 @@ public class DialogEditDialog extends ValidatingPrompt
 	{
 		if(input.equals("back") || input.equals("cancel"))
 			return true;
+
 		if(this.d == null)
+		{
 			try
 			{
 				final Integer id = Integer.parseInt(input);
@@ -97,6 +104,7 @@ public class DialogEditDialog extends ValidatingPrompt
 					context.getForWhom().sendRawMessage(ChatColor.RED + "A dialog with that id doesn't exist.");
 					return false;
 				}
+
 				return true;
 			}
 			catch(final Exception e)
@@ -104,16 +112,21 @@ public class DialogEditDialog extends ValidatingPrompt
 				context.getForWhom().sendRawMessage(ChatColor.RED + "Not a valid number.");
 				return false;
 			}
+		}
 		else if(context.getSessionData("option") == null)
 		{
 			for(final String option : this.options)
+			{
 				if(option.equals(input))
 					return true;
+			}
+
 			return false;
 		}
 		else if(context.getSessionData("option").equals("message"))
 			return true;
 		else
+		{
 			try
 			{
 				final Integer id = Integer.parseInt(input);
@@ -122,6 +135,7 @@ public class DialogEditDialog extends ValidatingPrompt
 					context.getForWhom().sendRawMessage(ChatColor.RED + "A dialog with that id doesn't exist.");
 					return false;
 				}
+
 				return true;
 			}
 			catch(final Exception e)
@@ -129,5 +143,6 @@ public class DialogEditDialog extends ValidatingPrompt
 				context.getForWhom().sendRawMessage(ChatColor.RED + "Not a valid number.");
 				return false;
 			}
+		}
 	}
 }

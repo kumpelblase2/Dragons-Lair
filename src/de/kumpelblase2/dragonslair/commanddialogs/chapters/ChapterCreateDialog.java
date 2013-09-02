@@ -18,6 +18,7 @@ public class ChapterCreateDialog extends ValidatingPrompt
 	{
 		if(input.equals("back") || input.equals("cancel"))
 			return new ChapterManageDialog();
+
 		final Chapter c = new Chapter();
 		c.setName(input);
 		c.save();

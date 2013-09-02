@@ -56,10 +56,12 @@ public class DungeonCreateDialog extends ValidatingPrompt
 			context.setSessionData("party_ready_message", null);
 			return new DungeonManageDialog();
 		}
+
 		if(context.getSessionData("dungeon_name") == null)
 		{
 			if(input.equals("back"))
 				return new DungeonManageDialog();
+
 			context.setSessionData("dungeon_name", input);
 		}
 		else if(context.getSessionData("starting_objective") == null)
@@ -69,6 +71,7 @@ public class DungeonCreateDialog extends ValidatingPrompt
 				context.setSessionData("dungeon_name", null);
 				return this;
 			}
+
 			context.setSessionData("starting_objective", Integer.parseInt(input));
 		}
 		else if(context.getSessionData("starting_chapter") == null)
@@ -78,6 +81,7 @@ public class DungeonCreateDialog extends ValidatingPrompt
 				context.setSessionData("starting_objective", null);
 				return this;
 			}
+
 			context.setSessionData("starting_chapter", Integer.parseInt(input));
 		}
 		else if(context.getSessionData("starting_pos") == null)
@@ -87,6 +91,7 @@ public class DungeonCreateDialog extends ValidatingPrompt
 				context.setSessionData("starting_chapter", null);
 				return this;
 			}
+
 			if(input.equals("here"))
 			{
 				final Player p = (Player)context.getForWhom();
@@ -102,6 +107,7 @@ public class DungeonCreateDialog extends ValidatingPrompt
 				context.setSessionData("starting_pos", null);
 				return this;
 			}
+
 			context.setSessionData("safe_word", input);
 		}
 		else if(context.getSessionData("min_players") == null)
@@ -111,6 +117,7 @@ public class DungeonCreateDialog extends ValidatingPrompt
 				context.setSessionData("safe_word", null);
 				return this;
 			}
+
 			context.setSessionData("min_players", Integer.parseInt(input));
 		}
 		else if(context.getSessionData("max_players") == null)
@@ -120,6 +127,7 @@ public class DungeonCreateDialog extends ValidatingPrompt
 				context.setSessionData("min_players", null);
 				return this;
 			}
+
 			context.setSessionData("max_players", Integer.parseInt(input));
 		}
 		else if(context.getSessionData("starting_message") == null)
@@ -129,6 +137,7 @@ public class DungeonCreateDialog extends ValidatingPrompt
 				context.setSessionData("max_players", null);
 				return this;
 			}
+
 			context.setSessionData("starting_message", input);
 		}
 		else if(context.getSessionData("end_message") == null)
@@ -138,6 +147,7 @@ public class DungeonCreateDialog extends ValidatingPrompt
 				context.setSessionData("starting_message", null);
 				return this;
 			}
+
 			context.setSessionData("end_message", input);
 		}
 		else if(context.getSessionData("party_ready_message") == null)
@@ -147,6 +157,7 @@ public class DungeonCreateDialog extends ValidatingPrompt
 				context.setSessionData("end_message", null);
 				return this;
 			}
+
 			context.setSessionData("party_ready_message", input);
 		}
 		else
@@ -191,6 +202,7 @@ public class DungeonCreateDialog extends ValidatingPrompt
 			context.setSessionData("party_ready_message", null);
 			return new DungeonManageDialog();
 		}
+
 		return this;
 	}
 
@@ -199,6 +211,7 @@ public class DungeonCreateDialog extends ValidatingPrompt
 	{
 		if(input.equals("back") || input.equals("cancel"))
 			return true;
+
 		if(context.getSessionData("dungeon_name") == null)
 		{
 			if(DragonsLairMain.getSettings().getDungeonByName(input) == null)
@@ -210,6 +223,7 @@ public class DungeonCreateDialog extends ValidatingPrompt
 			}
 		}
 		else if(context.getSessionData("starting_objective") == null)
+		{
 			try
 			{
 				final int i = Integer.parseInt(input);
@@ -226,7 +240,9 @@ public class DungeonCreateDialog extends ValidatingPrompt
 				context.getForWhom().sendRawMessage(ChatColor.RED + "It's not a number.");
 				return false;
 			}
+		}
 		else if(context.getSessionData("starting_chapter") == null)
+		{
 			try
 			{
 				final int i = Integer.parseInt(input);
@@ -243,24 +259,26 @@ public class DungeonCreateDialog extends ValidatingPrompt
 				context.getForWhom().sendRawMessage(ChatColor.RED + "It's not a number.");
 				return false;
 			}
+		}
 		else if(context.getSessionData("starting_pos") == null)
 		{
-			if(!input.equals("here"))
-				if(WorldUtility.stringToLocation(input) == null)
-				{
-					context.getForWhom().sendRawMessage(ChatColor.RED + "Invalid location data.");
-					return false;
-				}
-				else
-					return true;
+			if(!input.equals("here")) if(WorldUtility.stringToLocation(input) == null)
+			{
+				context.getForWhom().sendRawMessage(ChatColor.RED + "Invalid location data.");
+				return false;
+			}
+			else
+				return true;
 		}
 		else if(context.getSessionData("safe_word") == null)
 		{
 			if(input.length() == 0)
 				return false;
+
 			return true;
 		}
 		else if(context.getSessionData("min_players") == null)
+		{
 			try
 			{
 				Integer.parseInt(input);
@@ -271,7 +289,9 @@ public class DungeonCreateDialog extends ValidatingPrompt
 				context.getForWhom().sendRawMessage(ChatColor.RED + "It's not a number.");
 				return false;
 			}
+		}
 		else if(context.getSessionData("max_players") == null)
+		{
 			try
 			{
 				Integer.parseInt(input);
@@ -281,11 +301,13 @@ public class DungeonCreateDialog extends ValidatingPrompt
 				context.getForWhom().sendRawMessage(ChatColor.RED + "It's not a number.");
 				return false;
 			}
+		}
 		else if(context.getSessionData("party_ready_message") != null)
 		{
 			final AnswerType answer = new AnswerConverter(input).convert();
 			return answer != AnswerType.NOTHING;
 		}
+
 		return true;
 	}
 }

@@ -1,7 +1,8 @@
 package de.kumpelblase2.dragonslair.api;
 
 import java.sql.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 import de.kumpelblase2.dragonslair.*;
 import de.kumpelblase2.dragonslair.conversation.AnswerType;
@@ -33,18 +34,23 @@ public class Dialog
 			this.nextIDs.put(AnswerType.AGREEMENT, result.getInt(TableColumns.Dialogs.AGREEMENT_ID));
 			if(result.wasNull() || this.nextIDs.get(AnswerType.AGREEMENT) == 0)
 				this.nextIDs.remove(AnswerType.AGREEMENT);
+
 			this.nextIDs.put(AnswerType.CONSIDERING_AGREEMENT, result.getInt(TableColumns.Dialogs.CONSIDER_AGREEMENT_ID));
 			if(result.wasNull() || this.nextIDs.get(AnswerType.CONSIDERING_AGREEMENT) == 0)
 				this.nextIDs.remove(AnswerType.CONSIDERING_AGREEMENT);
+
 			this.nextIDs.put(AnswerType.DISAGREEMENT, result.getInt(TableColumns.Dialogs.DISAGREEMENT_ID));
 			if(result.wasNull() || this.nextIDs.get(AnswerType.DISAGREEMENT) == 0)
 				this.nextIDs.remove(AnswerType.DISAGREEMENT);
+
 			this.nextIDs.put(AnswerType.CONSIDERING_DISAGREEMENT, result.getInt(TableColumns.Dialogs.CONSIDER_DISAGREEMENT_ID));
 			if(result.wasNull() || this.nextIDs.get(AnswerType.CONSIDERING_DISAGREEMENT) == 0)
 				this.nextIDs.remove(AnswerType.CONSIDERING_DISAGREEMENT);
+
 			this.nextIDs.put(AnswerType.CONSIDERING, result.getInt(TableColumns.Dialogs.CONSIDER_ID));
 			if(result.wasNull() || this.nextIDs.get(AnswerType.CONSIDERING) == 0)
 				this.nextIDs.remove(AnswerType.CONSIDERING);
+
 			if(this.nextIDs.size() > 0)
 				this.nextIDs.put(AnswerType.NOTHING, this.id);
 		}
@@ -80,7 +86,9 @@ public class Dialog
 	public void setNextIDs(final Map<AnswerType, Integer> inNext)
 	{
 		for(final Entry<AnswerType, Integer> entry : inNext.entrySet())
+		{
 			this.setNextID(entry.getKey(), entry.getValue());
+		}
 	}
 
 	public Map<AnswerType, Integer> getNextIDs()
@@ -93,6 +101,7 @@ public class Dialog
 		final Integer id = this.nextIDs.get(inType);
 		if(id == null || id == 0)
 			return 0;
+
 		return id;
 	}
 
@@ -117,22 +126,27 @@ public class Dialog
 					st.setNull(3, Types.INTEGER);
 				else
 					st.setInt(3, this.nextIDs.get(AnswerType.AGREEMENT));
+
 				if(this.nextIDs.get(AnswerType.CONSIDERING_AGREEMENT) == null)
 					st.setNull(4, Types.INTEGER);
 				else
 					st.setInt(4, this.nextIDs.get(AnswerType.CONSIDERING_AGREEMENT));
+
 				if(this.nextIDs.get(AnswerType.DISAGREEMENT) == null)
 					st.setNull(5, Types.INTEGER);
 				else
 					st.setInt(5, this.nextIDs.get(AnswerType.DISAGREEMENT));
+
 				if(this.nextIDs.get(AnswerType.CONSIDERING_DISAGREEMENT) == null)
 					st.setNull(6, Types.INTEGER);
 				else
 					st.setInt(6, this.nextIDs.get(AnswerType.CONSIDERING_DISAGREEMENT));
+
 				if(this.nextIDs.get(AnswerType.CONSIDERING) == null)
 					st.setNull(7, Types.INTEGER);
 				else
 					st.setInt(7, this.nextIDs.get(AnswerType.CONSIDERING));
+
 				st.execute();
 			}
 			else
@@ -143,22 +157,27 @@ public class Dialog
 					st.setNull(2, Types.INTEGER);
 				else
 					st.setInt(2, this.nextIDs.get(AnswerType.AGREEMENT));
+
 				if(this.nextIDs.get(AnswerType.CONSIDERING_AGREEMENT) == null)
 					st.setNull(3, Types.INTEGER);
 				else
 					st.setInt(3, this.nextIDs.get(AnswerType.CONSIDERING_AGREEMENT));
+
 				if(this.nextIDs.get(AnswerType.DISAGREEMENT) == null)
 					st.setNull(4, Types.INTEGER);
 				else
 					st.setInt(4, this.nextIDs.get(AnswerType.DISAGREEMENT));
+
 				if(this.nextIDs.get(AnswerType.CONSIDERING_DISAGREEMENT) == null)
 					st.setNull(5, Types.INTEGER);
 				else
 					st.setInt(5, this.nextIDs.get(AnswerType.CONSIDERING_DISAGREEMENT));
+
 				if(this.nextIDs.get(AnswerType.CONSIDERING) == null)
 					st.setNull(6, Types.INTEGER);
 				else
 					st.setInt(6, this.nextIDs.get(AnswerType.CONSIDERING));
+
 				st.execute();
 				final ResultSet keys = st.getGeneratedKeys();
 				if(keys.next())

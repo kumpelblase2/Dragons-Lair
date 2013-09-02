@@ -23,6 +23,7 @@ public class ChapterEditDialog extends ValidatingPrompt
 		{
 			if(input.equals("back") || input.equals("cancel"))
 				return new ChapterManageDialog();
+
 			context.setSessionData("id", Integer.parseInt(input));
 		}
 		else if(input.equals("back"))
@@ -40,6 +41,7 @@ public class ChapterEditDialog extends ValidatingPrompt
 			context.setSessionData("id", null);
 			return new ChapterManageDialog();
 		}
+
 		return this;
 	}
 
@@ -48,7 +50,9 @@ public class ChapterEditDialog extends ValidatingPrompt
 	{
 		if(input.equals("back") || input.equals("cancel"))
 			return true;
+
 		if(context.getSessionData("id") == null)
+		{
 			try
 			{
 				final Integer id = Integer.parseInt(input);
@@ -57,6 +61,7 @@ public class ChapterEditDialog extends ValidatingPrompt
 					context.getForWhom().sendRawMessage(ChatColor.RED + "A chapter with that id doesn't exist.");
 					return false;
 				}
+
 				return true;
 			}
 			catch(final Exception e)
@@ -64,6 +69,8 @@ public class ChapterEditDialog extends ValidatingPrompt
 				context.getSessionData(ChatColor.RED + "Not a valid number.");
 				return false;
 			}
+		}
+
 		return true;
 	}
 }

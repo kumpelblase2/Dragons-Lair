@@ -29,6 +29,7 @@ public class ChangeLevelEventExecutor implements EventExecutor
 			{
 				final ActiveDungeon ad = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
 				if(ad != null)
+				{
 					for(final String member : ad.getCurrentParty().getMembers())
 					{
 						final Player pl = Bukkit.getPlayer(member);
@@ -40,6 +41,7 @@ public class ChangeLevelEventExecutor implements EventExecutor
 						else if(type.equals("remove"))
 							pl.setLevel(pl.getLevel() - level);
 					}
+				}
 			}
 		}
 		catch(final Exception ex)
@@ -48,6 +50,7 @@ public class ChangeLevelEventExecutor implements EventExecutor
 			DragonsLairMain.Log.warning(ex.getMessage());
 			return false;
 		}
+
 		return true;
 	}
 }

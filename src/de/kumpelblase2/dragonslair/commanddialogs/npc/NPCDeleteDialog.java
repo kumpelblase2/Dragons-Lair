@@ -24,10 +24,12 @@ public class NPCDeleteDialog extends ValidatingPrompt
 			context.setSessionData("npc_name", null);
 			return new NPCManageDialog();
 		}
+
 		if(context.getSessionData("npc_name") == null)
 		{
 			if(input.equals("back"))
 				return new NPCManageDialog();
+
 			Integer id = 0;
 			try
 			{
@@ -41,8 +43,10 @@ public class NPCDeleteDialog extends ValidatingPrompt
 					context.getForWhom().sendRawMessage(ChatColor.RED + "Something bad happened. Please try again with the id of the npc instead of the name.");
 					return this;
 				}
+
 				id = n.getID();
 			}
+
 			context.setSessionData("npc_name", id);
 			return this;
 		}
@@ -53,6 +57,7 @@ public class NPCDeleteDialog extends ValidatingPrompt
 				context.setSessionData("npc_name", null);
 				return this;
 			}
+
 			if(input.equals("delete"))
 			{
 				final Integer id = (Integer)context.getSessionData("npc_name");
@@ -62,6 +67,7 @@ public class NPCDeleteDialog extends ValidatingPrompt
 				npc.remove();
 				DragonsLairMain.getSettings().getNPCs().remove(npc.getID());
 			}
+
 			context.setSessionData("npc_name", null);
 			return new NPCManageDialog();
 		}
@@ -72,7 +78,9 @@ public class NPCDeleteDialog extends ValidatingPrompt
 	{
 		if(input.equals("back") || input.equals("cancel"))
 			return true;
+
 		if(context.getSessionData("npc_name") == null)
+		{
 			try
 			{
 				final int id = Integer.parseInt(input);
@@ -90,6 +98,8 @@ public class NPCDeleteDialog extends ValidatingPrompt
 					return false;
 				}
 			}
+		}
+
 		return true;
 	}
 }

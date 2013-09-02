@@ -17,8 +17,11 @@ public class DungeonEndEventExecutor implements EventExecutor
 			final Location bak = p.getLocation();
 			final ActiveDungeon ad = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
 			if(ad != null)
+			{
 				if(e.getOption("give_items") != null && !Boolean.parseBoolean(e.getOption("give_items")))
 					ad.getSavedPlayers().clear();
+			}
+
 			DragonsLairMain.getDungeonManager().stopDungeon(Integer.parseInt(dungeon_id), false);
 			if(e.getOption("warp_on_end") != null && !Boolean.parseBoolean(e.getOption("warp_on_end")))
 				p.teleport(bak);
@@ -29,6 +32,7 @@ public class DungeonEndEventExecutor implements EventExecutor
 			DragonsLairMain.Log.warning(ex.getMessage());
 			return false;
 		}
+
 		return true;
 	}
 }

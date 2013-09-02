@@ -4,7 +4,8 @@ import java.sql.*;
 import org.bukkit.*;
 import org.bukkit.inventory.ItemStack;
 import de.kumpelblase2.dragonslair.*;
-import de.kumpelblase2.dragonslair.utilities.*;
+import de.kumpelblase2.dragonslair.utilities.InventoryUtilities;
+import de.kumpelblase2.dragonslair.utilities.WorldUtility;
 import de.kumpelblase2.remoteentities.api.RemoteEntityType;
 
 public class NPC
@@ -112,12 +113,12 @@ public class NPC
 	{
 		this.isInvincible = invincible;
 	}
-	
+
 	public RemoteEntityType getType()
 	{
 		return this.type;
 	}
-	
+
 	public void setType(RemoteEntityType inType)
 	{
 		this.type = inType;
@@ -129,7 +130,7 @@ public class NPC
 		{
 			if(this.id != -1)
 			{
-				final PreparedStatement st = DragonsLairMain.createStatement("REPLACE INTO " + Tables.NPCS + "(" + "npc_id," + "npc_name," + "npc_skin," + "npc_location," + "npc_held_item," + "npc_armor," + "npc_spawned_from_beginning," + "npc_invincible,"  + "npc_type" + ") VALUES(?,?,?,?,?,?,?,?,?)");
+				final PreparedStatement st = DragonsLairMain.createStatement("REPLACE INTO " + Tables.NPCS + "(" + "npc_id," + "npc_name," + "npc_skin," + "npc_location," + "npc_held_item," + "npc_armor," + "npc_spawned_from_beginning," + "npc_invincible," + "npc_type" + ") VALUES(?,?,?,?,?,?,?,?,?)");
 				st.setInt(1, this.id);
 				st.setString(2, this.name);
 				st.setString(3, this.skin);

@@ -38,10 +38,10 @@ public class Cooldown
 			return this.dungeon.equals(object);
 		else if(object instanceof Cooldown)
 			return this.dungeon.equals(((Cooldown)object).getDungeonName());
-		else
-			return false;
+
+		return false;
 	}
-	
+
 	public int hashCode()
 	{
 		return this.dungeon.length() + (int)this.endTime;

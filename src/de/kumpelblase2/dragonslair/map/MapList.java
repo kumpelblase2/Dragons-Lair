@@ -11,9 +11,13 @@ public class MapList
 	{
 		if(this.maps.size() == 0)
 			return null;
+
 		for(final MapEntry map : this.maps)
+		{
 			if(map.is(p))
 				return map.getMap();
+		}
+
 		return null;
 	}
 

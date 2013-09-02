@@ -22,8 +22,10 @@ public class ChangeHungerEventExecutor implements EventExecutor
 				{
 					if(amount > 20)
 						amount = 20;
+
 					if(amount < 0)
 						amount = 0;
+
 					p.setFoodLevel(amount);
 				}
 				else if(type.equals("add"))
@@ -34,15 +36,18 @@ public class ChangeHungerEventExecutor implements EventExecutor
 						p.setFoodLevel(p.getFoodLevel() + amount);
 				}
 				else if(type.equals("remove"))
+				{
 					if(p.getFoodLevel() - amount <= 0)
 						p.setFoodLevel(0);
 					else
 						p.setFoodLevel(p.getFoodLevel() - amount);
+				}
 			}
 			else
 			{
 				final ActiveDungeon ad = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
 				if(ad != null)
+				{
 					for(final String member : ad.getCurrentParty().getMembers())
 					{
 						final Player pl = Bukkit.getPlayer(member);
@@ -50,8 +55,10 @@ public class ChangeHungerEventExecutor implements EventExecutor
 						{
 							if(amount > 20)
 								amount = 20;
+
 							if(amount < 0)
 								amount = 0;
+
 							pl.setFoodLevel(amount);
 						}
 						else if(type.equals("add"))
@@ -62,11 +69,14 @@ public class ChangeHungerEventExecutor implements EventExecutor
 								pl.setFoodLevel(pl.getFoodLevel() + amount);
 						}
 						else if(type.equals("remove"))
+						{
 							if(pl.getFoodLevel() - amount <= 0)
 								pl.setFoodLevel(0);
 							else
 								pl.setFoodLevel(pl.getFoodLevel() - amount);
+						}
 					}
+				}
 				else
 					return false;
 			}
@@ -77,6 +87,7 @@ public class ChangeHungerEventExecutor implements EventExecutor
 			DragonsLairMain.Log.warning(ex.getMessage());
 			return false;
 		}
+
 		return true;
 	}
 }

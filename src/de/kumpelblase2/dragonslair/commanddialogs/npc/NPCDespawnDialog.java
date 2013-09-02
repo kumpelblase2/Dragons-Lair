@@ -18,6 +18,7 @@ public class NPCDespawnDialog extends ValidatingPrompt
 	{
 		if(input.equals("back") || input.equals("cancel"))
 			return new NPCDespawnDialog();
+
 		try
 		{
 			final Integer id = Integer.parseInt(input);
@@ -27,6 +28,7 @@ public class NPCDespawnDialog extends ValidatingPrompt
 		{
 			DragonsLairMain.getDungeonManager().despawnNPC(input);
 		}
+
 		context.getForWhom().sendRawMessage(ChatColor.GREEN + "NPC despawned!");
 		return new NPCManageDialog();
 	}
@@ -36,6 +38,7 @@ public class NPCDespawnDialog extends ValidatingPrompt
 	{
 		if(input.equals("back") || input.equals("cancel"))
 			return true;
+
 		try
 		{
 			final Integer id = Integer.parseInt(input);
@@ -46,6 +49,7 @@ public class NPCDespawnDialog extends ValidatingPrompt
 					context.getForWhom().sendRawMessage(ChatColor.RED + "The npc isn't spawned.");
 					return false;
 				}
+
 				return true;
 			}
 			else
@@ -64,6 +68,7 @@ public class NPCDespawnDialog extends ValidatingPrompt
 				else
 					context.getForWhom().sendRawMessage(ChatColor.RED + "The npc isn't spawned.");
 			}
+
 			context.getForWhom().sendRawMessage(ChatColor.RED + "The npc doesn't exist.");
 			return false;
 		}

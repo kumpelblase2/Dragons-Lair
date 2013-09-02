@@ -6,7 +6,7 @@ import de.kumpelblase2.dragonslair.commanddialogs.GeneralConfigDialog;
 
 public class DungeonManageDialog extends ValidatingPrompt
 {
-	private final String[] options = new String[] { "create", "delete", "list", "edit", "back" };
+	private final String[] options = new String[]{ "create", "delete", "list", "edit", "back" };
 
 	@Override
 	public String getPromptText(final ConversationContext context)
@@ -33,6 +33,7 @@ public class DungeonManageDialog extends ValidatingPrompt
 			return new GeneralConfigDialog();
 		else if(input.equals("delete"))
 			return new DungeonDeleteDialog();
+
 		return END_OF_CONVERSATION;
 	}
 
@@ -47,6 +48,7 @@ public class DungeonManageDialog extends ValidatingPrompt
 			else if(splitt.length > 2)
 				return false;
 			else
+			{
 				try
 				{
 					Integer.parseInt(splitt[1]);
@@ -56,11 +58,14 @@ public class DungeonManageDialog extends ValidatingPrompt
 				{
 					return false;
 				}
+			}
 		}
-		else
-			for(final String option : this.options)
-				if(option.equals(arg1))
-					return true;
+		else for(final String option : this.options)
+		{
+			if(option.equals(arg1))
+				return true;
+		}
+
 		return false;
 	}
 }

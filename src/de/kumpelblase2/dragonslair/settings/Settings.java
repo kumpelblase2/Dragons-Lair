@@ -173,16 +173,22 @@ public class Settings
 	public NPC getNPCByName(final String name)
 	{
 		for(final NPC npc : this.npcs.values())
+		{
 			if(npc.getName().equals(name))
 				return npc;
+		}
+
 		return null;
 	}
 
 	public Dungeon getDungeonByName(final String name)
 	{
 		for(final Dungeon d : this.getDungeons().values())
+		{
 			if(d.getName().equalsIgnoreCase(name))
 				return d;
+		}
+
 		return null;
 	}
 

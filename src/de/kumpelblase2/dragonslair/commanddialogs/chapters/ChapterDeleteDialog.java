@@ -9,8 +9,7 @@ public class ChapterDeleteDialog extends ValidatingPrompt
 	@Override
 	public String getPromptText(final ConversationContext context)
 	{
-		if(context.getSessionData("id") == null)
-			return "Please enter the id you want to remove:";
+		if(context.getSessionData("id") == null) return "Please enter the id you want to remove:";
 		else
 			return ChatColor.YELLOW + "Are you sure you want to delete the chapter? Write 'delete' in the chat to confirm.";
 	}
@@ -22,6 +21,7 @@ public class ChapterDeleteDialog extends ValidatingPrompt
 		{
 			if(input.equals("back") || input.equals("cancel"))
 				return new ChapterManageDialog();
+
 			context.setSessionData("id", Integer.parseInt(input));
 		}
 		else if(input.equals("back"))
@@ -42,6 +42,7 @@ public class ChapterDeleteDialog extends ValidatingPrompt
 			context.setSessionData("id", null);
 			return new ChapterManageDialog();
 		}
+
 		return this;
 	}
 
@@ -50,7 +51,9 @@ public class ChapterDeleteDialog extends ValidatingPrompt
 	{
 		if(input.equals("back") || input.equals("cancel"))
 			return true;
+
 		if(context.getSessionData("id") == null)
+		{
 			try
 			{
 				final int id = Integer.parseInt(input);
@@ -59,6 +62,7 @@ public class ChapterDeleteDialog extends ValidatingPrompt
 					context.getForWhom().sendRawMessage(ChatColor.RED + "A chapter with that id doesn't exist.");
 					return false;
 				}
+
 				return true;
 			}
 			catch(final Exception e)
@@ -66,6 +70,7 @@ public class ChapterDeleteDialog extends ValidatingPrompt
 				context.getForWhom().sendRawMessage(ChatColor.RED + "Not a valid number.");
 				return false;
 			}
+		}
 		else
 			return true;
 	}

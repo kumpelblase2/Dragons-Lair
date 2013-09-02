@@ -57,15 +57,23 @@ public class BlockEntry implements Recoverable
 			st.setString(4, WorldUtility.locationToString(this.m_loc));
 			StringBuilder sb = new StringBuilder();
 			for(final String key : this.m_before.keySet())
+			{
 				sb.append(key + (0x1D) + this.m_before.get(key) + ";");
+			}
+
 			if(sb.length() > 1)
 				sb.substring(0, sb.length() - 1);
+
 			st.setString(5, sb.toString());
 			sb = new StringBuilder();
 			for(final String key : this.m_new.keySet())
+			{
 				sb.append(key + (0x1D) + this.m_new.get(key) + ";");
+			}
+
 			if(sb.length() > 1)
 				sb.substring(0, sb.length() - 1);
+
 			st.setString(6, sb.toString());
 			st.execute();
 		}
@@ -125,7 +133,9 @@ public class BlockEntry implements Recoverable
 		{
 			final Sign s = (Sign)inBroken;
 			for(int i = 0; i < s.getLines().length; i++)
+			{
 				options.put("line" + i, s.getLine(i));
+			}
 		}
 		else if(inBroken instanceof Chest)
 		{
@@ -133,8 +143,10 @@ public class BlockEntry implements Recoverable
 			final String itemString = InventoryUtilities.itemsToString(c.getBlockInventory().getContents());
 			final String[] split = itemString.split(";");
 			for(int i = 0; i < split.length; i++)
+			{
 				if(!split[i].equals("0:0:0"))
 					options.put("slot" + i, split[i]);
+			}
 		}
 		else if(inBroken instanceof BrewingStand)
 		{
@@ -143,8 +155,10 @@ public class BlockEntry implements Recoverable
 			final String itemString = InventoryUtilities.itemsToString(b.getInventory().getContents());
 			final String[] split = itemString.split(";");
 			for(int i = 0; i < split.length; i++)
+			{
 				if(!split[i].equals("0:0:0"))
 					options.put("slot" + i, split[i]);
+			}
 		}
 		else if(inBroken instanceof Dispenser)
 		{
@@ -152,8 +166,10 @@ public class BlockEntry implements Recoverable
 			final String itemString = InventoryUtilities.itemsToString(d.getInventory().getContents());
 			final String[] split = itemString.split(";");
 			for(int i = 0; i < split.length; i++)
+			{
 				if(!split[i].equals("0:0:0"))
 					options.put("slot" + i, split[i]);
+			}
 		}
 		else if(inBroken instanceof Furnace)
 		{
@@ -163,8 +179,10 @@ public class BlockEntry implements Recoverable
 			final String itemString = InventoryUtilities.itemsToString(f.getInventory().getContents());
 			final String[] split = itemString.split(";");
 			for(int i = 0; i < split.length; i++)
+			{
 				if(!split[i].equals("0:0:0"))
 					options.put("slot" + i, split[i]);
+			}
 		}
 		else if(inBroken instanceof Jukebox)
 		{
@@ -176,6 +194,7 @@ public class BlockEntry implements Recoverable
 			final NoteBlock n = (NoteBlock)inBroken;
 			options.put("note", "" + n.getRawNote());
 		}
+
 		return options;
 	}
 
@@ -185,6 +204,7 @@ public class BlockEntry implements Recoverable
 		final byte data = Byte.parseByte(options.get("data"));
 		if(this.m_loc.getBlock().getState() instanceof InventoryHolder)
 			((InventoryHolder)this.m_loc.getBlock().getState()).getInventory().clear();
+
 		this.m_loc.getBlock().setTypeIdAndData(id, data, true);
 		this.m_loc.getBlock().getState().update();
 		final BlockState inState = this.m_loc.getBlock().getState();
@@ -202,41 +222,53 @@ public class BlockEntry implements Recoverable
 			case CHEST:
 				final Chest c = (Chest)inState;
 				for(final String key : options.keySet())
+				{
 					if(key.startsWith("slot"))
 					{
 						final int index = Integer.parseInt(key.replace("slot", ""));
 						c.getBlockInventory().setItem(index, InventoryUtilities.stringToItem(options.get(key)));
 					}
+				}
+
 				break;
 			case BREWING_STAND:
 				final BrewingStand b = (BrewingStand)inState;
 				b.setBrewingTime(Integer.parseInt(options.get("brewing_time")));
 				for(final String key : options.keySet())
+				{
 					if(key.startsWith("slot"))
 					{
 						final int index = Integer.parseInt(key.replace("slot", ""));
 						b.getInventory().setItem(index, InventoryUtilities.stringToItem(options.get(key)));
 					}
+				}
+
 				break;
 			case DISPENSER:
 				final Dispenser d = (Dispenser)inState;
 				for(final String key : options.keySet())
+				{
 					if(key.startsWith("slot"))
 					{
 						final int index = Integer.parseInt(key.replace("slot", ""));
 						d.getInventory().setItem(index, InventoryUtilities.stringToItem(options.get(key)));
 					}
+				}
+
 				break;
 			case FURNACE:
 				final Furnace f = (Furnace)inState;
 				f.setBurnTime(Short.parseShort(options.get("burn_time")));
 				f.setCookTime(Short.parseShort(options.get("cooking_time")));
 				for(final String key : options.keySet())
+				{
 					if(key.startsWith("slot"))
 					{
 						final int index = Integer.parseInt(key.replace("slot", ""));
 						f.getInventory().setItem(index, InventoryUtilities.stringToItem(options.get(key)));
 					}
+				}
+
 				break;
 			case JUKEBOX:
 				final Jukebox j = (Jukebox)inState;
@@ -249,6 +281,7 @@ public class BlockEntry implements Recoverable
 			default:
 				break;
 		}
+
 		inState.update();
 	}
 

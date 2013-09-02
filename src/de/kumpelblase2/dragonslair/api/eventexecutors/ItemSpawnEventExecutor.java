@@ -28,6 +28,7 @@ public class ItemSpawnEventExecutor implements EventExecutor
 		{
 			return false;
 		}
+
 		Material m;
 		try
 		{
@@ -39,14 +40,17 @@ public class ItemSpawnEventExecutor implements EventExecutor
 			if(m == null)
 				return false;
 		}
+
 		if(world == null || itemid == null)
 			return false;
+
 		final World w = Bukkit.getWorld(world);
 		if(w != null)
 		{
 			w.dropItemNaturally(new Location(w, x, y, z), new ItemStack(m, amount));
 			return true;
 		}
+
 		return false;
 	}
 }

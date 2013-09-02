@@ -1,9 +1,7 @@
 package de.kumpelblase2.dragonslair.commanddialogs.dialogs;
 
 import org.bukkit.ChatColor;
-import org.bukkit.conversations.ConversationContext;
-import org.bukkit.conversations.Prompt;
-import org.bukkit.conversations.ValidatingPrompt;
+import org.bukkit.conversations.*;
 import de.kumpelblase2.dragonslair.DragonsLairMain;
 import de.kumpelblase2.dragonslair.api.Dialog;
 
@@ -26,6 +24,7 @@ public class DialogDeleteDialog extends ValidatingPrompt
 			context.setSessionData("id", null);
 			return new DialogManageDialog();
 		}
+
 		if(context.getSessionData("id") == null)
 		{
 			context.setSessionData("id", Integer.parseInt(input));
@@ -38,11 +37,13 @@ public class DialogDeleteDialog extends ValidatingPrompt
 				context.setSessionData("id", null);
 				return new DialogManageDialog();
 			}
+
 			final Dialog d = DragonsLairMain.getSettings().getDialogs().get(context.getSessionData("id"));
 			DragonsLairMain.debugLog("Delete dialog with id '" + d.getID() + "'");
 			d.remove();
 			DragonsLairMain.getSettings().getDialogs().remove(d.getID());
 		}
+
 		context.setSessionData("id", null);
 		return new DialogManageDialog();
 	}
@@ -52,7 +53,9 @@ public class DialogDeleteDialog extends ValidatingPrompt
 	{
 		if(input.equals("back") || input.equals("cancel"))
 			return true;
+
 		if(context.getSessionData("id") == null)
+		{
 			try
 			{
 				final Integer id = Integer.parseInt(input);
@@ -67,6 +70,8 @@ public class DialogDeleteDialog extends ValidatingPrompt
 				context.getForWhom().sendRawMessage(ChatColor.RED + "Not a valid number.");
 				return false;
 			}
+		}
+
 		return true;
 	}
 }

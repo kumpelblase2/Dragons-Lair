@@ -25,6 +25,7 @@ public class MapEntry
 			return this.map.equals(object);
 		else if(object instanceof String)
 			return this.map.getPlayer().getName().equals(object);
+
 		return false;
 	}
 
@@ -54,9 +55,10 @@ public class MapEntry
 				}
 			}
 		}
+
 		this.map = null;
 	}
-	
+
 	public int hashCode()
 	{
 		return this.map.getPlayer().getEntityId();

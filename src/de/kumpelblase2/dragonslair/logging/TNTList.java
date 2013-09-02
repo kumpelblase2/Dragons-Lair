@@ -42,10 +42,11 @@ public class TNTList
 					l = (Location)o;
 				else
 					return false;
+
 				return l.getWorld().getName().equals(this.loc.getWorld().getName()) && l.getBlockX() == this.loc.getBlockX() && l.getBlockY() == this.loc.getBlockY() && l.getBlockZ() == this.loc.getBlockZ();
 			}
 		}
-		
+
 		public int hashCode()
 		{
 			return this.loc.hashCode();
@@ -60,8 +61,11 @@ public class TNTList
 	public TNTEntry getEntry(final Location l)
 	{
 		for(final TNTEntry t : this.tntEntries)
+		{
 			if(t.equals(l))
 				return t;
+		}
+
 		return null;
 	}
 
@@ -93,8 +97,11 @@ public class TNTList
 	{
 		final Set<TNTEntry> subSet = new HashSet<TNTEntry>();
 		for(final TNTEntry e : this.tntEntries)
+		{
 			if(e.equals(dungeon))
 				subSet.add(e);
+		}
+
 		return subSet;
 	}
 }

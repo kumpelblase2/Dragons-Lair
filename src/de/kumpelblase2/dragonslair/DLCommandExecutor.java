@@ -14,8 +14,10 @@ public class DLCommandExecutor implements CommandExecutor
 	{
 		if(!cmd.getName().equals("dragonslair"))
 			return false;
+
 		if(args.length != 1)
 			return false;
+
 		if(args[0].equals("config"))
 		{
 			if(!sender.isPermissionSet("dragonslair.config"))
@@ -25,6 +27,7 @@ public class DLCommandExecutor implements CommandExecutor
 			}
 			else if(!sender.hasPermission("dragonslair.config"))
 				return false;
+
 			if(sender instanceof Player || sender instanceof ConsoleCommandSender)
 			{
 				final ConversationFactory f = DragonsLairMain.getDungeonManager().getConversationFactory();
@@ -42,6 +45,7 @@ public class DLCommandExecutor implements CommandExecutor
 			}
 			else if(!sender.hasPermission("dragonslair.config"))
 				return false;
+
 			DragonsLairMain.Log.info("Reloading data...");
 			DragonsLairMain.Log.info("Stopping all running dungeons...");
 			DragonsLairMain.getDungeonManager().stopDungeons();
@@ -64,6 +68,7 @@ public class DLCommandExecutor implements CommandExecutor
 		}
 		else
 			sender.sendMessage(ChatColor.RED + "No command like that.");
+
 		return false;
 	}
 }

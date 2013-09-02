@@ -13,7 +13,7 @@ import de.kumpelblase2.dragonslair.utilities.WorldUtility;
 
 public class DungeonEditDialog extends ValidatingPrompt
 {
-	public final String[] options = new String[] { "name", "starting objective", "starting chapter", "starting pos", "safe word", "min players", "max players", "starting message", "ending message", "ready message", "breakable blocks" };
+	public final String[] options = new String[]{ "name", "starting objective", "starting chapter", "starting pos", "safe word", "min players", "max players", "starting message", "ending message", "ready message", "breakable blocks" };
 
 	@Override
 	public String getPromptText(final ConversationContext context)
@@ -46,6 +46,7 @@ public class DungeonEditDialog extends ValidatingPrompt
 			else
 				return ChatColor.GREEN + "Should blocks be breakable?";
 		}
+
 		context.getForWhom().sendRawMessage("What do you want to edit?");
 		final StringBuilder sb = new StringBuilder();
 		for(int i = 0; i < this.options.length; i++)
@@ -54,6 +55,7 @@ public class DungeonEditDialog extends ValidatingPrompt
 			if(i != this.options.length - 1)
 				sb.append(",");
 		}
+
 		return sb.toString();
 	}
 
@@ -66,10 +68,12 @@ public class DungeonEditDialog extends ValidatingPrompt
 			arg0.setSessionData("option", null);
 			return new DungeonManageDialog();
 		}
+
 		if(arg0.getSessionData("dungeon") == null)
 		{
 			if(arg1.equals("back"))
 				return new DungeonManageDialog();
+
 			try
 			{
 				final Integer id = Integer.parseInt(arg1);
@@ -88,6 +92,7 @@ public class DungeonEditDialog extends ValidatingPrompt
 				arg0.setSessionData("dungeon", null);
 				return this;
 			}
+
 			arg0.setSessionData("option", arg1);
 		}
 		else if(arg0.getSessionData("option") != null)
@@ -97,12 +102,14 @@ public class DungeonEditDialog extends ValidatingPrompt
 				arg0.setSessionData("option", null);
 				return this;
 			}
+
 			final Dungeon d = DragonsLairMain.getSettings().getDungeons().get(arg0.getSessionData("dungeon"));
 			if(d == null)
 			{
 				arg0.getForWhom().sendRawMessage(ChatColor.RED + "An error occurred.");
 				return END_OF_CONVERSATION;
 			}
+
 			final String option = (String)arg0.getSessionData("option");
 			if(option.equals("name"))
 				d.setName(arg1);
@@ -112,10 +119,8 @@ public class DungeonEditDialog extends ValidatingPrompt
 				d.setStartingChapter(Integer.parseInt(arg1));
 			else if(option.equals("starting pos"))
 			{
-				if(arg1.equals("here"))
-					d.setStartingLocation(((Player)arg0.getForWhom()).getLocation());
-				else
-					d.setStartingLocation(WorldUtility.stringToLocation(arg1));
+				if(arg1.equals("here")) d.setStartingLocation(((Player)arg0.getForWhom()).getLocation());
+				else d.setStartingLocation(WorldUtility.stringToLocation(arg1));
 			}
 			else if(option.equals("safe word"))
 				d.setSafeWord(arg1);
@@ -134,6 +139,7 @@ public class DungeonEditDialog extends ValidatingPrompt
 				final AnswerType answer = new AnswerConverter(arg1).convert();
 				d.setBlocksBreakable((answer == AnswerType.AGREEMENT || answer == AnswerType.CONSIDERING_AGREEMENT));
 			}
+
 			d.save();
 			arg0.getForWhom().sendRawMessage(ChatColor.GREEN + "Dungeon '" + arg0.getSessionData("dungeon") + "' edited!");
 			arg0.setSessionData("dungeon", null);
@@ -148,6 +154,7 @@ public class DungeonEditDialog extends ValidatingPrompt
 	{
 		if(arg1.equals("back") || arg1.equals("cancel"))
 			return true;
+
 		if(arg0.getSessionData("dungeon") == null)
 		{
 			Dungeon d = null;
@@ -170,19 +177,26 @@ public class DungeonEditDialog extends ValidatingPrompt
 					return false;
 				}
 			}
+
 			for(final ActiveDungeon ad : DragonsLairMain.getDungeonManager().getActiveDungeons())
+			{
 				if(ad.getInfo().getID() == d.getID())
 				{
 					arg0.getForWhom().sendRawMessage(ChatColor.RED + "The dungeon is currently in use.");
 					return false;
 				}
+			}
+
 			return true;
 		}
 		else if(arg0.getSessionData("option") == null)
 		{
 			for(final String option : this.options)
+			{
 				if(option.equals(arg1))
 					return true;
+			}
+
 			return false;
 		}
 		else

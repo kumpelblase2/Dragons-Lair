@@ -23,10 +23,12 @@ public class TriggerDeleteDialog extends ValidatingPrompt
 			arg0.setSessionData("trigger_id", null);
 			return new TriggerManageDialog();
 		}
+
 		if(arg0.getSessionData("trigger_id") == null)
 		{
 			if(arg1.equals("back"))
 				return new TriggerManageDialog();
+
 			arg0.setSessionData("trigger_id", Integer.parseInt(arg1));
 			return this;
 		}
@@ -37,6 +39,7 @@ public class TriggerDeleteDialog extends ValidatingPrompt
 				arg0.setSessionData("trigger_id", null);
 				return this;
 			}
+
 			if(arg1.equals("delete"))
 			{
 				final int id = (Integer)arg0.getSessionData("trigger_id");
@@ -45,6 +48,7 @@ public class TriggerDeleteDialog extends ValidatingPrompt
 				DragonsLairMain.getSettings().getTriggers().remove(id);
 				DragonsLairMain.getInstance().getEventHandler().reloadTriggers();
 			}
+
 			arg0.setSessionData("trigger_id", null);
 			return new TriggerManageDialog();
 		}
@@ -55,7 +59,9 @@ public class TriggerDeleteDialog extends ValidatingPrompt
 	{
 		if(arg1.equals("back") || arg1.equals("cancel"))
 			return true;
+
 		if(arg0.getSessionData("trigger_id") == null)
+		{
 			try
 			{
 				final int id = Integer.parseInt(arg1);
@@ -72,10 +78,12 @@ public class TriggerDeleteDialog extends ValidatingPrompt
 				arg0.getForWhom().sendRawMessage(ChatColor.RED + "Not a valid number.");
 				return false;
 			}
+		}
 		else
 		{
 			if(arg1.length() > 0)
 				return true;
+
 			return false;
 		}
 	}

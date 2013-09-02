@@ -13,6 +13,7 @@ public class NPCSpawnEventExecutor implements EventExecutor
 		final String npc = e.getOption("npc_id");
 		if(npc == null)
 			return false;
+
 		try
 		{
 			final NPC n = DragonsLairMain.getSettings().getNPCByName(npc);
@@ -21,7 +22,7 @@ public class NPCSpawnEventExecutor implements EventExecutor
 				final int id = Integer.parseInt(npc);
 				if(!DragonsLairMain.getSettings().getNPCs().containsKey(id))
 					return false;
-				
+
 				DragonsLairMain.getDungeonManager().spawnNPC(DragonsLairMain.getSettings().getNPCs().get(id).getName());
 			}
 			else
@@ -31,6 +32,7 @@ public class NPCSpawnEventExecutor implements EventExecutor
 		{
 			return false;
 		}
+
 		return true;
 	}
 }

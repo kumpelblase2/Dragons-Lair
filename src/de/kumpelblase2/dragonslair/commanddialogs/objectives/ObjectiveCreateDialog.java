@@ -18,6 +18,7 @@ public class ObjectiveCreateDialog extends ValidatingPrompt
 	{
 		if(input.equals("back") || input.equals("cancel"))
 			return new ObjectiveManageDialog();
+
 		final Objective o = new Objective();
 		o.setDescription(input);
 		o.save();

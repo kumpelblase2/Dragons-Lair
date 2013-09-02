@@ -29,19 +29,17 @@ public class ObjectiveListDialog extends MessagePrompt
 			@Override
 			public int compare(final Objective o1, final Objective o2)
 			{
-				if(o1.getID() > o2.getID())
-					return 1;
-				else if(o1.getID() < o1.getID())
-					return -1;
-				else
-					return 0;
+				if(o1.getID() > o2.getID()) return 1;
+				else if(o1.getID() < o1.getID()) return -1;
+				else return 0;
 			}
 		});
 		arg0.getForWhom().sendRawMessage("There is/are " + objectives.length + " objective(s) avaiblable.");
-		if(10 * this.page >= objectives.length)
-			this.page = objectives.length / 12;
+		if(10 * this.page >= objectives.length) this.page = objectives.length / 12;
 		for(int i = 12 * this.page; i < objectives.length && i < 10 * this.page + 12; i++)
+		{
 			arg0.getForWhom().sendRawMessage("   " + objectives[i].getID() + " - " + objectives[i].getDescription());
+		}
 		return "---------------- Page " + (this.page + 1) + "/" + (objectives.length / 12 + 1);
 	}
 

@@ -21,6 +21,7 @@ public class EventMonster
 			return this.mob.equals(object);
 		else if(object instanceof EventMonster)
 			return ((EventMonster)object).getMonster().equals(this.mob);
+
 		return false;
 	}
 

@@ -8,7 +8,7 @@ import de.kumpelblase2.dragonslair.utilities.GeneralUtilities;
 
 public class EventEditDialog extends ValidatingPrompt
 {
-	private final String[] options = new String[] { "type", "add option", "delete option", "edit option" };
+	private final String[] options = new String[]{ "type", "add option", "delete option", "edit option" };
 	private Event e;
 
 	@Override
@@ -26,6 +26,7 @@ public class EventEditDialog extends ValidatingPrompt
 				if(i != this.options.length - 1)
 					sb.append(", ");
 			}
+
 			return ChatColor.AQUA + sb.toString();
 		}
 		else if(arg0.getSessionData("option").equals("type"))
@@ -65,10 +66,12 @@ public class EventEditDialog extends ValidatingPrompt
 			arg0.setSessionData("option_value", null);
 			return new EventManageDialog();
 		}
+
 		if(arg0.getSessionData("event_id") == null)
 		{
 			if(arg1.equals("back"))
 				return new EventManageDialog();
+
 			final Integer id = Integer.parseInt(arg1);
 			arg0.setSessionData("event_id", id);
 			this.e = DragonsLairMain.getSettings().getEvents().get(id);
@@ -80,6 +83,7 @@ public class EventEditDialog extends ValidatingPrompt
 				arg0.setSessionData("event_id", null);
 				return this;
 			}
+
 			arg0.setSessionData("option", arg1);
 		}
 		else
@@ -89,6 +93,7 @@ public class EventEditDialog extends ValidatingPrompt
 				arg0.setSessionData("option", null);
 				return this;
 			}
+
 			if(arg0.getSessionData("option").equals("type"))
 			{
 				this.e.setActionType(EventActionType.valueOf(arg1.toUpperCase().replace(" ", "_")));
@@ -105,6 +110,7 @@ public class EventEditDialog extends ValidatingPrompt
 					arg0.setSessionData("option", null);
 					return this;
 				}
+
 				this.e.removeOption(arg1);
 				this.e.save();
 				arg0.setSessionData("event_id", null);
@@ -139,6 +145,7 @@ public class EventEditDialog extends ValidatingPrompt
 				return new EventManageDialog();
 			}
 		}
+
 		return this;
 	}
 
@@ -147,7 +154,9 @@ public class EventEditDialog extends ValidatingPrompt
 	{
 		if(arg1.equals("back") || arg1.equals("cancel"))
 			return true;
+
 		if(arg0.getSessionData("event_id") == null)
+		{
 			try
 			{
 				final int id = Integer.parseInt(arg1);
@@ -156,6 +165,7 @@ public class EventEditDialog extends ValidatingPrompt
 					arg0.getForWhom().sendRawMessage(ChatColor.RED + "An event with that id doesn't exist.");
 					return false;
 				}
+
 				return true;
 			}
 			catch(final Exception e)
@@ -163,18 +173,25 @@ public class EventEditDialog extends ValidatingPrompt
 				arg0.getForWhom().sendRawMessage(ChatColor.RED + "Not a valid number.");
 				return false;
 			}
+		}
 		else if(arg0.getSessionData("option") == null)
 		{
 			for(final String option : this.options)
+			{
 				if(option.equals(arg1))
 					return true;
+			}
+
 			return false;
 		}
 		else if(arg0.getSessionData("option").equals("type"))
 		{
 			for(final EventActionType type : EventActionType.values())
+			{
 				if(type.toString().toLowerCase().equals(arg1.replace(" ", "_").toLowerCase()))
 					return true;
+			}
+
 			arg0.getForWhom().sendRawMessage(ChatColor.RED + "That type doesn't exist.");
 			return false;
 		}
@@ -185,6 +202,7 @@ public class EventEditDialog extends ValidatingPrompt
 				arg0.getForWhom().sendRawMessage(ChatColor.RED + "The event doesn't have this option.");
 				return false;
 			}
+
 			return true;
 		}
 		else if(arg0.getSessionData("option").equals("edit option"))
@@ -196,6 +214,7 @@ public class EventEditDialog extends ValidatingPrompt
 					arg0.getForWhom().sendRawMessage(ChatColor.RED + "The event doesn't have this option.");
 					return false;
 				}
+
 				return true;
 			}
 			else
@@ -208,11 +227,17 @@ public class EventEditDialog extends ValidatingPrompt
 		{
 			final EventActionOptions options = EventActionOptions.valueOf(this.e.getActionType().toString());
 			for(final String option : options.getRequiredTypes())
+			{
 				if(option.equals(arg1))
 					return true;
+			}
+
 			for(final String option : options.getOptionalTypes())
+			{
 				if(option.equals(arg1))
 					return true;
+			}
+
 			arg0.getForWhom().sendRawMessage(ChatColor.RED + "There is no such option for this event type.");
 			return false;
 		}

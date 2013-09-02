@@ -6,8 +6,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import de.kumpelblase2.dragonslair.DragonsLairMain;
 import de.kumpelblase2.dragonslair.api.NPC;
-import de.kumpelblase2.dragonslair.conversation.*;
-import de.kumpelblase2.dragonslair.utilities.*;
+import de.kumpelblase2.dragonslair.conversation.AnswerConverter;
+import de.kumpelblase2.dragonslair.conversation.AnswerType;
+import de.kumpelblase2.dragonslair.utilities.InventoryUtilities;
+import de.kumpelblase2.dragonslair.utilities.WorldUtility;
 
 public class NPCCreateDialog extends ValidatingPrompt
 {
@@ -42,10 +44,12 @@ public class NPCCreateDialog extends ValidatingPrompt
 			arg0.setSessionData("npc_armor", null);
 			return new NPCManageDialog();
 		}
+
 		if(arg0.getSessionData("npc_name") == null)
 		{
 			if(arg1.equals("back"))
 				return new NPCManageDialog();
+
 			arg0.setSessionData("npc_name", arg1);
 			return this;
 		}
@@ -56,6 +60,7 @@ public class NPCCreateDialog extends ValidatingPrompt
 				arg0.setSessionData("npc_name", null);
 				return this;
 			}
+
 			arg0.setSessionData("npc_skin", arg1);
 			return this;
 		}
@@ -66,10 +71,12 @@ public class NPCCreateDialog extends ValidatingPrompt
 				arg0.setSessionData("npc_skin", null);
 				return this;
 			}
+
 			if(arg1.equals("here"))
 				arg0.setSessionData("npc_pos", ((Player)arg0.getForWhom()).getLocation());
 			else
 				arg0.setSessionData("npc_pos", WorldUtility.stringToLocation(arg1));
+
 			return this;
 		}
 		else if(arg0.getSessionData("npc_held_item") == null)
@@ -79,6 +86,7 @@ public class NPCCreateDialog extends ValidatingPrompt
 				arg0.setSessionData("npc_pos", null);
 				return this;
 			}
+
 			try
 			{
 				final int i = Integer.parseInt(arg1);
@@ -88,6 +96,7 @@ public class NPCCreateDialog extends ValidatingPrompt
 			{
 				arg0.setSessionData("npc_held_item", Material.getMaterial(arg1.replace(" ", "_").toUpperCase()));
 			}
+
 			return this;
 		}
 		else if(arg0.getSessionData("npc_armor") == null)
@@ -97,6 +106,7 @@ public class NPCCreateDialog extends ValidatingPrompt
 				arg0.setSessionData("npc_held_item", null);
 				return this;
 			}
+
 			final ItemStack[] items = InventoryUtilities.stringToItems(arg1.replace(":", ";"));
 			arg0.setSessionData("npc_armor", items);
 			return this;
@@ -108,11 +118,13 @@ public class NPCCreateDialog extends ValidatingPrompt
 				arg0.setSessionData("npc_armor", null);
 				return this;
 			}
+
 			final AnswerType answer = new AnswerConverter(arg1).convert();
 			if(answer == AnswerType.AGREEMENT || answer == AnswerType.CONSIDERING_AGREEMENT)
 				arg0.setSessionData("npc_invincible", true);
 			else
 				arg0.setSessionData("npc_invincible", false);
+
 			return this;
 		}
 		else
@@ -122,11 +134,13 @@ public class NPCCreateDialog extends ValidatingPrompt
 				arg0.setSessionData("npc_armor", null);
 				return this;
 			}
+
 			final NPC n = new NPC();
 			n.setName((String)arg0.getSessionData("npc_name"));
 			String skin = (String)arg0.getSessionData("npc_skin");
 			if(skin.equals("-"))
 				skin = "";
+
 			n.setSkin(skin);
 			n.setLocation((Location)arg0.getSessionData("npc_pos"));
 			n.setHeldItem((Material)arg0.getSessionData("npc_held_item"));
@@ -137,11 +151,13 @@ public class NPCCreateDialog extends ValidatingPrompt
 				n.shouldSpawnAtBeginning(true);
 			else
 				n.shouldSpawnAtBeginning(false);
+
 			n.save();
 			DragonsLairMain.debugLog("Created NPC '" + n.getName() + "'");
 			DragonsLairMain.getSettings().getNPCs().put(n.getID(), n);
 			if(n.shouldSpawnAtBeginning())
 				DragonsLairMain.getDungeonManager().spawnNPC(n.getID());
+
 			arg0.setSessionData("npc_name", null);
 			arg0.setSessionData("npc_skin", null);
 			arg0.setSessionData("npc_pos", null);
@@ -157,6 +173,7 @@ public class NPCCreateDialog extends ValidatingPrompt
 	{
 		if(arg1.equals("back") || arg1.equals("cancel"))
 			return true;
+
 		if(arg0.getSessionData("npc_name") == null)
 			/*
 			 * if(DragonsLairMain.getSettings().getNPCByName(arg1) != null)
@@ -164,22 +181,24 @@ public class NPCCreateDialog extends ValidatingPrompt
 			 * arg0.getForWhom().sendRawMessage(ChatColor.RED + "A npc with that name already exists.");
 			 * return false;
 			 * }
-			 */
-			return true;
+			 */ return true;
 		else if(arg0.getSessionData("npc_skin") == null)
 			return true;
 		else if(arg0.getSessionData("npc_pos") == null)
 		{
 			if(arg1.equals("here"))
 				return true;
+
 			if(WorldUtility.stringToLocation(arg1) == null)
 			{
 				arg0.getForWhom().sendRawMessage(ChatColor.RED + "Invalid location data.");
 				return false;
 			}
+
 			return true;
 		}
 		else if(arg0.getSessionData("npc_held_item") == null)
+		{
 			try
 			{
 				final int id = Integer.parseInt(arg1);
@@ -188,6 +207,7 @@ public class NPCCreateDialog extends ValidatingPrompt
 					arg0.getForWhom().sendRawMessage(ChatColor.RED + "Invalid id.");
 					return false;
 				}
+
 				return true;
 			}
 			catch(final Exception e)
@@ -197,13 +217,16 @@ public class NPCCreateDialog extends ValidatingPrompt
 					arg0.getForWhom().sendRawMessage(ChatColor.RED + "An item with that name doesn't exist.");
 					return false;
 				}
+
 				return true;
 			}
+		}
 		else if(arg0.getSessionData("npc_armor") == null)
 		{
 			final ItemStack[] armor = InventoryUtilities.stringToItems(arg1.replace(":", ";"));
 			if(armor.length != 4)
 				return false;
+
 			return true;
 		}
 		else if(arg0.getSessionData("npc_invincible") == null || arg0.getSessionData("npc_should_spawn") == null)
@@ -212,8 +235,10 @@ public class NPCCreateDialog extends ValidatingPrompt
 			final AnswerType type = conv.convert();
 			if(type != AnswerType.NOTHING)
 				return true;
+
 			return false;
 		}
+
 		return false;
 	}
 }

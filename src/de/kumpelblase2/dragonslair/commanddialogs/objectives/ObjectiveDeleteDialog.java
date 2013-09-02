@@ -22,6 +22,7 @@ public class ObjectiveDeleteDialog extends ValidatingPrompt
 		{
 			if(input.equals("back") || input.equals("cancel"))
 				return new ObjectiveManageDialog();
+
 			context.setSessionData("id", Integer.parseInt(input));
 		}
 		else if(input.equals("back"))
@@ -42,6 +43,7 @@ public class ObjectiveDeleteDialog extends ValidatingPrompt
 			context.setSessionData("id", null);
 			return new ObjectiveManageDialog();
 		}
+
 		return this;
 	}
 
@@ -50,7 +52,9 @@ public class ObjectiveDeleteDialog extends ValidatingPrompt
 	{
 		if(input.equals("back") || input.equals("cancel"))
 			return true;
+
 		if(context.getSessionData("id") == null)
+		{
 			try
 			{
 				final int id = Integer.parseInt(input);
@@ -59,6 +63,7 @@ public class ObjectiveDeleteDialog extends ValidatingPrompt
 					context.getForWhom().sendRawMessage(ChatColor.RED + "A chapter with that id doesn't exist.");
 					return false;
 				}
+
 				return true;
 			}
 			catch(final Exception e)
@@ -66,6 +71,7 @@ public class ObjectiveDeleteDialog extends ValidatingPrompt
 				context.getForWhom().sendRawMessage(ChatColor.RED + "Not a valid number.");
 				return false;
 			}
+		}
 		else
 			return true;
 	}

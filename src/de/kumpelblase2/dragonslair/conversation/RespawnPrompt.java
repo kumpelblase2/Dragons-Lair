@@ -2,9 +2,7 @@ package de.kumpelblase2.dragonslair.conversation;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.conversations.ConversationContext;
-import org.bukkit.conversations.Prompt;
-import org.bukkit.conversations.ValidatingPrompt;
+import org.bukkit.conversations.*;
 import org.bukkit.entity.Player;
 import de.kumpelblase2.dragonslair.DragonsLairMain;
 import de.kumpelblase2.dragonslair.api.ActiveDungeon;
@@ -12,7 +10,7 @@ import de.kumpelblase2.dragonslair.api.DeathLocation;
 
 public class RespawnPrompt extends ValidatingPrompt
 {
-	private final String[] options = new String[] { "respawn", "resurrect" };
+	private final String[] options = new String[]{ "respawn", "resurrect" };
 
 	@Override
 	public String getPromptText(final ConversationContext arg0)
@@ -43,13 +41,16 @@ public class RespawnPrompt extends ValidatingPrompt
 			final ActiveDungeon ad = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
 			if(ad == null)
 				return END_OF_CONVERSATION;
+
 			for(final String member : ad.getCurrentParty().getMembers())
 			{
 				if(member.equals(p.getName()))
 					continue;
+
 				Bukkit.getPlayer(member).showPlayer(p);
 			}
-			if(((String)arg0.getSessionData("selected_option")).equals("resurrect"))
+
+			if(arg0.getSessionData("selected_option").equals("resurrect"))
 			{
 				final DeathLocation dloc = ad.getDeathLocationForPlayer(p.getName());
 				p.getInventory().setArmorContents(dloc.getArmor());
@@ -57,12 +58,14 @@ public class RespawnPrompt extends ValidatingPrompt
 			}
 			else
 				ad.giveMap(p);
+
 			ad.removeDeathLocation(p.getName());
 			DragonsLairMain.getInstance().getEventHandler().removePlayerFromDeathObserving(p.getName());
 			return END_OF_CONVERSATION;
 		}
 		else
 			arg0.setSessionData("selected_option", null);
+
 		return this;
 	}
 
@@ -72,10 +75,14 @@ public class RespawnPrompt extends ValidatingPrompt
 		if(arg0.getSessionData("selected_option") == null)
 		{
 			for(final String option : this.options)
+			{
 				if(option.equals(arg1))
 					return true;
+			}
+
 			return false;
 		}
+
 		return true;
 	}
 }

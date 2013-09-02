@@ -18,26 +18,37 @@ public class AnswerConverter
 		temp = temp.replaceAll("[^a-zA-Z 0-9]+", " ");
 		if(!temp.startsWith(" "))
 			temp = " " + temp;
+
 		if(!temp.endsWith(" "))
 			temp = temp + " ";
+
 		for(final String consider : PossibleAnswers.considerationWords)
+		{
 			if(temp.contains(" " + consider + " "))
 			{
 				temp = temp.replace(" " + consider, "");
 				considering = true;
 			}
+		}
+
 		for(final String correct : PossibleAnswers.approvalWords)
+		{
 			if(temp.contains(" " + correct + " "))
 			{
 				temp = temp.replace(" " + correct, "");
 				approval = true;
 			}
+		}
+
 		for(final String incorrect : PossibleAnswers.disapprovalWords)
+		{
 			if(temp.contains(" " + incorrect + " "))
 			{
 				temp = temp.replace(" " + incorrect, "");
 				disapproval = true;
 			}
+		}
+
 		if(approval && !disapproval && !considering)
 			return AnswerType.AGREEMENT;
 		else if(approval && !disapproval && considering)
@@ -52,6 +63,7 @@ public class AnswerConverter
 			return AnswerType.CONSIDERING;
 		else if(approval && disapproval && !considering)
 			return AnswerType.CONSIDERING;
+
 		return AnswerType.CONSIDERING;
 	}
 }

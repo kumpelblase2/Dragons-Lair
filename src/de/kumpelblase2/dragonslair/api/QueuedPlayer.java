@@ -20,6 +20,7 @@ public class QueuedPlayer
 			return this.player.equals(object);
 		else if(object instanceof Player)
 			return this.player.equals(((Player)object).getName());
+
 		return false;
 	}
 

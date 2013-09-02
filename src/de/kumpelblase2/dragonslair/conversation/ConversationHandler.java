@@ -32,6 +32,7 @@ public class ConversationHandler implements ConversationAbandonedListener
 	{
 		if(this.isInConversation(p))
 			p.abandonConversation(this.conversations.get(p.getName()).getConversation());
+
 		final ConversationFactory f = DragonsLairMain.getDungeonManager().getConversationFactory();
 		final Conversation c = f.withFirstPrompt(ConversationHandler.getPromptByID(dialogID, n)).buildConversation(p);
 		final ConversationStartEvent event = new ConversationStartEvent(p, n.getID(), c, dialogID);
@@ -41,6 +42,7 @@ public class ConversationHandler implements ConversationAbandonedListener
 			c.abandon();
 			return;
 		}
+
 		c.addConversationAbandonedListener(this);
 		c.begin();
 		if(DragonsLairMain.getSettings().getDialogs().get(dialogID).getType() != DialogType.MESSAGE)

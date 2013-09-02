@@ -15,9 +15,10 @@ public class DLCitizenHandler implements Listener
 		final NPC npc = DragonsLairMain.getSettings().getNPCByName(event.getNPC().getName());
 		if(npc == null)
 			return;
+
 		if(!DragonsLairMain.isWorldEnabled(event.getClicker().getWorld().getName()))
 			return;
-		
+
 		final RemoteEntityInteractEvent event2 = new RemoteEntityInteractEvent(DragonsLairMain.getDungeonManager().getNPCByEntity(event.getNPC().getBukkitEntity()), event.getClicker());
 		Bukkit.getPluginManager().callEvent(event2);
 		event.setCancelled(!event2.isCancelled());

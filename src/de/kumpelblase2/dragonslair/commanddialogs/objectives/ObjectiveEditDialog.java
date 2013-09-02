@@ -23,6 +23,7 @@ public class ObjectiveEditDialog extends ValidatingPrompt
 		{
 			if(input.equals("back") || input.equals("cancel"))
 				return new ObjectiveManageDialog();
+
 			context.setSessionData("id", Integer.parseInt(input));
 		}
 		else if(input.equals("back"))
@@ -40,15 +41,16 @@ public class ObjectiveEditDialog extends ValidatingPrompt
 			context.setSessionData("id", null);
 			return new ObjectiveManageDialog();
 		}
+
 		return this;
 	}
 
 	@Override
 	protected boolean isInputValid(final ConversationContext context, final String input)
 	{
-		if(input.equals("back") || input.equals("cancel"))
-			return true;
+		if(input.equals("back") || input.equals("cancel")) return true;
 		if(context.getSessionData("id") == null)
+		{
 			try
 			{
 				final Integer id = Integer.parseInt(input);
@@ -57,6 +59,7 @@ public class ObjectiveEditDialog extends ValidatingPrompt
 					context.getForWhom().sendRawMessage(ChatColor.RED + "A chapter with that id doesn't exist.");
 					return false;
 				}
+
 				return true;
 			}
 			catch(final Exception e)
@@ -64,6 +67,8 @@ public class ObjectiveEditDialog extends ValidatingPrompt
 				context.getSessionData(ChatColor.RED + "Not a valid number.");
 				return false;
 			}
+		}
+
 		return true;
 	}
 }

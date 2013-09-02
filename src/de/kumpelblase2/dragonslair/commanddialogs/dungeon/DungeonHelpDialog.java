@@ -27,6 +27,7 @@ public class DungeonHelpDialog extends FixedSetPrompt
 			arg0.getForWhom().sendRawMessage(ChatColor.YELLOW + "<Description needed>");
 		else if(arg1.equals("safe word"))
 			arg0.getForWhom().sendRawMessage(ChatColor.AQUA + "The safe word can be used by players inside a dungeon to stop or pause the dungeon.");
+
 		return this;
 	}
 }

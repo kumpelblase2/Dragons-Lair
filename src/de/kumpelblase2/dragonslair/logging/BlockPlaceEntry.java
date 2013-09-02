@@ -33,7 +33,7 @@ public class BlockPlaceEntry extends BlockEntry
 			return false;
 		if(inEntry.getNewData().get("block_type").equals(this.m_before.get("block_type")))
 			return true;
-		else
-			return false;
+
+		else return false;
 	}
 }

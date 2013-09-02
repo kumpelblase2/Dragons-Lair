@@ -1,10 +1,9 @@
 package de.kumpelblase2.dragonslair.api.eventexecutors;
 
 import org.bukkit.*;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import de.kumpelblase2.dragonslair.*;
+import org.bukkit.entity.*;
+import de.kumpelblase2.dragonslair.DragonsLairMain;
+import de.kumpelblase2.dragonslair.DungeonManager;
 import de.kumpelblase2.dragonslair.api.*;
 
 public class MobSpawnEventExecutor implements EventExecutor
@@ -19,9 +18,11 @@ public class MobSpawnEventExecutor implements EventExecutor
 				mobType = EntityType.fromId(Integer.parseInt(e.getOption("mob_id")));
 			else
 				mobType = EntityType.fromName(e.getOption("mob_id"));
+
 			int amount = 1;
 			if(e.getOption("amount") != null)
 				amount = Integer.parseInt(e.getOption("amount"));
+
 			final String world = e.getOption("world");
 			final int x = Integer.parseInt(e.getOption("x"));
 			final int y = Integer.parseInt(e.getOption("y"));
@@ -31,10 +32,12 @@ public class MobSpawnEventExecutor implements EventExecutor
 			final ActiveDungeon ad = DragonsLairMain.getDungeonManager().getDungeonOfPlayer(p.getName());
 			final DungeonManager dm = DragonsLairMain.getDungeonManager();
 			for(int i = 0; i < amount; i++)
+			{
 				if(ad != null)
 					dm.getSpawnedMobs().add(new EventMonster(e, ad, (LivingEntity)w.spawnEntity(l, mobType)));
 				else
 					w.spawnEntity(l, mobType);
+			}
 		}
 		catch(final Exception ex)
 		{
@@ -42,6 +45,7 @@ public class MobSpawnEventExecutor implements EventExecutor
 			DragonsLairMain.Log.warning(ex.getMessage());
 			return false;
 		}
+
 		return true;
 	}
 }

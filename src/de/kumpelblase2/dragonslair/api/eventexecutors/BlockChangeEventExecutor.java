@@ -35,14 +35,19 @@ public class BlockChangeEventExecutor implements EventExecutor
 				public void run()
 				{
 					for(int x = minx; x <= maxx; x++)
+					{
 						for(int y = miny; y <= maxy; y++)
+						{
 							for(int z = minz; z <= maxz; z++)
 							{
 								final Block b = Bukkit.getWorld(world).getBlockAt(x, y, z);
 								if(ad != null)
 									DragonsLairMain.getInstance().getLoggingManager().logBlockPlace(ad, b.getState());
+
 								Bukkit.getWorld(world).getBlockAt(x, y, z).setTypeId(id);
 							}
+						}
+					}
 				}
 			});
 		}
@@ -52,6 +57,7 @@ public class BlockChangeEventExecutor implements EventExecutor
 			DragonsLairMain.Log.warning(ex.getMessage());
 			return false;
 		}
+
 		return true;
 	}
 }

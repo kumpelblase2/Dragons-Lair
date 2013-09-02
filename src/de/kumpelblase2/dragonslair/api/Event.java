@@ -29,6 +29,7 @@ public class Event
 				final String[] optionSplitt = options.split(";");
 				this.actionOptions = new Option[optionSplitt.length];
 				for(int i = 0; i < optionSplitt.length; i++)
+				{
 					try
 					{
 						final String[] splitt = optionSplitt[i].split(":");
@@ -38,9 +39,11 @@ public class Event
 					{
 						DragonsLairMain.Log.warning("Unable to parse event option: " + optionSplitt[i]);
 					}
+				}
 			}
 			else
 				this.actionOptions = new Option[0];
+
 			final String cooldownString = result.getString(TableColumns.Events.COOLDOWNS);
 			if(cooldownString != null && cooldownString.length() > 0)
 			{
@@ -86,8 +89,11 @@ public class Event
 	public String getOption(final String key)
 	{
 		for(int i = 0; i < this.actionOptions.length; i++)
+		{
 			if(this.actionOptions[i].getType().equals(key))
 				return this.actionOptions[i].getValue();
+		}
+
 		return null;
 	}
 
@@ -102,6 +108,7 @@ public class Event
 				if(i != this.actionOptions.length - 1)
 					optionString.append(";");
 			}
+
 			if(this.id != -1)
 			{
 				final PreparedStatement st = DragonsLairMain.createStatement("REPLACE INTO " + Tables.EVENTS + "(" + "event_id," + "event_action_type," + "event_action_options," + "event_cooldowns" + ") VALUES(?,?,?,?)");
@@ -137,10 +144,12 @@ public class Event
 		{
 			if(this.actionOptions[i] == null)
 				continue;
+
 			sb.append(this.actionOptions[i].getType() + ":" + this.actionOptions[i].getValue());
 			if(i != this.actionOptions.length - 1)
 				sb.append(";");
 		}
+
 		return sb.toString();
 	}
 
@@ -148,24 +157,30 @@ public class Event
 	{
 		if(this.getOption(option) == null)
 			return;
+
 		final ArrayList<Option> options = new ArrayList<Option>(Arrays.asList(this.actionOptions));
 		for(int i = 0; i < options.size(); i++)
+		{
 			if(options.get(i).getType().equals(option))
 			{
 				options.remove(i);
 				break;
 			}
+		}
 		this.actionOptions = options.toArray(new Option[0]);
 	}
 
 	public void setOption(final String key, final String value)
 	{
 		for(int i = 0; i < this.actionOptions.length; i++)
+		{
 			if(this.actionOptions[i].getType().equals(key))
 			{
 				this.actionOptions[i].setValue(value);
 				return;
 			}
+		}
+
 		final ArrayList<Option> options = new ArrayList<Option>(Arrays.asList(this.actionOptions));
 		options.add(new Option(key, value));
 		this.actionOptions = options.toArray(new Option[0]);
@@ -194,8 +209,10 @@ public class Event
 			sb.append(cd.getDungeonName() + ":" + cd.getRemainingTime());
 			sb.append(";");
 		}
+
 		if(sb.length() > 1)
 			sb.substring(0, sb.length() - 1);
+
 		return sb.toString();
 	}
 
@@ -212,9 +229,11 @@ public class Event
 					this.cooldowns.remove(cd);
 					return false;
 				}
+
 				return true;
 			}
 		}
+
 		return false;
 	}
 

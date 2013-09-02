@@ -1,18 +1,19 @@
 package de.kumpelblase2.dragonslair;
 
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.*;
 import java.net.URL;
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.logging.Logger;
-import javax.xml.parsers.DocumentBuilderFactory;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.mcstats.Metrics;
 import org.w3c.dom.*;
-import de.kumpelblase2.dragonslair.Metrics.Graph;
 import de.kumpelblase2.dragonslair.api.*;
 import de.kumpelblase2.dragonslair.api.eventexecutors.*;
 import de.kumpelblase2.dragonslair.conversation.ConversationHandler;
@@ -47,6 +48,7 @@ public class DragonsLairMain extends JavaPlugin
 			instance = null;
 			return;
 		}
+
 		this.checkDatabase();
 		this.logManager = new LoggingManager();
 		this.manager = new DungeonManager();
@@ -69,6 +71,7 @@ public class DragonsLairMain extends JavaPlugin
 					Bukkit.getPluginManager().disablePlugin(DragonsLairMain.getInstance());
 					return;
 				}
+
 				DragonsLairMain.this.manager.getSettings().loadAll();
 				DragonsLairMain.this.logManager.loadEntries();
 				DragonsLairMain.this.eventScheduler.load();
@@ -102,8 +105,10 @@ public class DragonsLairMain extends JavaPlugin
 				DragonsLairMain.this.manager.setEventExecutor(EventActionType.START_SCHEDULED_EVENT, new ScheduledEventStartEventExecutor());
 				DragonsLairMain.this.manager.setEventExecutor(EventActionType.STOP_SCHEDULED_EVENT, new ScheduledEventStopEventExecutor());
 				DragonsLairMain.this.createMetricsData();
+
 				if(DragonsLairMain.this.checkCitizen())
 					Bukkit.getPluginManager().registerEvents(new DLCitizenHandler(), DragonsLairMain.getInstance());
+
 				if(isInDebugMode())
 				{
 					debugLog("Loaded " + DragonsLairMain.this.manager.getSettings().getNPCs().size() + " NPCs");
@@ -115,6 +120,7 @@ public class DragonsLairMain extends JavaPlugin
 					debugLog("Loaded " + DragonsLairMain.this.manager.getSettings().getChapters().size() + " chapters");
 					debugLog("Loaded " + DragonsLairMain.this.eventScheduler.getEvents().size() + " scheduled events.");
 				}
+
 				Log.info("Done.");
 				Bukkit.getScheduler().scheduleSyncRepeatingTask(DragonsLairMain.getInstance(), new CooldownCleanup(), 200L, 200L);
 				DragonsLairMain.this.startUpdateCheck();
@@ -124,14 +130,15 @@ public class DragonsLairMain extends JavaPlugin
 
 	private boolean setupEconomy()
 	{
-		if(this.getServer().getPluginManager().getPlugin("Vault") == null)
-			return false;
+		if(this.getServer().getPluginManager().getPlugin("Vault") == null) return false;
+
 		final RegisteredServiceProvider<Economy> rsp = this.getServer().getServicesManager().getRegistration(Economy.class);
 		if(rsp == null)
 		{
 			debugLog("No economy found.");
 			return false;
 		}
+
 		this.econ = rsp.getProvider();
 		if(this.econ != null)
 		{
@@ -158,10 +165,10 @@ public class DragonsLairMain extends JavaPlugin
 	private boolean checkCitizen()
 	{
 		final Plugin p = Bukkit.getServer().getPluginManager().getPlugin("Citizens");
-		if(p == null)
-			return false;
-		if(!p.isEnabled())
-			return false;
+		if(p == null) return false;
+
+		if(!p.isEnabled()) return false;
+
 		this.citizensEnabled = true;
 		return true;
 	}
@@ -175,10 +182,11 @@ public class DragonsLairMain extends JavaPlugin
 			this.manager.stopDungeons();
 			this.manager.saveCooldowns();
 		}
+
 		try
 		{
-			if(this.conn != null)
-				this.conn.close();
+			if(this.conn != null) this.conn.close();
+
 			debugLog("Disconnected database.");
 		}
 		catch(final SQLException e)
@@ -186,6 +194,7 @@ public class DragonsLairMain extends JavaPlugin
 			Log.warning("Error closing MySQL connection.");
 			e.printStackTrace();
 		}
+
 		instance = null;
 	}
 
@@ -250,6 +259,7 @@ public class DragonsLairMain extends JavaPlugin
 		{
 			debugLog("Creating table structure because it doesn't exist.");
 			for(final Tables t : Tables.values())
+			{
 				try
 				{
 					PreparedStatement st;
@@ -257,15 +267,19 @@ public class DragonsLairMain extends JavaPlugin
 						st = createStatement(t.getCreatingQuery());
 					else
 						st = createStatement(t.getSQLiteCreatingQuery());
+
 					st.execute();
 				}
 				catch(final Exception e)
 				{
 					Log.warning("Unable to create table '" + t.toString() + "'.");
 				}
+			}
+
 			this.getConfig().set("db.rev", 1);
 			this.saveConfig();
 		}
+
 		if(this.DATABASE_REV > this.getConfig().getInt("db.rev"))
 		{
 			debugLog("Database is outdated. Updating...");
@@ -275,6 +289,7 @@ public class DragonsLairMain extends JavaPlugin
 				currentRev++;
 				this.updateDatabase(currentRev);
 			}
+
 			debugLog("Database update finished.");
 			this.getConfig().set("db.rev", currentRev);
 			this.saveConfig();
@@ -288,13 +303,16 @@ public class DragonsLairMain extends JavaPlugin
 			final InputStream stream = this.getConfig().getString("db.type").equals("mysql") ? DragonsLairMain.class.getResourceAsStream("/resources/rev" + nextRev + ".txt") : DragonsLairMain.class.getResourceAsStream("/resources/rev" + nextRev + "_sqlite.txt");
 			if(stream == null && !this.getConfig().getString("db.type").equals("mysql"))
 			{
-				if(DragonsLairMain.class.getResourceAsStream("/resources/rev" + nextRev + ".txt") != null)
-					return;
+				if(DragonsLairMain.class.getResourceAsStream("/resources/rev" + nextRev + ".txt") != null) return;
 			}
+
 			final BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
 			String s = "";
 			while((s = reader.readLine()) != null)
+			{
 				createStatement(s).execute();
+			}
+
 			reader.close();
 		}
 		catch(final Exception e)
@@ -304,12 +322,12 @@ public class DragonsLairMain extends JavaPlugin
 	}
 
 	public static PreparedStatement createStatement(final String query)
-	{	
+	{
 		final Connection conn = getInstance().getMysqlConnection();
 		try
 		{
-			if(conn == null || !isDatabaseAlive())
-				DragonsLairMain.getInstance().setupDatabase();
+			if(conn == null || !isDatabaseAlive()) DragonsLairMain.getInstance().setupDatabase();
+
 			return conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 		}
 		catch(final SQLException e)
@@ -317,6 +335,7 @@ public class DragonsLairMain extends JavaPlugin
 			Log.warning("Error creating query '" + query + "'.");
 			e.printStackTrace();
 		}
+
 		return null;
 	}
 
@@ -357,49 +376,34 @@ public class DragonsLairMain extends JavaPlugin
 		try
 		{
 			final Metrics m = new Metrics(this);
-			m.createGraph("Dungeons").addPlotter(new Metrics.Plotter()
+			m.createGraph("Dungeons").addPlotter(new Metrics.Plotter("Amount")
 			{
 				@Override
 				public int getValue()
 				{
 					return DragonsLairMain.getSettings().getDungeons().size();
 				}
-
-				@Override
-				public String getColumnName()
-				{
-					return "Amount";
-				}
 			});
-			final Graph g = m.createGraph("NPCs");
-			g.addPlotter(new Metrics.Plotter()
+
+			final Metrics.Graph g = m.createGraph("NPCs");
+			g.addPlotter(new Metrics.Plotter("Amount")
 			{
 				@Override
 				public int getValue()
 				{
 					return DragonsLairMain.getSettings().getNPCs().size();
 				}
-
-				@Override
-				public String getColumnName()
-				{
-					return "Amount";
-				}
 			});
-			g.addPlotter(new Metrics.Plotter()
+
+			g.addPlotter(new Metrics.Plotter("Spawned")
 			{
 				@Override
 				public int getValue()
 				{
 					return DragonsLairMain.getDungeonManager().getNPCManager().getAllEntities().size();
 				}
-
-				@Override
-				public String getColumnName()
-				{
-					return "Spawned";
-				}
 			});
+
 			m.start();
 		}
 		catch(final IOException e)
@@ -425,18 +429,19 @@ public class DragonsLairMain extends JavaPlugin
 		this.getConfig().set("db.rev", this.getConfig().getInt("db.rev", 0));
 		this.getConfig().set("update-notice", this.getConfig().getBoolean("update-notice", false));
 		this.getConfig().set("update-notice-interval", this.getConfig().getInt("update-notice-interval", 10));
+
 		if(this.getConfig().contains("verbose-start"))
 		{
 			this.getConfig().set("debug-mode", this.getConfig().getBoolean("verbose-start"));
 			this.getConfig().set("verbose-start", null);
 		}
-		else
-			this.getConfig().set("debug-mode", this.getConfig().getBoolean("debug-mode", false));
+		else this.getConfig().set("debug-mode", this.getConfig().getBoolean("debug-mode", false));
 
 		this.getConfig().set("resurrect_money", this.getConfig().getInt("resurrect", 500));
 		this.getConfig().set("interacting_between_players", this.getConfig().getBoolean("interacting_between_players", false));
 		if(!this.getConfig().getKeys(false).contains("enabled-worlds"))
-			this.getConfig().set("enabled-worlds", new ArrayList<String>(Arrays.asList(new String[] { "world" })));
+			this.getConfig().set("enabled-worlds", new ArrayList<String>(Arrays.asList(new String[]{ "world" })));
+
 		this.saveConfig();
 	}
 
@@ -466,8 +471,8 @@ public class DragonsLairMain extends JavaPlugin
 				final Node titleNode = ((Element)description.item(0)).getFirstChild();
 				String title = titleNode.getNodeValue();
 				title = title.replace("Dragons", "").replace("Lair", "").replace("v", "").replace(" - ", "").replace("Beta", "").replace(" ", "");
-				if(this.getDescription().getVersion().equals(title))
-					return;
+				if(this.getDescription().getVersion().equals(title)) return;
+
 				final double currentVer = this.getVersionValue(this.getDescription().getVersion());
 				final double newVer = this.getVersionValue(title);
 				if(newVer > currentVer)
@@ -488,7 +493,10 @@ public class DragonsLairMain extends JavaPlugin
 		final String[] split = version.split("\\.");
 		String newVer = "";
 		for(int i = 0; i < split.length; i++)
+		{
 			newVer += (i == 0) ? split[i] + "." : split[i];
+		}
+
 		try
 		{
 			return Double.parseDouble(newVer);
@@ -515,6 +523,7 @@ public class DragonsLairMain extends JavaPlugin
 		{
 			return false;
 		}
+
 		return true;
 	}
 
@@ -540,7 +549,6 @@ public class DragonsLairMain extends JavaPlugin
 
 	public static void debugLog(final String input)
 	{
-		if(isInDebugMode())
-			Log.info("[DEBUG] " + input);
+		if(isInDebugMode()) Log.info("[DEBUG] " + input);
 	}
 }

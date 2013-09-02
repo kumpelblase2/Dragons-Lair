@@ -11,14 +11,17 @@ public final class WorldUtility
 	{
 		if(entites.size() == 0)
 			return null;
+
 		double current = Double.POSITIVE_INFINITY;
 		LivingEntity nearest = null;
 		for(final Entity e : entites)
 		{
 			if(!(e instanceof LivingEntity) || excluded.contains(e.getType()))
 				continue;
+
 			if(e instanceof Player && DragonsLairMain.getDungeonManager().getNPCManager().isRemoteEntity((LivingEntity)e))
 				continue;
+
 			final double squared = e.getLocation().distanceSquared(loc);
 			if(squared < current && squared < 1024D)
 			{
@@ -26,6 +29,7 @@ public final class WorldUtility
 				nearest = (LivingEntity)e;
 			}
 		}
+
 		return nearest;
 	}
 
@@ -35,8 +39,8 @@ public final class WorldUtility
 		final Chunk ch = w.getChunkAt(to);
 		if(ch.isLoaded())
 			w.refreshChunk(ch.getX(), ch.getZ());
-		else
-			w.loadChunk(ch);
+
+		else w.loadChunk(ch);
 		entity.teleport(to);
 	}
 

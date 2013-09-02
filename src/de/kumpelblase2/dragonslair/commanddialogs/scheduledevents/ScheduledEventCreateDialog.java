@@ -1,10 +1,9 @@
 package de.kumpelblase2.dragonslair.commanddialogs.scheduledevents;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import org.bukkit.ChatColor;
-import org.bukkit.conversations.ConversationContext;
-import org.bukkit.conversations.Prompt;
-import org.bukkit.conversations.ValidatingPrompt;
+import org.bukkit.conversations.*;
 import de.kumpelblase2.dragonslair.DragonsLairMain;
 import de.kumpelblase2.dragonslair.api.ScheduledEvent;
 import de.kumpelblase2.dragonslair.conversation.AnswerConverter;
@@ -38,13 +37,18 @@ public class ScheduledEventCreateDialog extends ValidatingPrompt
 			arg0.setSessionData("repeat_delay", null);
 			return new ScheduledEventsManageDialog();
 		}
+
 		if(arg0.getSessionData("event_ids") == null)
 		{
 			if(arg1.equals("back"))
 				return new ScheduledEventsManageDialog();
+
 			final List<Integer> scheduleIDs = new ArrayList<Integer>();
 			for(final String id : arg1.split(","))
+			{
 				scheduleIDs.add(Integer.parseInt(id));
+			}
+
 			arg0.setSessionData("event_ids", scheduleIDs);
 		}
 		else if(arg0.getSessionData("init_delay") == null)
@@ -54,6 +58,7 @@ public class ScheduledEventCreateDialog extends ValidatingPrompt
 				arg0.setSessionData("event_ids", null);
 				return this;
 			}
+
 			arg0.setSessionData("init_delay", Integer.parseInt(arg1));
 		}
 		else if(arg0.getSessionData("repeating") == null)
@@ -63,6 +68,7 @@ public class ScheduledEventCreateDialog extends ValidatingPrompt
 				arg0.setSessionData("init_delay", null);
 				return this;
 			}
+
 			final AnswerType answer = new AnswerConverter(arg1).convert();
 			if(answer == AnswerType.AGREEMENT || answer == AnswerType.CONSIDERING_AGREEMENT)
 				arg0.setSessionData("repeating", true);
@@ -76,6 +82,7 @@ public class ScheduledEventCreateDialog extends ValidatingPrompt
 				arg0.setSessionData("repeating", null);
 				return this;
 			}
+
 			arg0.setSessionData("repeat_delay", Integer.parseInt(arg1));
 		}
 		else
@@ -85,6 +92,7 @@ public class ScheduledEventCreateDialog extends ValidatingPrompt
 				arg0.setSessionData("repeat_delay", null);
 				return this;
 			}
+
 			final AnswerType answer = new AnswerConverter(arg1).convert();
 			final boolean autoStart = (answer == AnswerType.AGREEMENT || answer == AnswerType.CONSIDERING_AGREEMENT ? true : false);
 			final int repeat_delay = (arg0.getSessionData("repeat_delay") == null ? 1 : (Integer)arg0.getSessionData("repeat_delay"));
@@ -107,6 +115,7 @@ public class ScheduledEventCreateDialog extends ValidatingPrompt
 			arg0.setSessionData("repeat_delay", null);
 			return new ScheduledEventsManageDialog();
 		}
+
 		return this;
 	}
 
@@ -115,12 +124,14 @@ public class ScheduledEventCreateDialog extends ValidatingPrompt
 	{
 		if(arg1.equals("cancel") || arg1.equals("back"))
 			return true;
+
 		if(arg0.getSessionData("event_ids") == null)
 		{
 			if(arg1.contains(","))
 			{
 				final String[] ids = arg1.split(",");
 				for(final String s : ids)
+				{
 					try
 					{
 						final Integer id = Integer.parseInt(s);
@@ -135,8 +146,10 @@ public class ScheduledEventCreateDialog extends ValidatingPrompt
 						arg0.getForWhom().sendRawMessage(ChatColor.RED + "That is not a valid number.");
 						return false;
 					}
+				}
 			}
 			else
+			{
 				try
 				{
 					final Integer id = Integer.parseInt(arg1);
@@ -151,9 +164,12 @@ public class ScheduledEventCreateDialog extends ValidatingPrompt
 					arg0.getForWhom().sendRawMessage(ChatColor.RED + "That is not a valid number.");
 					return false;
 				}
+			}
+
 			return true;
 		}
 		else if(arg0.getSessionData("init_delay") == null)
+		{
 			try
 			{
 				Integer.parseInt(arg1);
@@ -164,14 +180,17 @@ public class ScheduledEventCreateDialog extends ValidatingPrompt
 				arg0.getForWhom().sendRawMessage(ChatColor.RED + "Not a valid number.");
 				return false;
 			}
+		}
 		else if(arg0.getSessionData("repeating") == null)
 		{
 			final AnswerType answer = new AnswerConverter(arg1).convert();
 			if(answer != AnswerType.NOTHING)
 				return true;
+
 			return false;
 		}
 		else if((Boolean)arg0.getSessionData("repeating") && arg0.getSessionData("repeat_delay") == null)
+		{
 			try
 			{
 				Integer.parseInt(arg1);
@@ -182,11 +201,13 @@ public class ScheduledEventCreateDialog extends ValidatingPrompt
 				arg0.getForWhom().sendRawMessage(ChatColor.RED + "Not a valid number.");
 				return false;
 			}
+		}
 		else
 		{
 			final AnswerType answer = new AnswerConverter(arg1).convert();
 			if(answer != AnswerType.NOTHING)
 				return true;
+
 			return false;
 		}
 	}

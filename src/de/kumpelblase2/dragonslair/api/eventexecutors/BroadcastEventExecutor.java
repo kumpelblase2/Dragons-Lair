@@ -17,6 +17,7 @@ public class BroadcastEventExecutor implements EventExecutor
 		final String permission = e.getOption("permission");
 		ActiveDungeon ad = null;
 		if(dungeon != null)
+		{
 			try
 			{
 				final Integer id = Integer.parseInt(dungeon);
@@ -26,16 +27,19 @@ public class BroadcastEventExecutor implements EventExecutor
 			{
 				ad = DragonsLairMain.getDungeonManager().getActiveDungeonByName(dungeon);
 			}
+		}
+
 		try
 		{
 			if(ad != null)
+			{
 				for(final String member : ad.getCurrentParty().getMembers())
 				{
 					final Player pl = Bukkit.getPlayer(member);
 					if(permission != null)
-						if(pl.hasPermission(permission))
-							pl.sendRawMessage(GeneralUtilities.replaceColors(message));
+						if(pl.hasPermission(permission)) pl.sendRawMessage(GeneralUtilities.replaceColors(message));
 				}
+			}
 			else if(permission != null)
 				Bukkit.broadcast(GeneralUtilities.replaceColors(message), permission);
 			else
@@ -47,6 +51,7 @@ public class BroadcastEventExecutor implements EventExecutor
 			DragonsLairMain.Log.warning(ex.getMessage());
 			return false;
 		}
+
 		return true;
 	}
 }

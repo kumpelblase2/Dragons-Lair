@@ -35,6 +35,7 @@ public class SafeWordPrompt extends FixedSetPrompt
 			arg0.getForWhom().sendRawMessage("<Voice>If you don't come back, something unexpected and really bad thing will happen. I have warned you.");
 			DragonsLairMain.getDungeonManager().stopDungeon(DragonsLairMain.getDungeonManager().getDungeonOfPlayer(((Player)arg0.getForWhom()).getName()).getInfo().getName(), true);
 		}
+
 		DragonsLairMain.getInstance().getConversationHandler().removeSafeWordConversation((Player)arg0.getForWhom());
 		return END_OF_CONVERSATION;
 	}
